@@ -5,11 +5,11 @@ import java.util.List;
 
 public class Patient extends User {
     private static int idCounter = 0;
-    enum Gender {
+    public enum Gender {
         MALE, FEMALE
     }
 
-    enum BloodType {
+    public enum BloodType {
         Apos, Aneg,
         Bpos, Bneg,
         ABpos, ABneg,
