@@ -22,8 +22,6 @@ public class Patient extends User {
     private Gender gender;
     private BloodType bloodType;
     // patient hold list of pending appointment and list of completed outcome record
-    private List<Appointment> appointments;
-    private List<AppointmentOutcomeRecord> outcomeRecords;
     // medical records and outcome record merged in 1
 
 
@@ -33,10 +31,9 @@ public class Patient extends User {
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.bloodType = bloodType;
-        appointments = new ArrayList<>();
-        outcomeRecords = new ArrayList<>();
     }
 
+    // get to send read query to database
     public int getId() {
         return id;
     }
@@ -57,10 +54,7 @@ public class Patient extends User {
         return bloodType;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    // set to send update query to database
     public void setName(String name) {
         this.name = name;
     }
@@ -82,11 +76,11 @@ public class Patient extends User {
     }
 
     public void addAppointment(Appointment appointment) {
-        appointments.add(appointment);
+
     }
 
     public void addOutcomeRecord(AppointmentOutcomeRecord outcomeRecord) {
-        outcomeRecords.add(outcomeRecord);
+
     }
 
     // consider moving this to a control appointment manager - single responsibility principle
