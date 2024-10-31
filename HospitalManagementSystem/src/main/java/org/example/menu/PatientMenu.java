@@ -1,10 +1,19 @@
 package org.example.menu;
 
+import org.example.control.PatientService;
 import org.example.entity.Patient;
 import org.example.entity.User;
 import java.util.Scanner;
 
-public class PatientMenu implements Menu {
+public class PatientMenu {
+    private final PatientService patientService = new PatientService();
+    private Patient currentPatient;
+
+    public PatientMenu() {
+        currentPatient = patientService.ge
+    }
+
+    // patient menu will be passed in an id
     public void displayMenu() {
         System.out.println("=====PATIENT MENU=====");
         System.out.println("1. View Medical Record\n2. Update Personal Information\n3. View Available Appointment Slots\n4. Schedule an Appointment\n5. Reschedule an Appointment\n6. Cancel an Appointment\n7. View Scheduled Appointments\n8. View Past Appointment Outcome Record\n9. Logout");

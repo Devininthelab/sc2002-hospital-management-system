@@ -1,3 +1,7 @@
+package org.example.entity;
+
+import org.example.entity.AppointmentOutcomeRecord;
+
 import java.util.LinkedList;
 import java.util.Queue;
 

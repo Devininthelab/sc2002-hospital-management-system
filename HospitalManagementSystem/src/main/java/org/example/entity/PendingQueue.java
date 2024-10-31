@@ -12,6 +12,6 @@ public class PendingQueue extends AppointmentOutcomeRecordQueue {
     }
     public void addRecord(AppointmentOutcomeRecord record) {
     	queue.add(record);
-        System.out.println("Adding record with pending medication: " + record);
+        System.out.println("Adding record with pending medication.csv: " + record);
     }
 }

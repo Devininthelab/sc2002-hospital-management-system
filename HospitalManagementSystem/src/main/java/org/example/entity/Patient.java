@@ -1,10 +1,10 @@
 package org.example.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Patient extends User {
-    private static int idCounter = 0;
+public class Patient {
     public enum Gender {
         MALE, FEMALE
     }
@@ -18,15 +18,15 @@ public class Patient extends User {
 
     private int id;
     private String name;
-    private int dateOfBirth;
+    private LocalDate dateOfBirth;
     private Gender gender;
     private BloodType bloodType;
     // patient hold list of pending appointment and list of completed outcome record
     // medical records and outcome record merged in 1
 
 
-    public Patient(String name, int dateOfBirth, Gender gender, BloodType bloodType) {
-        this.id = idCounter++;
+    public Patient(int id, String name, LocalDate dateOfBirth, Gender gender, BloodType bloodType) {
+        this.id = id;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
@@ -42,7 +42,7 @@ public class Patient extends User {
         return name;
     }
 
-    public int getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
@@ -59,7 +59,7 @@ public class Patient extends User {
         this.name = name;
     }
 
-    public void setDateOfBirth(int dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -75,24 +75,5 @@ public class Patient extends User {
         return "Patient [id=" + id + ", name=" + name + "]";
     }
 
-    public void addAppointment(Appointment appointment) {
 
-    }
-
-    public void addOutcomeRecord(AppointmentOutcomeRecord outcomeRecord) {
-
-    }
-
-    // consider moving this to a control appointment manager - single responsibility principle
-    public void scheduleAppointment(int doctorId, int timeslot) {
-
-    }
-
-    public void reScheduleAppointment(int doctorId, int timeslot) {
-
-    }
-
-    public void cancelAppointment(int doctorId, int timeslot) {
-
-    }
 }
