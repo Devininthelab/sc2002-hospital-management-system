@@ -14,6 +14,6 @@ public class RejectedQueue { // to top up inventory and meet the request
     
     public void addRecord(AppointmentOutcomeRecord record) {
     	queue.add(record);
-        System.out.println("Adding record with unavailable medication: " + record);      
+        System.out.println("Adding record with unavailable medication.csv: " + record);
     }
 }

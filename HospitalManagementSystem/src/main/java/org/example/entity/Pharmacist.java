@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Pharmacist extends User {
     private Map<String, String> prescriptions; // Maps prescription ID to its status
-    private Map<String, Integer> inventory;    // Maps medication name to stock level
+    private Map<String, Integer> inventory;    // Maps medication.csv name to stock level
 
     public Pharmacist(String username, String password, String contact) {
         super(username, password, "Pharmacist", contact);  // Role is set as "Pharmacist"

@@ -118,15 +118,15 @@ public void setTypeOfService(ArrayList<String> typeOfService) {
 }
 
 
-public void updateMedicationStatusFromInput() { //Update status of medication
+public void updateMedicationStatusFromInput() { //Update status of medication.csv
     Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter the index of the medication status to update (0 to " + (medicationStatus.size() - 1) + "): ");
+    System.out.print("Enter the index of the medication.csv status to update (0 to " + (medicationStatus.size() - 1) + "): ");
     
     int index = scanner.nextInt(); // Read index
     scanner.nextLine(); // Consume the newline
 
     if (index >= 0 && index < medicationStatus.size()) {
-        System.out.print("Enter the new medication status: ");
+        System.out.print("Enter the new medication.csv status: ");
         String newStatus = scanner.nextLine(); // Read new status
         medicationStatus.set(index, newStatus); // Update the status
         System.out.println("Medication status updated to: " + newStatus);
