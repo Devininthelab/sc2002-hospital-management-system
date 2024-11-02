@@ -15,12 +15,21 @@ public class PatientService {
         patientRepository = new PatientRepository();
     }
 
-    public void updatePatientName(int patientId, String name) {
+    public Patient getPatientById(int id) {
+        return patientRepository.getPatientById(id);
+    }
+
+    public void updateName(int patientId, String name) {
         patientRepository.updatePatientField(patientId, "name", name);
     }
 
-    public void updatePatientBirthday(int patientId, LocalDate birthday) {
+    public void updateDateOfBirth(int patientId, int day, int month, int year) {
+        LocalDate localDate = LocalDate.of(day, month, year);
+        patientRepository.updatePatientField(patientId, "dateofbirth", localDate.format(PatientRepository.DATE_FORMATTER));
+    }
 
+    public void updateGender(int patientId, Patient.Gender gender) {
+        patientRepository.updatePatientField(patientId, "gender", gender.name());
     }
 
     public void addAppointment(Appointment appointment) {

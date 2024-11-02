@@ -1,15 +1,12 @@
 package org.example.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MedicalRecord extends User {
-    private Date dateOfBirth;
-    private String gender;
-    private String bloodType;
-    private List<String> diagnoses;
-    private List<String> treatments;
+public class MedicalRecord {
+
 
     public MedicalRecord(String username, String password, String contact, Date dateOfBirth, String gender, String bloodType) {
         super(username, password, "Patient", contact);  // Role is set as "Patient"

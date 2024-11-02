@@ -1,10 +1,11 @@
 package org.example.entity;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Patient {
+public class Patient extends User {
     public enum Gender {
         MALE, FEMALE
     }
@@ -15,22 +16,36 @@ public class Patient {
         ABpos, ABneg,
         Opos, Oneg
     }
-
-    private int id;
+    // implicit medical record
+    private int patientId;
     private String name;
     private LocalDate dateOfBirth;
-    private Gender gender;
-    private BloodType bloodType;
+    private Patient.Gender gender;
+    private String contact;
+    private Patient.BloodType bloodType;
+    private List<String> diagnoses;
+    private List<String> treatments;
+
+    // appointment management
+    private List<Appointment> appointments;
+    private List<AppointmentOutcomeRecord> appointmentOutcomes;
     // patient hold list of pending appointment and list of completed outcome record
-    // medical records and outcome record merged in 1
 
 
-    public Patient(int id, String name, LocalDate dateOfBirth, Gender gender, BloodType bloodType) {
-        this.id = id;
+    public Patient(int id, String password, int patientId, String name, LocalDate dateOfBirth,
+                   Gender gender, String contact, BloodType bloodType) {
+        super(id, password, "patient");
+        this.patientId = patientId;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+        this.contact = contact;
         this.bloodType = bloodType;
+        // to be populated when reading database
+        this.diagnoses = new ArrayList<>();
+        this.treatments = new ArrayList<>();
+        this.appointments = new ArrayList<>();
+        this.appointmentOutcomes = new ArrayList<>();
     }
 
     // get to send read query to database
@@ -69,6 +84,20 @@ public class Patient {
 
     public void setBloodType(BloodType bloodType) {
         this.bloodType = bloodType;
+    }
+
+    public String medicalRecord() {
+        String diagnoses_treatments = "Diagnoses: treatments\n";
+        for (int i = 0; i < treatments.size(); i++) {
+            diagnoses_treatments += diagnoses.get(i) + ": " + treatments.get(i) + "\n";
+        }
+        return "Patient id: " + patientId
+                + "\nName: " + name
+                + "\nDate of birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                + "\nGender: " + gender
+                + "\nContact: " + contact
+                + "\nBlood type: " + bloodType.name()
+                + diagnoses_treatments;
     }
 
     public String toString() {

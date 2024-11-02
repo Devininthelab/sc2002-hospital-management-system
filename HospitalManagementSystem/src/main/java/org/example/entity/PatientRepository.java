@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class PatientRepository {
     private List<Patient> patients = new ArrayList<>();
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final String csvPath = "src/main/resources/patientdb.csv";
 
     public PatientRepository() {
@@ -18,18 +18,24 @@ public class PatientRepository {
     }
 
     private void loadPatientsFromCSV(String csvPath) {
-        List<List<String>> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("book.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 int id = Integer.parseInt(values[0].trim());
-                String name = values[1].trim();
-                LocalDate dateOfBirth = LocalDate.parse(values[2].trim(), DATE_FORMATTER);
-                Patient.Gender gender = Patient.Gender.valueOf(values[3].trim().toUpperCase());
-                Patient.BloodType bloodType = Patient.BloodType.valueOf(values[4].trim().toUpperCase());
+                String password = values[1].trim();
+                int patientId = Integer.parseInt(values[2].trim());
+                String name = values[3].trim();
+                LocalDate dateOfBirth = LocalDate.parse(values[4].trim(), DATE_FORMATTER);
+                Patient.Gender gender = Patient.Gender.valueOf(values[5].trim().toUpperCase());
+                String contact = values[6].trim();
+                Patient.BloodType bloodType = Patient.BloodType.valueOf(values[7].trim().toUpperCase());
 
-                this.patients.add(new Patient(id, name, dateOfBirth, gender, bloodType));
+                this.patients.add(new Patient(id, password, patientId, name, dateOfBirth, gender, contact, bloodType));
+                // load diagnoses and treament
+                // load appointments
+                // load appointments outcome records
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,6 +62,9 @@ public class PatientRepository {
 
         // Update the specified field based on its name
         switch (field.toLowerCase()) {
+            case "password":
+                patient.updatePassword(newValue);
+                break;
             case "name":
                 patient.setName(newValue);
                 break;
