@@ -2,72 +2,115 @@ package org.example.menu;
 
 import org.example.control.PatientService;
 import org.example.entity.Patient;
+import org.example.entity.PatientRepository;
 import org.example.entity.User;
+
+import java.time.LocalDate;
 import java.util.Scanner;
 
-public class PatientMenu {
+public class PatientMenu implements Menu {
     private final PatientService patientService = new PatientService();
-    private Patient currentPatient;
+    private final PatientRepository patientRepository = new PatientRepository();
+    private Patient patient;
+    private Scanner scanner = new Scanner(System.in);
 
-    public PatientMenu() {
-        currentPatient = patientService.ge
+    public void start() {
+        Scanner sc = new Scanner(System.in);
+        login();
+        int choice;
+        do {
+            displayMenu();
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            handleChoice(choice);
+        } while (choice != 9);  // Exit when logout is chosen
+    }
+
+    public void login() {
+        while (true) {
+            System.out.print("Please enter your user id: ");
+            int id = scanner.nextInt();
+            System.out.print("Please enter your password: ");
+            String password = scanner.nextLine();
+
+            patient = patientService.getPatientById(id);
+            if (patient == null) {
+                System.out.println("Patient not found. Try again");
+                continue;
+            }
+
+            if (patient.getPassword().equals(password)) {
+                System.out.println("You are logged in.");
+                break;
+            }
+
+            System.out.println("Wrong password. Try again");
+        }
     }
 
     // patient menu will be passed in an id
     public void displayMenu() {
         System.out.println("=====PATIENT MENU=====");
-        System.out.println("1. View Medical Record\n2. Update Personal Information\n3. View Available Appointment Slots\n4. Schedule an Appointment\n5. Reschedule an Appointment\n6. Cancel an Appointment\n7. View Scheduled Appointments\n8. View Past Appointment Outcome Record\n9. Logout");
+        System.out.println("1. Change password" +
+                "2. View Medical Record\n" +
+                "3. Update Personal Information\n" +
+                "4. View Available Appointment Slots\n" +
+                "5. Schedule an Appointment\n" +
+                "6. Reschedule an Appointment\n" +
+                "7. Cancel an Appointment\n" +
+                "8. View Scheduled Appointments\n" +
+                "9. View Past Appointment Outcome Record\n" +
+                "10. Logout");
     }
 
-    public void handleChoice(int choice, User user) {
-        Patient patient = (Patient) user;  // Cast User to Patient
+    public void handleChoice(int choice) {  // Cast User to Patient
         switch (choice) {
             case 1:
-                viewMedicalRecord(patient);
+                changePassword();
                 break;
             case 2:
-                updatePersonalInformation(patient);
+                viewMedicalRecord();
                 break;
             case 3:
-                viewAvailableAppointmentSlots(patient);
+                updatePersonalInformation();
                 break;
             case 4:
-                scheduleAppointment(patient);
+                viewAvailableAppointmentSlots();
                 break;
             case 5:
-                rescheduleAppointment(patient);
+                scheduleAppointment();
                 break;
             case 6:
-                cancelAppointment(patient);
+                rescheduleAppointment();
                 break;
             case 7:
-                viewScheduledAppointment(patient);
+                cancelAppointment();
                 break;
             case 8:
-                viewPastAOR(patient);
+                viewScheduledAppointment();
                 break;
             case 9:
-                logout(patient);
+                viewPastAOR();
+                break;
+            case 10:
+                System.out.println("Logging out...");
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
         }
     }
 
-    public void start(User user) {
-        Patient patient = (Patient) user;  // Cast User to Patient
-        Scanner sc = new Scanner(System.in);
-        int choice;
-        do {
-            displayMenu();
-            System.out.print("Enter your choice: ");
-            choice = sc.nextInt();
-            handleChoice(choice, patient);
-        } while (choice != 9);  // Exit when logout is chosen
+    private void changePassword() {
+        System.out.print("Please enter new password: ");
+        String password = scanner.nextLine();
+        patientRepository.updatePatientField(patient.getId(), "password",password);
     }
 
-    private void viewMedicalRecord(Patient patient) {}
-    private void updatePersonalInformation(Patient patient) {
+    private void viewMedicalRecord() {
+        System.out.println(patient.medicalRecord());
+    }
+
+    private void updatePersonalInformation() {
         System.out.println("Choose information to update: \n1. Name\n2. Date of Birth\n3. Gender\n4. Blood Type");
         Scanner sc = new Scanner(System.in);
         int choice = sc.nextInt();
@@ -78,8 +121,11 @@ public class PatientMenu {
                     patient.setName(name);
                     break;
                 case 2:
-                    int dateOfBirth = sc.nextInt();
-                    patient.setDateOfBirth(dateOfBirth);
+                    int day = sc.nextInt();
+                    int month = sc.nextInt();
+                    int year = sc.nextInt();
+                    LocalDate birthDate = LocalDate.of(year, month, day);
+                    patient.setDateOfBirth(birthDate);
                     break;
                 case 3:
                     System.out.println("Choose gender:\n1. Male\n2. Female");
@@ -90,73 +136,49 @@ public class PatientMenu {
                         patient.setGender(Patient.Gender.FEMALE);
                     }
                     break;
-                case 4:
-                    System.out.println("Choose Blood Type:\n1. A+\n2. A-\n3. B+\n4. B-\n5. AB+\n6. AB-\n7. O+\n8. O-\n");
-                    int bloodType = sc.nextInt();
-                    switch (bloodType) {
-                        case 1:
-                            patient.setBloodType(Patient.BloodType.Apos);
-                            break;
-                        case 2:
-                            patient.setBloodType(Patient.BloodType.Aneg);
-                            break;
-                        case 3:
-                            patient.setBloodType(Patient.BloodType.Bpos);
-                            break;
-                        case 4:
-                            patient.setBloodType(Patient.BloodType.Bneg);
-                            break;
-                        case 5:
-                            patient.setBloodType(Patient.BloodType.ABpos);
-                            break;
-                        case 6:
-                            patient.setBloodType(Patient.BloodType.ABneg);
-                            break;
-                        case 7:
-                            patient.setBloodType(Patient.BloodType.Opos);
-                            break;
-                        case 8:
-                            patient.setBloodType(Patient.BloodType.Oneg);
-                            break;
-                    }
-                    break;
             }
             System.out.println("Choose information to update: \n1. Name\n2. Date of Birth\n3. Gender\n4. Blood Type");
             choice = sc.nextInt();
         }
         while (choice >= 1 && choice <= 8);
     }
-}
-// ENUM VALUES IN GENDER AND BLOOD TYPE SHOULD BE IN PUBLIC SCOPE
-private void viewAvailableAppointmentSlots(Patient patient) {
-    //implement method in Patient class
-}
-private void scheduleAppointment(Patient patient) {
-    Scanner sc = new Scanner(System.in);
-    System.out.println("Timeslot:\n");
-    int timeslot = sc.nextInt();
-    patient.scheduleAppointment(timeslot);
-}
-private void rescheduleAppointment(Patient patient) {
-    Scanner sc = new Scanner(System.in);
-    System.out.println("Timeslot:\n");
-    int timeslot = sc.nextInt();
-    patient.reScheduleAppointment();
-}
-private void cancelAppointment(Patient patient) {
-    Scanner sc = new Scanner(System.in);
-    System.out.println("Timeslot:\n");
-    int timeslot = sc.nextInt();
-    patient.cancelAppointment(timeslot);
+
+    // ENUM VALUES IN GENDER AND BLOOD TYPE SHOULD BE IN PUBLIC SCOPE
+    private void viewAvailableAppointmentSlots() {
+        //implement method in Patient class
+    }
+
+
+    private void scheduleAppointment() {
+
+        System.out.print("Timeslot:");
+        int timeslot = scanner.nextInt();
+        System.out.print("Select doctor ID:");
+        int doctorId = scanner.nextInt();
+        patientService.scheduleAppointment(doctorId, timeslot);
+    }
+    private void rescheduleAppointment() {
+        System.out.print("Timeslot:");
+        int timeslot = scanner.nextInt();
+        System.out.print("Select doctor ID:");
+        int doctorId = scanner.nextInt();
+        patientService.reScheduleAppointment(doctorId, timeslot);
+    }
+    private void cancelAppointment() {
+        System.out.print("Timeslot:");
+        int timeslot = scanner.nextInt();
+        System.out.print("Select doctor ID:");
+        int doctorId = scanner.nextInt();
+        patientService.cancelAppointment(doctorId, timeslot);
+    }
+
+    private void viewScheduledAppointment() {
+        // detail and status of scheduled appointment
+        System.out.println("Scheduled Appointment:");
+    }
+    private void viewPastAOR() {
+        System.out.println("Past Appointment Outcome Record:");
+    }
 }
 
-private void viewScheduledAppointment(Patient patient) {
-
-}
-private void viewPastAOR(Patient patient) {
-    patient.viewPastAOR(); //
-}
-private void logout(Patient patient) {}
-
-}
 
