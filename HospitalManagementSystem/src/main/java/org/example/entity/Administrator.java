@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Administrator extends User {
+public class Administrator extends Staff {
     private List<User> staff; // List of hospital staff
     private List<String> appointments; // List of appointment details
-    private Map<String, Integer> inventory; // Maps medication.csv name to stock level
+    private Map<String, Integer> inventory; // Maps Medicine_List.csv name to stock level
 
     public Administrator(String username, String password, String contact) {
         super(username, password, "Administrator", contact); // Role is set as "Administrator"
@@ -49,7 +49,7 @@ public class Administrator extends User {
         }
     }
 
-    // Manage inventory: add or update stock level of a medication.csv
+    // Manage inventory: add or update stock level of a Medicine_List.csv
     public void manageInventory(String medication, int stockLevel) {
         inventory.put(medication, stockLevel);
         System.out.println("Inventory updated: " + medication + " stock level set to " + stockLevel);

@@ -1,6 +1,6 @@
 package org.example.entity;
 
-public class Doctor extends User {
+public class Doctor extends Staff {
     private int doctorId;
 
 

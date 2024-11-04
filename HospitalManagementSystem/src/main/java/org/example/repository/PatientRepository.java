@@ -1,16 +1,17 @@
-package org.example.entity;
+package org.example.repository;
+
+import org.example.entity.Patient;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class PatientRepository {
     private List<Patient> patients = new ArrayList<>();
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final String csvPath = "src/main/resources/patientdb.csv";
+    private static final String csvPath = "src/main/resources/Patient_List.csv";
 
     public PatientRepository() {
         this.patients = new ArrayList<>();

@@ -1,8 +1,5 @@
 package org.example.menu;
 
-import org.example.control.AccountService;
-import org.example.entity.User;
-
 import java.util.Scanner;
 
 public class UserMenu {
@@ -32,9 +29,7 @@ public class UserMenu {
         System.out.println("Log in using your id and password");
         System.out.println("Enter your role:\n" +
                 "1. Patient\n" +
-                "2. Doctor\n" +
-                "3. Pharmacist\n" +
-                "4. Admin");
+                "2. Staff");
         int role = scanner.nextInt();
         switch (role) {
             case 1:
