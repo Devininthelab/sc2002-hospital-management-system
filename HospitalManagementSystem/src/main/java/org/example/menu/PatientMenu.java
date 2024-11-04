@@ -1,15 +1,14 @@
 package org.example.menu;
 
-import org.example.control.PatientService;
+
 import org.example.entity.Patient;
-import org.example.entity.PatientRepository;
-import org.example.entity.User;
+import org.example.repository.PatientRepository;
 
 import java.time.LocalDate;
 import java.util.Scanner;
 
 public class PatientMenu implements Menu {
-    private final PatientService patientService = new PatientService();
+
     private final PatientRepository patientRepository = new PatientRepository();
     private Patient patient;
     private Scanner scanner = new Scanner(System.in);

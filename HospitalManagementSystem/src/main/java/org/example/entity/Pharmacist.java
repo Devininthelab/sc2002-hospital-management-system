@@ -3,9 +3,9 @@ package org.example.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Pharmacist extends User {
+public class Pharmacist extends Staff {
     private Map<String, String> prescriptions; // Maps prescription ID to its status
-    private Map<String, Integer> inventory;    // Maps medication.csv name to stock level
+    private Map<String, Integer> inventory;    // Maps Medicine_List.csv name to stock level
 
     public Pharmacist(String username, String password, String contact) {
         super(username, password, "Pharmacist", contact);  // Role is set as "Pharmacist"

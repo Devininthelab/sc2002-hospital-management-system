@@ -1,7 +1,7 @@
 package org.example.menu;
 
 import org.example.entity.Administrator;
-import org.example.entity.User;
+
 import java.util.Scanner;
 
 public class AdministratorMenu implements Menu {
