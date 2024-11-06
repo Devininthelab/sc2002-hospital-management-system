@@ -5,54 +5,59 @@ import java.time.LocalDate;
 public class Appointment {
     // might need to store this somewhere to get persistence
     private static int counter = 0;
-
+    public enum Status {
+        PENDING, CONFIRMED, CANCELLED, COMPLETED
+    }
     private int id;
-    private int doctorId;
-    private int patientId;
+    private String doctorId;
+    private String patientId;
     private LocalDate date;
     private int timeslot;
-    private String status;
+    private Status status;
+    private Prescription prescription;
 
-    public Appointment(int doctorId, int timeslot, LocalDate date) {
-        id = counter++;
+    public Appointment(String doctorId, int timeslot, LocalDate date) {
+        this.id = counter++;
         this.doctorId = doctorId;
-        this.patientId = doctorId;
         this.timeslot = timeslot;
         this.date = date;
-        status = "pending";
+        this.status = Status.PENDING;
     }
 
-    public void reSchedule(int doctorId, int timeslot) {
+    public void reSchedule(String doctorId, int timeslot) {
         this.doctorId = doctorId;
         this.timeslot = timeslot;
     }
 
     // Parameterized constructor
-    public Appointment(int appointmentID, int patientId, int doctorId, LocalDate date,
-                      int timeslot, String status) {
+    public Appointment(int appointmentID, String patientId, String doctorId, LocalDate date,
+                      int timeslot, Status status) {
         this.id = counter++;
         this.patientId = patientId;
         this.doctorId = doctorId;
-        //this.date = date; // Again, consider using a date type
+        this.date = date; // Again, consider using a date type
         this.timeslot = timeslot;
         this.status = status; // Status can be customized during object creation
+        this.prescription = new Prescription(id, patientId, doctorId);
     }
 
     // Getters and Setters
-
-    public int getPatientID() {
+    public int getId() {
+        return id;
+    }
+    public String getPatientID() {
         return patientId;
     }
 
-    public void setPatientID(int patientID) {
+    public void setPatientID(String patientID) {
         this.patientId = patientID;
     }
 
-    public int getDoctorID() {
+    public String getDoctorID() {
         return doctorId;
     }
 
-    public void setDoctorID(int doctorID) {
+    public void setDoctorID(String doctorID) {
         this.doctorId = doctorID;
     }
 
@@ -72,12 +77,18 @@ public class Appointment {
         this.timeslot = timeslot;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+    public Prescription getPrescription() {
+        return prescription;
+    }
+    public void setPrescription(Prescription prescription) {
+        this.prescription = prescription;
     }
 
     @Override
@@ -94,8 +105,8 @@ public class Appointment {
     
     // Method to create an AppointmentOutcomeRecord if status is completed
     public AppointmentOutcomeRecord createOutcomeRecordIfCompleted() {
-        if (status.equalsIgnoreCase("completed")) {
-			AppointmentOutcomeRecord outcomeRecord = new AppointmentOutcomeRecord(id, date, ""); //TODO how to add parameters.
+        if (status == Status.COMPLETED) {
+			AppointmentOutcomeRecord outcomeRecord = new AppointmentOutcomeRecord(id, date, "", prescription); //TODO how to add parameters.
             System.out.println("Outcome record created: " + outcomeRecord);
             return outcomeRecord;
         } else {
