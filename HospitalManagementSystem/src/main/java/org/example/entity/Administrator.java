@@ -1,20 +1,18 @@
 package org.example.entity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Administrator extends Staff {
     private List<User> staff; // List of hospital staff
     private List<String> appointments; // List of appointment details
-    private Map<String, Integer> inventory; // Maps Medicine_List.csv name to stock level
+    private final Inventory inventory; // Manages inventory of medications
 
     public Administrator(String username, String password, String contact) {
         super(username, password, "Administrator", contact); // Role is set as "Administrator"
         this.staff = new ArrayList<>();
         this.appointments = new ArrayList<>();
-        this.inventory = new HashMap<>();
+        this.inventory = new Inventory();
     }
 
     // Add a new staff member
@@ -49,16 +47,44 @@ public class Administrator extends Staff {
         }
     }
 
-    // Manage inventory: add or update stock level of a Medicine_List.csv
-    public void manageInventory(String medication, int stockLevel) {
-        inventory.put(medication, stockLevel);
-        System.out.println("Inventory updated: " + medication + " stock level set to " + stockLevel);
+    // View current inventory of medications
+    public void viewInventory() {
+        inventory.viewInventory();
     }
 
-    // Approve a replenishment request
-    public void approveReplenishment(String medication, int quantity) {
-        int currentStock = inventory.getOrDefault(medication, 0);
-        inventory.put(medication, currentStock + quantity);
-        System.out.println("Replenishment approved for " + medication + ". New stock level: " + (currentStock + quantity));
+    // Manage inventory - add medicine
+    public void addMedicine(String medicineName, int stockLevel, int lowStockLevel) {
+        inventory.addMedicine(medicineName, stockLevel, lowStockLevel);
+    }
+
+    // Manage inventory - remove medicine (implemented within Administrator)
+    public void removeMedicine(String medicineName) {
+        inventory.removeMedicine(medicineName);
+    }
+
+    // Manage inventory - update stock level
+    public void updateStockLevel(String medicineName, int stockLevel) {
+        inventory.updateStockLevel(medicineName, stockLevel);
+    }
+
+    // Manage inventory - update low stock level
+    public void updateLowStockLevel(String medicineName, int lowStockLevel) {
+        inventory.updateLowStockLevel(medicineName, lowStockLevel);
+    }
+
+    // Manage inventory - approve replenishment request
+    public void approveReplenishmentRequest(String medicineName, int quantity) {
+        Medication medication = inventory.getMedicine(medicineName);
+        if (medication != null && medication.isRequested()) {
+            int currentStock = medication.getStockLevel();
+            inventory.updateStockLevel(medicineName, currentStock + quantity);
+            inventory.updateRequest(medicineName, false);
+            System.out.println("Replenishment approved for " + medicineName + ". New stock level: " +
+                    medication.getStockLevel());
+        } else if (medication == null) {
+            System.out.println("Medication not found in inventory.");
+        } else {
+            System.out.println("No pending replenishment request for " + medicineName);
+        }
     }
 }

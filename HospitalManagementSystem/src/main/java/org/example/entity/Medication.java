@@ -1,39 +1,52 @@
 package org.example.entity;
 
 public class Medication {
-    private String name;
+    private final String medicineName;
     private int stockLevel;
     private int lowStockAlert;
+    private boolean requested;
 
-    public Medication(String name, int stockLevel, int lowStockAlert) {
-        this.name = name;
+    public Medication(String medicineName, int stockLevel, int lowStockAlert) {
+        this.medicineName = medicineName;
         this.stockLevel = stockLevel;
         this.lowStockAlert = lowStockAlert;
+        this.requested = false;
     }
     //Getters and Setters
     public String getName() {
-        return name;
+        return medicineName;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
+
     public int getStockLevel() {
         return stockLevel;
-    }
-    public void setStockLevel(int stockLevel) {
-        this.stockLevel = stockLevel;
     }
     public int getLowStockAlert() {
         return lowStockAlert;
     }
+    public void setStockLevel(int stockLevel) {
+        this.stockLevel = stockLevel;
+    }
     public void setLowStockAlert(int lowStockAlert) {
         this.lowStockAlert = lowStockAlert;
     }
+
+    public boolean isRequested() {
+        return requested;
+    }
+
+    public void setRequested(boolean requested) {
+        this.requested = requested;
+    }
+
+
+
+    @Override
     public String toString() {
         return "Medication{" +
-                "name='" + name + '\'' +
+                "medicineName='" + medicineName + '\'' +
                 ", stockLevel=" + stockLevel +
                 ", lowStockAlert=" + lowStockAlert +
+                ", requested=" + requested +
                 '}';
     }
 }

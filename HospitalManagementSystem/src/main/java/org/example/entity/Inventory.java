@@ -1,116 +1,71 @@
 package org.example.entity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Inventory {
-    private class Medication {
-        private final String medicineName;
-        private int stockLevel;
-        private int lowStockLevel;
-
-        public Medication(String medicineName, int stockLevel, int lowStockLevel) {
-            this.medicineName = medicineName;
-            this.stockLevel = stockLevel;
-            this.lowStockLevel = lowStockLevel;
-        }
-
-        public String getMedicineName() {
-            return medicineName;
-        }
-
-        public int getStockLevel() {
-            return stockLevel;
-        }
-
-        public int getLowStockLevel() {
-            return lowStockLevel;
-        }
-
-        public void setStockLevel(int stockLevel) {
-            this.stockLevel = stockLevel;
-        }
-
-        public void setLowStockLevel(int lowStockLevel) {
-            this.lowStockLevel = lowStockLevel;
-        }
-    }
-
     // Inventory attributes
-    private final List<Medication> medications; // List to store all medications
+    private final List<Medication> medications;
 
     // Constructor
     public Inventory() {
         this.medications = new ArrayList<>();
     }
-
-    // Method to add medication to the inventory
-    public void addMedicine(String medicineName, int stockLevel, int lowStockLevel) {
-        Medication medication = new Medication(medicineName, stockLevel, lowStockLevel);
-        medications.add(medication);
-        checkLowStockAlert(medication);
-    }
-
-    // Method to remove medication from the inventory
-    public void removeMedicine(String medicineName) {
-        Iterator<Medication> iterator = medications.iterator();
-        while (iterator.hasNext()) {
-            Medication medication = iterator.next();
-            if (medication.getMedicineName().equals(medicineName)) {
-                iterator.remove();
-                System.out.println("Medication removed successfully.");
-                return;
-            }
-        }
-        System.out.println("Medication not found in inventory.");
-    }
-
-    // Method to update stock level of a medication
-    public void updateStockLevel(String medicineName, int stockLevel) {
-        Medication medication = findMedication(medicineName);
-        if (medication != null) {
-            medication.setStockLevel(stockLevel);
-            checkLowStockAlert(medication);
-        } else {
-            System.out.println("Medication not found.");
-        }
-    }
-
-    // Method to update the low stock level of a medication (for administrators)
-    public void updateLowStockLevel(String medicineName, int lowStockLevel) {
-        Medication medication = findMedication(medicineName);
-        if (medication != null) {
-            medication.setLowStockLevel(lowStockLevel);
-            System.out.println("Low stock level updated for " + medicineName);
-        } else {
-            System.out.println("Medication not found.");
-        }
-    }
-
-    // Method to check if stock level is below low stock level
-    private void checkLowStockAlert(Medication medication) {
-        if (medication.getStockLevel() < medication.getLowStockLevel()) {
-            System.out.println("Low stock alert for " + medication.getMedicineName());
-        }
-    }
-
-    // Private helper method to find a medication by name
-    private Medication findMedication(String medicineName) {
+    // helper method to find medicine by name
+    private Medication findMedicine(String medicineName) {
         for (Medication medication : medications) {
-            if (medication.getMedicineName().equals(medicineName)) {
+            if (medication.getName().equals(medicineName)) {
                 return medication;
             }
         }
         return null;
     }
 
-    // Method to view all medications in the inventory
-    public void viewMedications() {
+    // Public method to access a medication by name
+    public Medication getMedicine(String medicineName) {
+        return findMedicine(medicineName);
+    }
+
+    // View current inventory of medications
+    public void viewInventory() {
+        System.out.println("Current Inventory:");
         for (Medication medication : medications) {
-            System.out.println("Medicine Name: " + medication.getMedicineName() +
-                    "\nStock Level: " + medication.getStockLevel() +
-                    "\nLow Stock Level: " + medication.getLowStockLevel());
+            System.out.println(medication.toString());
+        }
+    }
+
+    // create new medicine to inventory
+    public void createMedicine(String medicineName, int stockLevel, int lowStockLevel) {
+        Medication medication = new Medication(medicineName, stockLevel, lowStockLevel);
+        medications.add(medication);
+    }
+
+    // update stock level of medicine
+    public void updateStockLevel(String medicineName, int newStockLevel) {
+        Medication medication = findMedicine(medicineName);
+        if (medication != null) {
+            medication.setStockLevel(newStockLevel);
+        } else {
+            System.out.println("Medication not found.");
+        }
+    }
+    // update low stock level of medicine
+    public void updateLowStockLevel(String medicineName, int newLowStockLevel) {
+        Medication medication = findMedicine(medicineName);
+        if (medication != null) {
+            medication.setLowStockAlert(newLowStockLevel);
+        } else {
+            System.out.println("Medication not found.");
+        }
+    }
+
+    // Update replenishment request status
+    public void updateRequest(String medicineName, boolean requested) {
+        Medication medication = findMedicine(medicineName);
+        if (medication != null) {
+            medication.setRequested(requested);
+        } else {
+            System.out.println("Medication not found.");
         }
     }
 }
