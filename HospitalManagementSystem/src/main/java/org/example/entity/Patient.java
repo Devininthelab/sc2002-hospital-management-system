@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Patient extends User {
+public class Patient {
     public enum Gender {
         MALE, FEMALE
     }
@@ -17,7 +17,8 @@ public class Patient extends User {
         Opos, Oneg
     }
     // implicit medical record
-    private int patientId;
+    private int id;
+    private String password;
     private String name;
     private LocalDate dateOfBirth;
     private Patient.Gender gender;
@@ -32,10 +33,10 @@ public class Patient extends User {
     // patient hold list of pending appointment and list of completed outcome record
 
 
-    public Patient(int id, String password, int patientId, String name, LocalDate dateOfBirth,
+    public Patient(int id, String password, String name, LocalDate dateOfBirth,
                    Gender gender, String contact, BloodType bloodType) {
-        super(id, password, "patient");
-        this.patientId = patientId;
+        this.id = id;
+        this.password = password;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
@@ -51,6 +52,10 @@ public class Patient extends User {
     // get to send read query to database
     public int getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getName() {
@@ -74,6 +79,10 @@ public class Patient extends User {
         this.name = name;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
@@ -91,7 +100,7 @@ public class Patient extends User {
         for (int i = 0; i < treatments.size(); i++) {
             diagnoses_treatments += diagnoses.get(i) + ": " + treatments.get(i) + "\n";
         }
-        return "Patient id: " + patientId
+        return "Patient id: " + id
                 + "\nName: " + name
                 + "\nDate of birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                 + "\nGender: " + gender
