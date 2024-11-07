@@ -5,13 +5,12 @@ import java.util.Map;
 
 public class Pharmacist extends Staff {
     private Map<String, String> prescriptions; // Maps prescription ID to its status
-    private Map<String, Integer> inventory;    // Maps Medicine_List.csv name to stock level
-
+    private final Inventory inventory;   // Maps Medicine_List.csv name to stock level
     public Pharmacist(String username, String password, String contact) {
         super(username, password, "Pharmacist", contact);  // Role is set as "Pharmacist"
         this.prescriptions = new HashMap<>();
-        this.inventory = new HashMap<>();
-    }
+        this.inventory = new Inventory();
+}
 
     // View appointment outcome record for a specific prescription
     public String viewPrescriptionStatus(String prescriptionId) {
@@ -29,17 +28,23 @@ public class Pharmacist extends Staff {
     }
 
     // View current inventory of medications
-    public void viewInventory() {
-        System.out.println("Medication Inventory:");
-        inventory.forEach((medication, stockLevel) ->
-                System.out.println("Medication: " + medication + ", Stock Level: " + stockLevel)
-        );
+    public void viewInventory(){
+        inventory.viewInventory();
     }
 
     // Submit a replenishment request for low-stock medications
-    public void submitReplenishmentRequest(String medication, int quantity) {
-        int currentStock = inventory.getOrDefault(medication, 0);
-        inventory.put(medication, currentStock + quantity);
-        System.out.println("Replenishment request submitted for " + medication + ", new stock level: " + (currentStock + quantity));
+    public void submitReplenishmentRequest(String medicineName) {
+        Medication medication = inventory.getMedicine(medicineName);
+        if (medication != null) {
+            if (medication.getStockLevel() < medication.getLowStockAlert()) {
+                medication.setRequested(true);
+                System.out.println("Replenishment request for " + medicineName + " submitted.");
+            } else {
+                System.out.println("Stock level for " + medicineName + " is above low-stock alert.");
+            }
+        } else {
+            System.out.println("Medication not found.");
+        }
     }
+    
 }
