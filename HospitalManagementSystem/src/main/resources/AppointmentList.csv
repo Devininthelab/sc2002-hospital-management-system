@@ -1,0 +1,4 @@
+Appointment ID,Patient ID,Doctor ID,Appointment Status,Date and Time,Appointment Outcome Record
+1,P001,D101,Confirmed,2023-11-08 09:00,
+2,P002,D102,Canceled,2023-11-09 10:30,
+3,P003,D103,Completed,2023-11-07 14:00,"Prescribed medication; follow-up in two weeks."

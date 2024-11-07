@@ -1,18 +1,26 @@
 package org.example.entity;
 
 public class Staff {
+    // for gender
+    public enum Gender {
+        MALE, FEMALE, OTHER // You can add more options if needed
+    }
+
+
     private String staffId;
     private String password;
     private String role;
     private String name;
     private int age;
+    private Gender gender;
 
-    public Staff(String staffId, String password, String role, String name, int age) {
+    public Staff(String staffId, String password, String role, String name, int age, Gender gender) {
         this.staffId = staffId;
         this.password = password;
         this.role = role;
         this.name = name;
         this.age = age;
+        this.gender = gender;
     }
 
     public String getStaffId() {
@@ -62,6 +70,14 @@ public class Staff {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public String toString() {
