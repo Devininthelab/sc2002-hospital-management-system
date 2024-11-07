@@ -11,16 +11,21 @@ public class Appointment {
     private int id;
     private String doctorId;
     private String patientId;
-    private LocalDate date;
+    private String date;
     private int timeslot;
     private Status status;
-    private Prescription prescription;
-
-    public Appointment(String doctorId, int timeslot, LocalDate date) {
+    private AppointmentOutcomeRecord outcome = null;
+    //AVOID DUPLICATE ID WHEN WORKING WITH DATABASE AND COUNTER
+    public static void setCounter(int highestId) {
+        counter = highestId + 1;
+    }
+    // Constructor for creating an appointment (patient perspective)
+    public Appointment(String patientId, String doctorId, String date, int timeslot) {
         this.id = counter++;
+        this.patientId = patientId;
         this.doctorId = doctorId;
-        this.timeslot = timeslot;
         this.date = date;
+        this.timeslot = timeslot;
         this.status = Status.PENDING;
     }
 
@@ -30,17 +35,16 @@ public class Appointment {
     }
 
     // Parameterized constructor
-    public Appointment(int appointmentID, String patientId, String doctorId, LocalDate date,
-                      int timeslot, Status status) {
-        this.id = counter++;
+    // Constructor when retrieving from database
+    public Appointment(int id, String patientId, String doctorId, String date, int timeslot, Status status) {
+        this.id = id;
         this.patientId = patientId;
         this.doctorId = doctorId;
-        this.date = date; // Again, consider using a date type
+        this.date = date;
         this.timeslot = timeslot;
-        this.status = status; // Status can be customized during object creation
-        this.prescription = new Prescription(id, patientId, doctorId);
+        this.status = status;
+        //this.prescription = new Prescription(id, patientId, doctorId)
     }
-
     // Getters and Setters
     public int getId() {
         return id;
@@ -61,11 +65,11 @@ public class Appointment {
         this.doctorId = doctorID;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -84,11 +88,11 @@ public class Appointment {
     public void setStatus(Status status) {
         this.status = status;
     }
-    public Prescription getPrescription() {
-        return prescription;
+    public AppointmentOutcomeRecord getAppointmentOutcomeRecord() {
+        return outcome;
     }
-    public void setPrescription(Prescription prescription) {
-        this.prescription = prescription;
+    public void setAppointmentOutcomeRecord(AppointmentOutcomeRecord outcome) {
+        this.outcome = outcome;
     }
 
     @Override
@@ -106,7 +110,9 @@ public class Appointment {
     // Method to create an AppointmentOutcomeRecord if status is completed
     public AppointmentOutcomeRecord createOutcomeRecordIfCompleted() {
         if (status == Status.COMPLETED) {
-			AppointmentOutcomeRecord outcomeRecord = new AppointmentOutcomeRecord(id, date, "", prescription); //TODO how to add parameters.
+			AppointmentOutcomeRecord outcomeRecord = new AppointmentOutcomeRecord(id, date, timeslot);
+            this.outcome = outcomeRecord;
+            //TODO how to add parameters.
             System.out.println("Outcome record created: " + outcomeRecord);
             return outcomeRecord;
         } else {
@@ -114,6 +120,4 @@ public class Appointment {
             return null;
         }
     }
-
-
 }

@@ -1,6 +1,6 @@
 package org.example.repository;
 
-import org.example.entity.Medication;
+import org.example.entity.Medicine;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,10 +8,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MedicationRepository {
-    private Map<String, Medication> medicationMap = new HashMap<>();
+public class MedicineRepository {
+    private Map<String, Medicine> medicineMap = new HashMap<>();
+    private String filePath;
 
-    public void loadMedications(String filePath) {
+    public MedicineRepository(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void loadMedicinesFromCSV(String filePath) {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             while ((line = br.readLine()) != null) {
@@ -20,33 +25,39 @@ public class MedicationRepository {
                     String name = values[0].trim();
                     int stockLevel = Integer.parseInt(values[1].trim());
                     int lowStockAlert = Integer.parseInt(values[2].trim());
-                    Medication medication = new Medication(name, stockLevel, lowStockAlert);
-                    medicationMap.put(name, medication);
+                    Medicine medication = new Medicine(name, stockLevel, lowStockAlert);
+                    medicineMap.put(name, medication);
                 }
             }
         } catch (IOException e) {
             System.out.println("Error reading CSV file: " + e.getMessage());
         }
     }
-
-    public Medication getMedication(String name) {
-        return medicationMap.get(name);
+    public void saveMedicineToCSV(Medicine medicine, String filePath) {
+        //IMPLEMENT LATER
+    }
+    public void addMedicine(Medicine medicine) {
+        medicineMap.put(medicine.getName(), medicine);
+        saveMedicineToCSV(medicine, filePath);
+    }
+    public Medicine getMedication(String name) {
+        return medicineMap.get(name);
     }
 
     public void updateStockLevel(String name, int newStockLevel) {
-        Medication medication = medicationMap.get(name);
-        if (medication != null) {
-            medication.setStockLevel(newStockLevel);
+        Medicine medicine = medicineMap.get(name);
+        if (medicine != null) {
+            medicine.setStockLevel(newStockLevel);
         }
     }
     public void updateLowStockAlert(String name, int newLowStockAlert) {
-        Medication medication = medicationMap.get(name);
-        if (medication != null) {
-            medication.setLowStockAlert(newLowStockAlert);
+        Medicine medicine = medicineMap.get(name);
+        if (medicine != null) {
+            medicine.setLowStockAlert(newLowStockAlert);
         }
     }
 
     public void displayMedications() {
-        medicationMap.values().forEach(System.out::println);
+        medicineMap.values().forEach(System.out::println);
     }
 }

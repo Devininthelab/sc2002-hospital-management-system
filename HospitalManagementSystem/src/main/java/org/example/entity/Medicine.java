@@ -1,11 +1,11 @@
 package org.example.entity;
 
-public class Medication {
+public class Medicine {
     private String name;
     private int stockLevel;
     private int lowStockAlert;
 
-    public Medication(String name, int stockLevel, int lowStockAlert) {
+    public Medicine(String name, int stockLevel, int lowStockAlert) {
         this.name = name;
         this.stockLevel = stockLevel;
         this.lowStockAlert = lowStockAlert;
