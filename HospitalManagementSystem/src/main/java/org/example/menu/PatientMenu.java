@@ -32,7 +32,7 @@ public class PatientMenu implements Menu {
             System.out.print("Please enter your password: ");
             String password = scanner.nextLine();
 
-            patient = patientService.getPatientById(id);
+            patient = patientRepository.getPatientById(id);
             if (patient == null) {
                 System.out.println("Patient not found. Try again");
                 continue;
