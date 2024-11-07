@@ -11,20 +11,21 @@ public class AppointmentOutcomeRecord {
     private int appointmentId;
     private LocalDate date;
     private ArrayList<String> typeOfService;
-    private HashMap<String, String> prescribedMedication;
+    private HashMap<String, Prescription.Status> prescribedMedication;
     private String consultationNotes;
+
     //private boolean followUpAction; what's this for
 
-    public AppointmentOutcomeRecord(int appointmentId, LocalDate date, String consultationNotes) {
+    public AppointmentOutcomeRecord(int appointmentId, LocalDate date, String consultationNotes, Prescription prescription) {
         this.appointmentId = appointmentId;
         this.date = date;
-        this.prescribedMedication = new HashMap<>();
+        this.prescribedMedication = new HashMap<>(prescription.getMedications());
         this.consultationNotes = consultationNotes;
         this.typeOfService = new ArrayList<>();
     }
 
     // For doctor
-    public HashMap<String, String> getPrescribedMedication() {
+    public HashMap<String, Prescription.Status> getPrescribedMedication() {
         return prescribedMedication;
     }
 
@@ -37,7 +38,7 @@ public class AppointmentOutcomeRecord {
     }
 
     // for pharmacist
-    public boolean updateMedicationStatus(String medication, String status) {
+    public boolean updateMedicationStatus(String medication, Prescription.Status status) {
         if (prescribedMedication.containsKey(medication)) {
             this.prescribedMedication.put(medication, status);
             return true;
@@ -45,7 +46,7 @@ public class AppointmentOutcomeRecord {
         return false;
     }
 
-
+    // SHOULD WE ADD A MEDICATION_REPO CLASS?
     public void updateMedicationStatusFromInput() { //Update status of Medicine_List.csv
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the index of the Medicine_List.csv status to update (0 to " + (medicationStatus.size() - 1) + "): ");
