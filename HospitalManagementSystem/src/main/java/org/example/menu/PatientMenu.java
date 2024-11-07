@@ -154,6 +154,8 @@ public class PatientMenu implements Menu {
         int timeslot = scanner.nextInt();
         System.out.print("Select doctor ID:");
         int doctorId = scanner.nextInt();
+        patientRepository.scheduleAppointment();
+
         patientService.scheduleAppointment(doctorId, timeslot);
     }
     private void rescheduleAppointment() {

@@ -38,7 +38,7 @@ public class DoctorMenu implements Menu {
 
             doctor = doctorRepository.getDoctorById(id);
             if (doctor == null) {
-                System.out.println("Patient not found. Try again");
+                System.out.println("Doctor not found. Try again");
                 continue;
             }
 
@@ -104,10 +104,15 @@ public class DoctorMenu implements Menu {
     }
 
     public void updatePatientMedicalRecords() {
+        System.out.println("Enter patient's id: ");
+        int patientId = scanner.nextInt();
+        Patient patient = patientRepository.getPatientById(patientId);
+        System.out.println("Add new ");
 
     }
 
     public void viewPersonalSchedule() {
+        doctor.setSchedule(doctorRepository.loadDoctorSchedule(doctor.getId()));
 
     }
 
