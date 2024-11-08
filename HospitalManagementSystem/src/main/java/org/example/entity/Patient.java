@@ -17,7 +17,7 @@ public class Patient {
         Opos, Oneg
     }
     // implicit medical record
-    private int id;
+    private String id;
     private String password;
     private String name;
     private LocalDate dateOfBirth;
@@ -33,7 +33,7 @@ public class Patient {
     // patient hold list of pending appointment and list of completed outcome record
 
 
-    public Patient(int id, String password, String name, LocalDate dateOfBirth,
+    public Patient(String id, String password, String name, LocalDate dateOfBirth,
                    Gender gender, String contact, BloodType bloodType) {
         this.id = id;
         this.password = password;
@@ -49,10 +49,8 @@ public class Patient {
         this.appointmentOutcomes = new ArrayList<>();
     }
 
-    // get to send read query to database
-    public int getId() {
-        return id;
-    }
+
+    public String getId() { return id; }
 
     public String getPassword() {
         return password;
@@ -75,6 +73,8 @@ public class Patient {
     }
 
     // set to send update query to database
+    private void setId(String id) { this.id = id; }
+
     public void setName(String name) {
         this.name = name;
     }
