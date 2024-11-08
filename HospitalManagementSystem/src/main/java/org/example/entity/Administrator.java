@@ -74,7 +74,7 @@ public class Administrator extends Staff {
 
     // Manage inventory - approve replenishment request
     public void approveReplenishmentRequest(String medicineName, int quantity) {
-        Medication medication = inventory.getMedicine(medicineName);
+        Medicine medication = inventory.getMedicine(medicineName);
         if (medication != null && medication.isRequested()) {
             int currentStock = medication.getStockLevel();
             inventory.updateStockLevel(medicineName, currentStock + quantity);
