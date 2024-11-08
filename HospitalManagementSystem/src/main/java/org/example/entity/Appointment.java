@@ -12,7 +12,7 @@ public class Appointment {
     private String doctorId;
     private String patientId;
     private String date;
-    private int timeslot;
+    private int timeslot; // 8 hours a day, 6 days a week = 8 x 6 = 48 timeslots ranging from 0 to 47
     private Status status;
     private AppointmentOutcomeRecord outcome = null;
     //AVOID DUPLICATE ID WHEN WORKING WITH DATABASE AND COUNTER

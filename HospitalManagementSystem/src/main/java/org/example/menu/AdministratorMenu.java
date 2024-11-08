@@ -1,10 +1,23 @@
 package org.example.menu;
 
 import org.example.entity.Administrator;
+import org.example.repository.AppointmentRepository;
+import org.example.repository.MedicineRepository;
+import org.example.repository.StaffRepository;
 
 import java.util.Scanner;
 
 public class AdministratorMenu implements Menu {
+    private Administrator administrator; // current addministrator interacting with the menu
+    private Scanner scanner = new Scanner(System.in);
+    private final StaffRepository staffRepository = new StaffRepository();
+    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
+    private final MedicineRepository medicineRepository = new MedicineRepository();
+
+
+
+
+
     public void displayMenu() {
         System.out.println("=====ADMINISTRATOR MENU=====");
         System.out.println("1. View and Manage Hospital Staff\n2. View Appointment Details\n3. View and Manage Medication Inventory\n4. Approve Replenishment Requests\n5. Logout");

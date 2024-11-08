@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This is also can be know as InventoryRepository. This class is responsible for managing the stock of medicines in the clinic.
+ */
 public class MedicineRepository {
     private Map<String, Medicine> medicineMap = new HashMap<>();
     private String filePath;

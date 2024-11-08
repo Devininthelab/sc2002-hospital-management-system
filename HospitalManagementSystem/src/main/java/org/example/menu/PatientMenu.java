@@ -21,7 +21,10 @@ public class PatientMenu implements Menu {
     private Patient patient;
     private Scanner scanner = new Scanner(System.in);
 
-
+    /**
+     * Start the user menu, should run first when the program starts
+     * Patient should log in first before accessing the menu
+     */
     public void start() {
         Scanner sc = new Scanner(System.in);
         login();
@@ -34,13 +37,15 @@ public class PatientMenu implements Menu {
         } while (choice != 9);  // Exit when logout is chosen
     }
 
+    /**
+     * Log in to the system, a patient should enter their id and password UNTIL they are correct
+     */
     public void login() {
         while (true) {
             System.out.print("Please enter your user id: ");
             int id = scanner.nextInt();
             System.out.print("Please enter your password: ");
             String password = scanner.nextLine();
-
             patient = patientRepository.getPatientById(id);
             if (patient == null) {
                 System.out.println("Patient not found. Try again");
@@ -56,7 +61,7 @@ public class PatientMenu implements Menu {
         }
     }
 
-    // patient menu will be passed in an id
+
     public void displayMenu() {
         System.out.println("=====PATIENT MENU=====");
         System.out.println("1. Change password" +
@@ -98,7 +103,7 @@ public class PatientMenu implements Menu {
                 viewScheduledAppointment();
                 break;
             case 9:
-                viewPastAOR();
+                viewPastAppointmentOutcomeRecord();
                 break;
             case 10:
                 System.out.println("Logging out...");
@@ -151,7 +156,12 @@ public class PatientMenu implements Menu {
         while (choice >= 1 && choice <= 8);
     }
 
-    // ENUM VALUES IN GENDER AND BLOOD TYPE SHOULD BE IN PUBLIC SCOPE
+    /**
+     * View available appointment slots for a doctor
+     * Patient should select a doctor to view their available appointment slots
+     * (Use doctorRepository to interact with the doctor data)
+     * Then prinit the doctor's schedule
+     */
     private void viewAvailableAppointmentSlots() {
         //implement method in Patient class
         List<Doctor> doctors = doctorRepository.getAllDoctors();
@@ -173,7 +183,11 @@ public class PatientMenu implements Menu {
         }
     }
 
-
+    /**
+     * Schedule an appointment with a doctor
+     * Patient should select a doctor, date, and timeslot to schedule an appointment
+     * (Use appointmentRepository to interact with the appointment data)
+     */
     private void scheduleAppointment() {
         System.out.print("Date(Monday to Sunday): ");
         String date = scanner.nextLine();
@@ -188,6 +202,7 @@ public class PatientMenu implements Menu {
             System.out.println("Something went wrong. Try again");
         }
     }
+
     private void rescheduleAppointment() {
         System.out.print("Select appointment ID:");
         int id = scanner.nextInt();
@@ -195,8 +210,9 @@ public class PatientMenu implements Menu {
         String date = scanner.nextLine();
         System.out.print("Timeslot:");
         int timeslot = scanner.nextInt();
-        appointmentRepository.reScheduleAppointment(id, date, timeslot);
+        appointmentRepository.rescheduleAppointment(id, date, timeslot);
     }
+
     private void cancelAppointment() {
         System.out.print("Select doctor ID:");
         int doctorId = scanner.nextInt();
@@ -215,7 +231,9 @@ public class PatientMenu implements Menu {
         }
         System.out.println("Scheduled Appointment:");
     }
-    private void viewPastAOR() {
+
+
+    private void viewPastAppointmentOutcomeRecord() {
         System.out.println("Past Appointment Outcome Record:");
     }
 }
