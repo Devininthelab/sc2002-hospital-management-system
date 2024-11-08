@@ -1,10 +1,13 @@
 package org.example.menu;
 
+import org.example.entity.Medicine;
 import org.example.entity.Pharmacist;
+import org.example.entity.AppointmentOutcomeRecord
 import org.example.repository.AppointmentOutcomeRecordRepository;
 import org.example.repository.MedicineRepository;
 import org.example.repository.StaffRepository;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class PharmacistMenu implements Menu {
@@ -61,8 +64,11 @@ public class PharmacistMenu implements Menu {
         }
     }
 
-    public void handleChoice(int choice, User user) {
-        Pharmacist pharmacist = (Pharmacist) user;  // Cast User to Pharmacist
+    /**
+     * redirect to view functions with corresponding responsibility
+     * @param choice
+     */
+    public void handleChoice(int choice) {
         switch (choice) {
             case 1:
                 viewAppointmentOutcomeRecord(pharmacist);
@@ -84,5 +90,32 @@ public class PharmacistMenu implements Menu {
         }
     }
 
+    /**
+     * Display all appointment outcome record with a pending prescription
+     * @param pharmacist
+     */
+    public void viewAppointmentOutcomeRecord(Pharmacist pharmacist) {
+        List<AppointmentOutcomeRecord> records = appointmentOutcomeRecordRepository.getAllPendingRecords();
+        for (AppointmentOutcomeRecord record : records) {
+            System.out.println(record);
+        }
+    }
 
+    public void updatePrescriptionStatus(Pharmacist pharmacist) {
+        System.out.print("Enter appointment id: ");
+        int appointmentId = scanner.nextInt();
+        System.out.println(appointmentOutcomeRecordRepository.getRecordById(appointmentId));
+        System.out.print("Enter new prescription status: ");
+        String status = scanner.nextLine();
+        appointmentOutcomeRecordRepository.updatePrescriptionStatus(appointmentId, status);
+    }
+
+    public void viewMedicationInventory(Pharmacist pharmacist) {
+        List<Medicine> medicines = medicineRepository.getMedicines();
+        medicines.forEach(System.out::println);
+    }
+
+    public void submitReplenishmentRequest(Pharmacist pharmacist) {
+        
+    }
 }

@@ -62,7 +62,11 @@ public class MedicineRepository {
         }
     }
 
+    public List<Medicine> getMedicines() {
+        return medicines;
+    }
+
     public void displayMedications() {
-        medicineMap.values().forEach(System.out::println);
+
     }
 }
