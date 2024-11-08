@@ -1,11 +1,13 @@
 package org.example.menu;
 
+import org.example.entity.Appointment;
 import org.example.entity.Doctor;
 import org.example.entity.Patient;
 import org.example.repository.DoctorRepository;
 import org.example.repository.PatientRepository;
 import org.example.repository.StaffRepository;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class DoctorMenu implements Menu {
@@ -14,6 +16,7 @@ public class DoctorMenu implements Menu {
     private final PatientRepository patientRepository = new PatientRepository();
     private final StaffRepository staffRepository = new StaffRepository();
     private DoctorRepository doctorRepository = new DoctorRepository();
+    private AppointmentRepository appointmentRepository = new AppointmentRepository();
 
 
     public void displayMenu() {
@@ -112,23 +115,46 @@ public class DoctorMenu implements Menu {
     }
 
     public void viewPersonalSchedule() {
-        doctor.setSchedule(doctorRepository.loadDoctorSchedule(doctor.getId()));
-
+        String[][] schedule = doctor.getSchedule();
+        System.out.printf("| %-8s | %-9s | %-9s | %-9s | %-9s | %-9s | %-9s |%n", "", "MONDAY", "TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY");
+        for (int i = 0; i < 20; i++) {
+            System.out.printf("| %-8s | %-9s | %-9s | %-9s | %-9s | %-9s | %-9s |%n", schedule[i][0], schedule[i][1], schedule[i][2], schedule[i][3], schedule[i][4], schedule[i][5], schedule[i][6]);
+        }
     }
 
     public void setAvailabilityForAppointments() {
-
+        System.out.println("Choose a date and timeslot:");
+        System.out.print("Date (Monday to Sunday): ");
+        String date = scanner.nextLine();
+        System.out.print("Timeslot: ");
+        int timeslot = scanner.nextInt();
+        System.out.print("New availability status (Available, Busy, Booked): ");
+        String availability = scanner.nextLine();
+        doctorRepository.updateDoctorSchedule(doctor.getId(), date, timeslot, availability);
     }
 
     public void acceptOrDeclineAppointmentRequests() {
+        List<Appointment> appointments = doctor.getAppointments();
+        System.out.printf("You have %d appointment requests%n", appointments.size());
 
+        System.out.printf("| | | | | | ");
     }
 
     public void viewUpcomingAppointments() {
-
+        for (Appointment appointment : doctor.getAppointments()) {
+            if (appointment.getStatus().equals("Accepted")) {
+                System.out.println(appointment);
+            }
+        }
     }
 
     public void recordAppointmentOutcome() {
+        System.out.print("Enter appointment's id: ");
+        String appointmentId = scanner.nextLine();
+        System.out.print("Enter date: ");
+        String date = scanner.nextLine();
+        System.out.print("Enter type of service: ");
+        String service = scanner.nextLine();
 
     }
 

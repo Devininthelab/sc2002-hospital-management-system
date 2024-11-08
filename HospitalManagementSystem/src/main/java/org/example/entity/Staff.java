@@ -21,6 +21,10 @@ public class Staff {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getRole() {
         return role;
     }

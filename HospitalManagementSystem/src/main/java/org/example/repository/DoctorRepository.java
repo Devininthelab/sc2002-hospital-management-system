@@ -13,7 +13,7 @@ import java.util.List;
 public class DoctorRepository {
     private List<Doctor> doctors;
     private final StaffRepository staffRepository = new StaffRepository();
-    public DoctorRepository(int id) {
+    public DoctorRepository() {
         doctors = staffRepository.getAllDoctors();
         for (Doctor doctor : doctors) {
             doctor.setSchedule(loadDoctorSchedule(doctor.getId()));
@@ -39,15 +39,17 @@ public class DoctorRepository {
     }
 
     public Doctor getDoctorById(String id) {
-        for (Doctor doctor : doctors) {
-            if (doctor.getId().equals(id)) {
-                return doctor;
-            }
-        }
-        return null;
+        return doctors.stream()
+                .filter(doc -> doc.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
-    public void updateDoctorSchedule(String doctorId, int date, int time, String newStatus) {
+    public List<Doctor> getAllDoctors() {
+        return doctors;
+    }
+
+    public void updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
         Doctor doctor = getDoctorById(doctorId);
         doctor.getSchedule()[date][time] = newStatus;
         saveDoctorSchedule(doctorId);
