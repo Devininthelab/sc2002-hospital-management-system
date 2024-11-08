@@ -12,7 +12,7 @@ import java.util.List;
 
 public class AppointmentRepository {
     private List<Appointment> appointments = new ArrayList<>();
-    private String filePath;
+    private static final String filePath = "src/main/resources/Appointment.csv";
     //AVOID DUPLICATE ID WHEN WORKING WITH DATABASE AND COUNTER
     private void setHighestAppointmentId() {
         int highestId = 0;
@@ -24,8 +24,7 @@ public class AppointmentRepository {
         Appointment.setCounter(highestId);  // Set counter to the next available ID
     }
 
-    public AppointmentRepository(String filePath) {
-        this.filePath = filePath;
+    public AppointmentRepository() {
         loadAppointmentsFromCSV();
         setHighestAppointmentId();
     }
