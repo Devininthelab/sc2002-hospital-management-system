@@ -1,14 +1,16 @@
 package org.example.entity;
 
+import org.example.utils.Gender;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Administrator extends Staff {
-    private List<User> staff; // List of hospital staff
+    private List<Staff> staffs; // List of hospital staff
     private List<String> appointments; // List of appointment details
     private final Inventory inventory; // Manages inventory of medications
 
-    public Administrator(String username, String password, String contact) {
+    public Administrator(String id, String name, String role, Gender gender, int age, String password) {
         super(username, password, "Administrator", contact); // Role is set as "Administrator"
         this.staff = new ArrayList<>();
         this.appointments = new ArrayList<>();
@@ -22,7 +24,7 @@ public class Administrator extends Staff {
     }
 
     // Update existing staff details
-    public void updateStaff(int staffId, String newUsername, String newContact) {
+    public void updateStaff(String staffId, String newUsername, String newContact) {
         for (User member : staff) {
             if (member.getId() == staffId) {
                 member.updateProfile(newUsername, newContact);

@@ -43,7 +43,7 @@ public class PatientMenu implements Menu {
     public void login() {
         while (true) {
             System.out.print("Please enter your user id: ");
-            int id = scanner.nextInt();
+            String id = scanner.nextLine();
             System.out.print("Please enter your password: ");
             String password = scanner.nextLine();
             patient = patientRepository.getPatientById(id);

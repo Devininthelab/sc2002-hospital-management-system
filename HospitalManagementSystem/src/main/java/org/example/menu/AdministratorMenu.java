@@ -15,9 +15,6 @@ public class AdministratorMenu implements Menu {
     private final MedicineRepository medicineRepository = new MedicineRepository();
 
 
-
-
-
     public void displayMenu() {
         System.out.println("=====ADMINISTRATOR MENU=====");
         System.out.println("1. View and Manage Hospital Staff\n2. View Appointment Details\n3. View and Manage Medication Inventory\n4. Approve Replenishment Requests\n5. Logout");
