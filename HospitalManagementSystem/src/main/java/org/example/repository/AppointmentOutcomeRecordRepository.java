@@ -13,7 +13,6 @@ public class AppointmentOutcomeRecordRepository {
     private static final String filePath = "src/main/resources/AppointmentOutcomeRecord.csv";
 
     public AppointmentOutcomeRecordRepository() {
-
         loadRecordsFromCSV();
     }
 
@@ -117,7 +116,7 @@ public class AppointmentOutcomeRecordRepository {
         return sb.toString();
     }
 
-    public List<AppointmentOutcomeRecord> getRecords() {
+    public List<AppointmentOutcomeRecord> getAllPendingRecords() {
         return records;
     }
 
@@ -134,6 +133,11 @@ public class AppointmentOutcomeRecordRepository {
             }
         }
         return null; // If not found
+    }
+
+    public void updatePrescriptionStatus(int id, String status) {
+        AppointmentOutcomeRecord record = getRecordById(id);
+        record
     }
 
 }

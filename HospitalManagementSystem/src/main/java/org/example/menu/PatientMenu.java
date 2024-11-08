@@ -39,6 +39,7 @@ public class PatientMenu implements Menu {
 
     /**
      * Log in to the system, a patient should enter their id and password UNTIL they are correct
+     * Patient state is stored in this phase
      */
     public void login() {
         while (true) {
