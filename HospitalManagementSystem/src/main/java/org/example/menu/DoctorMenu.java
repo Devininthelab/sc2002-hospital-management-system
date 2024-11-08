@@ -33,6 +33,18 @@ public class DoctorMenu implements Menu {
                 "9. Logout");
     }
 
+    public void start() {
+        //Doctor doctor = (Doctor) user;  // Cast User to Doctor
+        login();
+        int choice;
+        do {
+            displayMenu();
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            handleChoice(choice);
+        } while (choice != 8);  // Exit when logout is chosen
+    }
+
     public void login() {
         while (true) {
             System.out.print("Please enter your user id: ");
@@ -87,17 +99,7 @@ public class DoctorMenu implements Menu {
         }
     }
 
-    public void start() {
-        //Doctor doctor = (Doctor) user;  // Cast User to Doctor
-        Scanner sc = new Scanner(System.in);
-        int choice;
-        do {
-            displayMenu();
-            System.out.print("Enter your choice: ");
-            choice = sc.nextInt();
-            handleChoice(choice);
-        } while (choice != 8);  // Exit when logout is chosen
-    }
+
 
     public void viewPatientMedicalRecords() {
         System.out.print("Enter patient's id: ");
