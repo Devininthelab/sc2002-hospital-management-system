@@ -1,17 +1,26 @@
 package org.example.menu;
 
 
+import org.example.entity.Appointment;
+import org.example.entity.Doctor;
 import org.example.entity.Patient;
+import org.example.repository.AppointmentRepository;
+import org.example.repository.DoctorRepository;
 import org.example.repository.PatientRepository;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 public class PatientMenu implements Menu {
 
     private final PatientRepository patientRepository = new PatientRepository();
+    private final DoctorRepository doctorRepository = new DoctorRepository();
+    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
     private Patient patient;
     private Scanner scanner = new Scanner(System.in);
+
 
     public void start() {
         Scanner sc = new Scanner(System.in);
@@ -145,34 +154,65 @@ public class PatientMenu implements Menu {
     // ENUM VALUES IN GENDER AND BLOOD TYPE SHOULD BE IN PUBLIC SCOPE
     private void viewAvailableAppointmentSlots() {
         //implement method in Patient class
+        List<Doctor> doctors = doctorRepository.getAllDoctors();
+        System.out.println("------------------------------------");
+        System.out.println("|           Doctor List            |");
+        System.out.println("------------------------------------");
+        System.out.printf("| %-8s | %-30s |%n", "ID", "NAME");
+        for (Doctor doctor : doctors) {
+            System.out.printf("| %-8s | %-30s |%n", doctor.getId(), doctor.getName());
+        }
+        // print doctor's name, and id
+        System.out.print("Select a doctor, provide doctor's id: ");
+        String doctorId = scanner.nextLine();
+        Doctor doctor = doctorRepository.getDoctorById(doctorId);
+        String[][] schedule = doctor.getSchedule();
+        System.out.printf("| %-8s | %-9s | %-9s | %-9s | %-9s | %-9s | %-9s |%n", "", "MONDAY", "TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY");
+        for (int i = 0; i < 20; i++) {
+            System.out.printf("| %-8s | %-9s | %-9s | %-9s | %-9s | %-9s | %-9s |%n", schedule[i][0], schedule[i][1], schedule[i][2], schedule[i][3], schedule[i][4], schedule[i][5], schedule[i][6]);
+        }
     }
 
 
     private void scheduleAppointment() {
-
+        System.out.print("Date(Monday to Sunday): ");
+        String date = scanner.nextLine();
         System.out.print("Timeslot:");
         int timeslot = scanner.nextInt();
         System.out.print("Select doctor ID:");
-        int doctorId = scanner.nextInt();
-        patientService.scheduleAppointment(doctorId, timeslot);
+        String doctorId = scanner.nextLine();
+        boolean success = appointmentRepository.addAppointment(patient.getId(), doctorId, date, timeslot);
+        if (success) {
+            System.out.println("Appointment scheduled");
+        } else {
+            System.out.println("Something went wrong. Try again");
+        }
     }
     private void rescheduleAppointment() {
+        System.out.print("Select appointment ID:");
+        int id = scanner.nextInt();
+        System.out.print("Date(Monday to Sunday): ");
+        String date = scanner.nextLine();
         System.out.print("Timeslot:");
         int timeslot = scanner.nextInt();
-        System.out.print("Select doctor ID:");
-        int doctorId = scanner.nextInt();
-        patientService.reScheduleAppointment(doctorId, timeslot);
+        appointmentRepository.reScheduleAppointment(id, date, timeslot);
     }
     private void cancelAppointment() {
-        System.out.print("Timeslot:");
-        int timeslot = scanner.nextInt();
         System.out.print("Select doctor ID:");
         int doctorId = scanner.nextInt();
-        patientService.cancelAppointment(doctorId, timeslot);
+        System.out.print("Date(Monday to Sunday): ");
+        String date = scanner.nextLine();
+        System.out.print("Timeslot:");
+        int timeslot = scanner.nextInt();
+        appointmentRepository.cancelAppointment(doctorId, date, timeslot);
     }
 
     private void viewScheduledAppointment() {
         // detail and status of scheduled appointment
+        List<Appointment> appointments = patientRepository.getScheduledAppointments();
+        for (Appointment appointment : appointments) {
+            System.out.println(appointment);
+        }
         System.out.println("Scheduled Appointment:");
     }
     private void viewPastAOR() {
