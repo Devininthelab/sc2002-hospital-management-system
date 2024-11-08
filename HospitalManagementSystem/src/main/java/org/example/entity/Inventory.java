@@ -74,7 +74,7 @@ public class Inventory {
     }
 
     // Method to view all medications in the inventory
-    public void viewMedications() {
+    public void viewMedicines() {
         for (Medicine medicine : medicines) {
             System.out.println("Medicine Name: " + medicine.getName() +
                     "\nStock Level: " + medicine.getStockLevel() +
