@@ -3,6 +3,7 @@ package org.example.menu;
 import org.example.entity.Appointment;
 import org.example.entity.Doctor;
 import org.example.entity.Patient;
+import org.example.repository.AppointmentRepository;
 import org.example.repository.DoctorRepository;
 import org.example.repository.PatientRepository;
 import org.example.repository.StaffRepository;
