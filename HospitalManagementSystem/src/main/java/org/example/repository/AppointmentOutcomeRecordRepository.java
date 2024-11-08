@@ -84,6 +84,32 @@ public class AppointmentOutcomeRecordRepository {
     }
     public void saveRecordToCSV(AppointmentOutcomeRecord record) {
         //IMPLEMENT LATER
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) { //handles the logic of saving a single AppointmentOutcomeRecord to a CSV file.
+            // Convert record fields into a CSV string
+            String csvLine = recordToCSV(record);
+        
+        // Write the new record to the CSV file
+            writer.write(csvLine);
+            writer.newLine(); // Ensure the next record goes on a new line
+        }catch (IOException e) {
+            System.out.println("Error saving record to CSV: " + e.getMessage());
+        }
+    }
+    private String recordToCSV(AppointmentOutcomeRecord record) { //converts the fields of a single AppointmentOutcomeRecord object into a CSV line format (a string).
+    // Prepare a StringBuilder to build the CSV line
+    StringBuilder sb = new StringBuilder();
+    
+    // Append fields to the CSV line (separate fields with commas)
+        sb.append(record.getAppointmentId()).append(",")
+          .append(record.getDate()).append(",")
+          .append(record.getTimeslot()).append(",")
+          .append(String.join(";", record.getTypeOfService())).append(",")
+          .append(convertPrescriptionToCSVStyle(record.getPrescription())).append(",")
+          .append(record.getConsultationNotes());
+    
+        return sb.toString();
+    }
+    
     }
     public List<AppointmentOutcomeRecord> getRecords() {
         return records;
