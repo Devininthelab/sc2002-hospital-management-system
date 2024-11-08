@@ -84,6 +84,9 @@ public class Inventory {
         }
         return null;
     }
+    public Medicine getMedicine(String medicineName) {
+        return findMedicine(medicineName);
+    }
 
     // Method to view all medications in the inventory
     public void viewMedicines() {
