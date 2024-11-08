@@ -1,58 +1,50 @@
+
+
+
 package org.example.entity;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.example.repository.MedicationRepository;
+
+import java.util.List;
 
 public class Prescription {
-    public enum Status {
-        PENDING, DISPENSED;
-    }
     private int prescriptionId;
-    private String patientId;
-    private String doctorId;
-    private Map<String, Status> medications; // Maps medication name to status
+    private List<Medication> medications;
+    private final MedicationRepository repo = new MedicationRepository();
 
-    public Prescription(int prescriptionId, String patientId, String doctorId) {
+    // Constructor
+    public Prescription(int prescriptionId) {
         this.prescriptionId = prescriptionId;
-        this.patientId = patientId;
-        this.doctorId = doctorId;
-        this.medications = new HashMap<>();
+        repo.loadMedicationsFromCSV();
+        this.medications = repo.getMedicationsById(prescriptionId);
     }
 
     public int getPrescriptionId() {
         return prescriptionId;
     }
 
-    public String getPatientId() {
-        return patientId;
-    }
-
-    public String getDoctorId() {
-        return doctorId;
-    }
-
-    public void addMedication(String medicationName, Status status) {
-        medications.put(medicationName, status);
-    }
-
-    public Map<String, Status> getMedications() {
+    public List<Medication> getMedications() {
         return medications;
     }
 
-    public void updateMedicationStatus(String medicationName, Status status) {
-        if (medications.containsKey(medicationName)) {
-            medications.put(medicationName, status);
-        } else {
-            System.out.println("Medication not found.");
+    public void addMedication(Medication medication) {
+        medications.add(medication);
+    }
+
+    public void updateMedicationStatus(String medicationName, Medication.Status status) {
+        for (Medication medication : medications) {
+            if (medication.getName().equals(medicationName)) {
+                medication.setStatus(status);
+                return;
+            }
         }
+        System.out.println("Medication not found.");
     }
 
     @Override
     public String toString() {
         return "Prescription{" +
                 "prescriptionId=" + prescriptionId +
-                ", patientId=" + patientId +
-                ", doctorId=" + doctorId +
                 ", medications=" + medications +
                 '}';
     }
