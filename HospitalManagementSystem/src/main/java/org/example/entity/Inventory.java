@@ -12,14 +12,26 @@ public class Inventory {
     public Inventory() {
         this.medicines = new ArrayList<>();
     }
-
+    public void createMedicine(String medicineName, int stockLevel, int lowStockLevel) {
+        Medicine medicine = new Medicine(medicineName, stockLevel, lowStockLevel);
+        medicines.add(medicine);
+    }
     // Method to add medication to the inventory
     public void addMedicine(String medicineName, int stockLevel, int lowStockLevel) {
         Medicine medicine = new Medicine(medicineName, stockLevel, lowStockLevel);
         medicines.add(medicine);
         checkLowStockAlert(medicine);
     }
-
+    // Method to update replenishment request status
+    public void updateRequest(String medicineName, boolean requested) {
+        Medicine medicine = findMedicine(medicineName);
+        if (medicine != null) {
+            medicine.setRequested(requested);
+            System.out.println("Request status updated for " + medicineName + " to " + requested);
+        } else {
+            System.out.println("Medicine not found.");
+        }
+    }
     // Method to remove medication from the inventory
     public void removeMedicine(String medicineName) {
         Iterator<Medicine> iterator = medicines.iterator();
