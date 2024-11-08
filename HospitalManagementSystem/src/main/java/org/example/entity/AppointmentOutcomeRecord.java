@@ -17,7 +17,8 @@ public class AppointmentOutcomeRecord {
     private String consultationNotes;
 
     //private boolean followUpAction; what's this for
-
+// to indicate whether the patient needs to schedule another appt
+    
     /*public AppointmentOutcomeRecord(int appointmentId, String date, int timeslot, String consultationNotes, Prescription prescription) {
         this.appointmentId = appointmentId;
         this.date = date;
