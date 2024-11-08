@@ -12,8 +12,18 @@ import java.util.List;
 
 public class AppointmentRepository {
     private List<Appointment> appointments = new ArrayList<>();
-    private String filePath;
-    //AVOID DUPLICATE ID WHEN WORKING WITH DATABASE AND COUNTER
+    private final String filePath = "src/main/resources/Appointment_List.csv";
+
+
+    public AppointmentRepository() {
+        loadAppointmentsFromCSV();
+        setHighestAppointmentId();
+    }
+
+    /**
+     * Auto increment the appointment ID counter to the highest ID in the list
+     * meaning that the next appointment ID will be unique
+     */
     private void setHighestAppointmentId() {
         int highestId = 0;
         for (Appointment appointment : appointments) {
@@ -24,11 +34,6 @@ public class AppointmentRepository {
         Appointment.setCounter(highestId);  // Set counter to the next available ID
     }
 
-    public AppointmentRepository(String filePath) {
-        this.filePath = filePath;
-        loadAppointmentsFromCSV();
-        setHighestAppointmentId();
-    }
 
     public void loadAppointmentsFromCSV() {
         String line;

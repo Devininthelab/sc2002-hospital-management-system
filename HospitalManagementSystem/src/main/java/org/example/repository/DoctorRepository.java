@@ -2,7 +2,7 @@ package org.example.repository;
 
 
 import org.example.entity.Doctor;
-
+import org.example.utils.DateToNumber;
 import java.io.*;
 import java.util.List;
 
@@ -20,6 +20,12 @@ public class DoctorRepository {
         }
     }
 
+    /**
+     * Load the doctor's schedule from the database
+     * Each doctor has a separate file named {doctorId}_availability.csv
+     * @param doctorId the doctor's ID
+     * @return a 2D array of the doctor's schedule
+     */
     public String[][] loadDoctorSchedule(String doctorId) {
         Doctor doctor = getDoctorById(doctorId);
         String[][] schedule = new String[20][7];
@@ -49,9 +55,18 @@ public class DoctorRepository {
         return doctors;
     }
 
+    /**
+     * Update the doctor's schedule in the database.
+     * Use function dateToNumber to convert date to number (read the function's documentation)
+     * @param doctorId the doctor's ID
+     * @param date the date of the appointment
+     * @param time the time slot of the appointment
+     * @param newStatus the new status of the appointment (e.g. "Available", "Booked", "Unavailable")
+     */
     public void updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
         Doctor doctor = getDoctorById(doctorId);
-        doctor.getSchedule()[date][time] = newStatus;
+        int number = DateToNumber.dateToNumber(date);
+        doctor.getSchedule()[number][time] = newStatus;
         saveDoctorSchedule(doctorId);
     }
 

@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is also can be know as InventoryRepository. This class is responsible for managing the stock of medicines in the clinic.
+ */
 public class MedicineRepository {
     private List<Medicine> medicines;
     private final String filePath = "src/main/resources/Medicine_List.csv";
