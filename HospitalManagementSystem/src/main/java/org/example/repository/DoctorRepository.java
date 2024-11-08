@@ -2,7 +2,7 @@ package org.example.repository;
 
 
 import org.example.entity.Doctor;
-
+import org.example.utils.DateToNumber;
 import java.io.*;
 import java.util.List;
 
@@ -13,13 +13,19 @@ import java.util.List;
 public class DoctorRepository {
     private List<Doctor> doctors;
     private final StaffRepository staffRepository = new StaffRepository();
-    public DoctorRepository(int id) {
+    public DoctorRepository() {
         doctors = staffRepository.getAllDoctors();
         for (Doctor doctor : doctors) {
             doctor.setSchedule(loadDoctorSchedule(doctor.getId()));
         }
     }
 
+    /**
+     * Load the doctor's schedule from the database
+     * Each doctor has a separate file named {doctorId}_availability.csv
+     * @param doctorId the doctor's ID
+     * @return a 2D array of the doctor's schedule
+     */
     public String[][] loadDoctorSchedule(String doctorId) {
         Doctor doctor = getDoctorById(doctorId);
         String[][] schedule = new String[20][7];
@@ -39,17 +45,28 @@ public class DoctorRepository {
     }
 
     public Doctor getDoctorById(String id) {
-        for (Doctor doctor : doctors) {
-            if (doctor.getId().equals(id)) {
-                return doctor;
-            }
-        }
-        return null;
+        return doctors.stream()
+                .filter(doc -> doc.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
-    public void updateDoctorSchedule(String doctorId, int date, int time, String newStatus) {
+    public List<Doctor> getAllDoctors() {
+        return doctors;
+    }
+
+    /**
+     * Update the doctor's schedule in the database.
+     * Use function dateToNumber to convert date to number (read the function's documentation)
+     * @param doctorId the doctor's ID
+     * @param date the date of the appointment
+     * @param time the time slot of the appointment
+     * @param newStatus the new status of the appointment (e.g. "Available", "Booked", "Unavailable")
+     */
+    public void updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
         Doctor doctor = getDoctorById(doctorId);
-        doctor.getSchedule()[date][time] = newStatus;
+        int number = DateToNumber.dateToNumber(date);
+        doctor.getSchedule()[number][time] = newStatus;
         saveDoctorSchedule(doctorId);
     }
 
