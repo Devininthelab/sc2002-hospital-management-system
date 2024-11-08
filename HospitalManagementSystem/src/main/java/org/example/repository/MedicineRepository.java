@@ -5,15 +5,20 @@ import org.example.entity.Medicine;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+/**
+ * This is also can be know as InventoryRepository. This class is responsible for managing the stock of medicines in the clinic.
+ */
 public class MedicineRepository {
-    private Map<String, Medicine> medicineMap = new HashMap<>();
-    private String filePath;
+    private List<Medicine> medicines;
+    private final String filePath = "src/main/resources/Medicine_List.csv";
 
-    public MedicineRepository(String filePath) {
-        this.filePath = filePath;
+    public MedicineRepository() {
+        medicines = new ArrayList<>();
     }
 
     public void loadMedicinesFromCSV(String filePath) {
@@ -26,7 +31,7 @@ public class MedicineRepository {
                     int stockLevel = Integer.parseInt(values[1].trim());
                     int lowStockAlert = Integer.parseInt(values[2].trim());
                     Medicine medication = new Medicine(name, stockLevel, lowStockAlert);
-                    medicineMap.put(name, medication);
+                    medicines.add(medication);
                 }
             }
         } catch (IOException e) {

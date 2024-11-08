@@ -2,6 +2,7 @@ package org.example.repository;
 
 import org.example.entity.Doctor;
 import org.example.entity.Patient;
+import org.example.entity.Pharmacist;
 import org.example.entity.Staff;
 
 import java.io.*;
@@ -52,5 +53,19 @@ public class StaffRepository {
             }
         }
         return doctors;
+    }
+
+    /**
+     * Query the staff list for pharmacist with the matching id
+     * @param id
+     * @return
+     */
+    public Pharmacist getPharmacistById(String id) {
+        for (Staff staff : staffList) {
+            if (staff.getRole().equals("pharmacist") && staff.getId().equals(id)) {
+                return (Pharmacist) staff;
+            }
+        }
+        return null;
     }
 }

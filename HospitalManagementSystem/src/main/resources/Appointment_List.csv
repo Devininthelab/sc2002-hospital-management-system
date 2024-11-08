@@ -1,0 +1,4 @@
+ID,doctorId,patientId,date,timeslot,status
+1,DO101,PA101,Monday,10-11,CONFIRMED
+2,DO102,PA102,Monday,11-12,CANCELLED
+3,DO103,PA103,Monday,12-13,COMPLETED
