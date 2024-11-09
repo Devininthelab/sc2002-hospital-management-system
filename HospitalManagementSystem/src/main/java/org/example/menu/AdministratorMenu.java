@@ -73,9 +73,9 @@ public class AdministratorMenu implements Menu {
                 "12. Set Low Stock Alert Level\n" +
                 "13. View Low Stock Inventory Items\n" +
                 "14. Approve Replenishment Request\n" +
-                "15. Generate Low Stock Report\n" +
-                "16. Logout");
+                "15. Logout");
     }
+
 
 
     /**
@@ -127,12 +127,126 @@ public class AdministratorMenu implements Menu {
                 approveReplenishmentRequest();
                 break;
             case 15:
-                generateLowStockReport();
-                break;
-            case 16:
                 System.out.println("Logging out...");
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
         }
+    }
+
+
+    /**
+     * Add a new staff member to the system
+     */
+    public void addStaff(){
+        System.out.println("Enter the staff member's name: ");
+        String name = scanner.nextLine();
+        System.out.println("Enter the staff member's id: ");
+        String id = scanner.nextLine();
+        System.out.println("Enter the staff member's password: ");
+        String password = scanner.nextLine();
+        System.out.println("Enter the staff member's role: ");
+        String role = scanner.nextLine();
+        Staff staff = new Staff(id, name, password, role);
+        staffRepository.addStaff(staff);
+    }
+
+    /**
+     * Update an existing staff member's information
+     */
+    public void updateStaff() {
+    }
+
+
+    /**
+     * Remove a staff member from the system
+     */
+    public void removeStaff() {
+
+    }
+
+    /**
+     * View the list of staff members
+     */
+    public void viewStaffList() {
+
+    }
+
+
+    /**
+     * View the list of scheduled appointments
+     */
+    public void viewScheduledAppointments() {
+
+    }
+
+    /**
+     * Update the status of an appointment
+     */
+    public void updateAppointmentStatus() {
+
+    }
+
+    /**
+     * Record the outcome of an appointment
+     */
+    public void recordAppointmentOutcome() {
+
+    }
+
+
+    /**
+     * View the outcome record of an appointment
+     */
+    public void viewAppointmentOutcomeRecord() {
+
+    }
+
+    /**
+     * Add a new medication to the inventory
+     */
+    public void addMedicationToInventory() {
+
+    }
+
+    /**
+     * Update the stock levels of a medication in the inventory
+     */
+    public void updateInventoryStockLevels() {
+
+    }
+
+    /**
+     * Remove a medication from the inventory
+     */
+    public void removeMedicationFromInventory() {
+
+    }
+
+
+    /**
+     * Set the low stock alert level for a medication
+     */
+    public void setLowStockAlertLevel() {
+
+    }
+
+
+    /**
+     * View the list of medications with low stock
+     */
+    public void viewLowStockInventoryItems() {
+
+    }
+
+
+    /**
+     * Approve a replenishment request for a medication
+     */
+    public void approveReplenishmentRequest() {
+
+    }
+
+
+
 }
