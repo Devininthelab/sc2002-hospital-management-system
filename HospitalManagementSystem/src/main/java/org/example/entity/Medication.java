@@ -29,6 +29,9 @@ public class Medication {
         }
     }
 
+    /**
+     * id is the same as appointment id and appointment outcome record id
+     */
     private int id;
     private String name;
     private int quantity;

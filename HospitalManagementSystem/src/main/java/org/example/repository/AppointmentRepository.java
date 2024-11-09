@@ -10,6 +10,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * AppointmentRepository
+ * Depend on
+ * - DoctorRepo to update their availability
+ */
 public class AppointmentRepository {
     private List<Appointment> appointments = new ArrayList<>();
     private static int counter = 0;
@@ -64,20 +69,21 @@ public class AppointmentRepository {
         }
     }
 
-    public void saveAppointmentToCSV(Appointment appointment, String filePath) {
-        //IMPLEMENT LATER
+    public void saveAppointmentToCSV() {
+        //TODO: rewrite entire csv
     }
 
     public List<Appointment> getAppointments() {
         return appointments;
     }
 
-    public void addAppointment(String patientId, String doctorId, String date, int timeslot) {
+    public boolean addAppointment(String patientId, String doctorId, String date, int timeslot) {
         // Use counter to assign a unique ID
         Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot);
         appointments.add(appointment);
-        saveAppointmentToCSV(appointment, filePath);
+        saveAppointmentToCSV();
         System.out.println("Appointment added: " + appointment);
+        return true;
     }
 
     public Appointment getAppointmentById(int id) {
@@ -89,7 +95,21 @@ public class AppointmentRepository {
         return null;  // Return null if appointment not found
     }
 
-    public void displayAppointments() {
-        appointments.forEach(System.out::println);
+    /**
+     * Once accepted, an appointment cannot be rescheduled
+     * @param id
+     * @param date
+     * @param timeslot
+     */
+    public void rescheduleAppointment(int id, String doctorId, String date, int timeslot) {
+        Appointment appointment = getAppointmentById(id);
+        //TODO: change date and timeslot
+        appointment.setDate(date);
+        appointment.setTimeslot(timeslot);
+        appointment.setDoctorID(doctorId);
+        saveAppointmentToCSV();
     }
+
+
+
 }

@@ -2,9 +2,7 @@ package org.example.repository;
 
 import org.example.entity.Medication;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +30,16 @@ public class MedicationRepository {
             System.out.println("Error reading CSV file: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error parsing medication data: " + e.getMessage());
+        }
+    }
+
+    public void saveMedicationsToCSV() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+            for (Medication medication : medications) {
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

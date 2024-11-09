@@ -114,7 +114,7 @@ public class DoctorMenu implements Menu {
         int patientId = scanner.nextInt();
         Patient patient = patientRepository.getPatientById(patientId);
         System.out.println("Add new ");
-
+        //TODO: implement update medical record field in PatientRepository
     }
 
     public void viewPersonalSchedule() {
@@ -141,6 +141,7 @@ public class DoctorMenu implements Menu {
         System.out.printf("You have %d appointment requests%n", appointments.size());
 
         System.out.printf("| | | | | | ");
+        //TODO: how to differentiate requested from accepted appointed
     }
 
     public void viewUpcomingAppointments() {
@@ -164,7 +165,8 @@ public class DoctorMenu implements Menu {
         String date = scanner.nextLine();
         System.out.print("Enter type of service: ");
         String service = scanner.nextLine();
-        // enter list of
+        //TODO: prompt for list of prescription
+        //TODO: appointment outcome record repository to save new outcome record
     }
 
     public void logout() {

@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import org.example.entity.Appointment;
 import org.example.entity.Patient;
 
 import java.io.*;
@@ -23,7 +24,7 @@ public class PatientRepository {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                int id = Integer.parseInt(values[0].trim());
+                String id =values[0].trim();
                 String password = values[1].trim();
                 String name = values[2].trim();
                 LocalDate dateOfBirth = LocalDate.parse(values[3].trim(), DATE_FORMATTER);
@@ -34,6 +35,7 @@ public class PatientRepository {
                 this.patients.add(new Patient(id, password, name, dateOfBirth, gender, contact, bloodType));
                 // load diagnoses and treatment
                 // load appointments
+
                 // load appointments outcome records
             }
         } catch (IOException e) {
@@ -45,7 +47,7 @@ public class PatientRepository {
 
     public Patient getPatientById(int id) {
         for (Patient patient : patients) {
-            if (patient.getId() == id) {
+            if (patient.getId().equals(id)) {
                 return patient;
             }
         }
@@ -96,5 +98,9 @@ public class PatientRepository {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Appointment> getScheduledAppointments() {
+        List<Appointment> appointments = new ArrayList<>();
     }
 }

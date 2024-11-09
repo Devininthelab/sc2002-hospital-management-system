@@ -207,6 +207,11 @@ public class PatientMenu implements Menu {
     private void rescheduleAppointment() {
         System.out.print("Select appointment ID:");
         int id = scanner.nextInt();
+        System.out.println("Change doctor? empty to keep same");
+        String doctorId = scanner.nextLine();
+        if (doctorId.isEmpty()) {
+            doctorId = appointmentRepository.getAppointmentById(id).getDoctorID();
+        }
         System.out.print("Date(Monday to Sunday): ");
         String date = scanner.nextLine();
         System.out.print("Timeslot:");

@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This is also can be know as InventoryRepository. This class is responsible for managing the stock of medicines in the clinic.
+ * This can also can be interpreted as InventoryRepository.
+ * This class is responsible for managing the stock of medicines in the clinic.
  */
 public class MedicineRepository {
     private List<Medicine> medicines;
@@ -45,10 +46,20 @@ public class MedicineRepository {
         }
     }
 
+    /**
+     * Used by admin to add new medicine
+     * @param medicine
+     */
     public void addMedicine(Medicine medicine) {
         medicines.add(medicine);
         saveMedicineToCSV(medicine, filePath);
     }
+
+    /**
+     * Used by
+     * @param name
+     * @return
+     */
     public Medicine getMedication(String name) {
         for (Medicine medicine : medicines) {
             if (medicine.getName().equalsIgnoreCase(name)) {
