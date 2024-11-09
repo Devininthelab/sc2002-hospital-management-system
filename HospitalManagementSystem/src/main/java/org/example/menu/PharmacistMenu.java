@@ -71,19 +71,19 @@ public class PharmacistMenu implements Menu {
     public void handleChoice(int choice) {
         switch (choice) {
             case 1:
-                viewAppointmentOutcomeRecord(pharmacist);
+                viewAppointmentOutcomeRecord();
                 break;
             case 2:
-                updatePrescriptionStatus(pharmacist);
+                updatePrescriptionStatus();
                 break;
             case 3:
-                viewMedicationInventory(pharmacist);
+                viewMedicationInventory();
                 break;
             case 4:
-                submitReplenishmentRequest(pharmacist);
+                submitReplenishmentRequest();
                 break;
             case 5:
-                logout(pharmacist);
+                System.out.println("Logging out...");
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
@@ -92,16 +92,20 @@ public class PharmacistMenu implements Menu {
 
     /**
      * Display all appointment outcome record with a pending prescription
-     * @param pharmacist
      */
-    public void viewAppointmentOutcomeRecord(Pharmacist pharmacist) {
+    public void viewAppointmentOutcomeRecord() {
         List<AppointmentOutcomeRecord> records = appointmentOutcomeRecordRepository.getAllPendingRecords();
         for (AppointmentOutcomeRecord record : records) {
             System.out.println(record);
         }
     }
 
-    public void updatePrescriptionStatus(Pharmacist pharmacist) {
+    /**
+     * Update prescription status in appointment outcome record
+     * Prompt pharmacist for record id, and print out the detail of that id
+     * Then prompt for new status, save through appointment outcome record
+     */
+    public void updatePrescriptionStatus() {
         System.out.print("Enter appointment id: ");
         int appointmentId = scanner.nextInt();
         System.out.println(appointmentOutcomeRecordRepository.getRecordById(appointmentId));
@@ -110,12 +114,14 @@ public class PharmacistMenu implements Menu {
         appointmentOutcomeRecordRepository.updatePrescriptionStatus(appointmentId, status);
     }
 
-    public void viewMedicationInventory(Pharmacist pharmacist) {
+
+    public void viewMedicationInventory() {
+        System.out.println("Medication inventory");
         List<Medicine> medicines = medicineRepository.getMedicines();
         medicines.forEach(System.out::println);
     }
 
-    public void submitReplenishmentRequest(Pharmacist pharmacist) {
+    public void submitReplenishmentRequest() {
         
     }
 }

@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class DoctorMenu implements Menu {
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
     private Doctor doctor;
     private final PatientRepository patientRepository = new PatientRepository();
     private final StaffRepository staffRepository = new StaffRepository();
-    private DoctorRepository doctorRepository = new DoctorRepository();
+    private final DoctorRepository doctorRepository = new DoctorRepository();
     private AppointmentRepository appointmentRepository = new AppointmentRepository();
 
 
@@ -34,13 +34,13 @@ public class DoctorMenu implements Menu {
     }
 
     public void start() {
-        //Doctor doctor = (Doctor) user;  // Cast User to Doctor
+
         login();
         int choice;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = sc.nextInt();
+            choice = scanner.nextInt();
             handleChoice(choice);
         } while (choice != 8);  // Exit when logout is chosen
     }
@@ -151,14 +151,20 @@ public class DoctorMenu implements Menu {
         }
     }
 
+    /**
+     * Used to mark an appointment as completed. Doctor must fill out the outcome record
+     * before it can be marked as completed
+     * Input: Appointment id, date of completion, type of service
+     */
     public void recordAppointmentOutcome() {
+        System.out.println("Mark appointment as completed");
         System.out.print("Enter appointment's id: ");
         String appointmentId = scanner.nextLine();
         System.out.print("Enter date: ");
         String date = scanner.nextLine();
         System.out.print("Enter type of service: ");
         String service = scanner.nextLine();
-
+        // enter list of
     }
 
     public void logout() {
