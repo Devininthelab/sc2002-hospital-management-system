@@ -26,7 +26,7 @@ public class DoctorMenu implements Menu {
                 "2. Update Patient Medical Records\n" +
                 "3. View Personal Schedule\n" +
                 "4. Set Availability for Appointments\n" +
-                "5. Accept or Decline Appointment Requests\n" +
+                "5. Manage Appointment Requests\n" +
                 "6. View Upcoming Appointments\n" +
                 "7. Record Appointment Outcome\n" +
                 "8. Change password" +
@@ -83,7 +83,7 @@ public class DoctorMenu implements Menu {
                 setAvailabilityForAppointments();
                 break;
             case 5:
-                acceptOrDeclineAppointmentRequests();
+                manageAppointmentRequests();
                 break;
             case 6:
                 viewUpcomingAppointments();
@@ -143,7 +143,7 @@ public class DoctorMenu implements Menu {
         doctorRepository.updateDoctorSchedule(doctor.getId(), date, timeslot, availability);
     }
 
-    public void acceptOrDeclineAppointmentRequests() {
+    public void manageAppointmentRequests() {
         List<Appointment> appointments = doctor.getAppointments();
         System.out.printf("You have %d appointment requests%n", appointments.size());
 
