@@ -139,16 +139,21 @@ public class AdministratorMenu implements Menu {
      * Add a new staff member to the system
      */
     public void addStaff(){
-        System.out.println("Enter the staff member's name: ");
-        String name = scanner.nextLine();
         System.out.println("Enter the staff member's id: ");
         String id = scanner.nextLine();
+        System.out.println("Enter the staff member's name: ");
+        String name = scanner.nextLine();
         System.out.println("Enter the staff member's password: ");
         String password = scanner.nextLine();
         System.out.println("Enter the staff member's role: ");
         String role = scanner.nextLine();
-        Staff staff = new Staff(id, name, password, role);
-        staffRepository.addStaff(staff);
+        System.out.println("Enter the staff member's gender: ");
+        String gender = scanner.nextLine();
+        System.out.println("Enter the staff member's age: ");
+        int age = scanner.nextInt();
+
+        Staff staff = new Staff(id, name, role, gender, age, password);
+        staffRepository.addStaffRepo(staff);
     }
 
     /**

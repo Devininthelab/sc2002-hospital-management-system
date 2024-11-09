@@ -2,7 +2,7 @@ package org.example.menu;
 
 import org.example.entity.Medicine;
 import org.example.entity.Pharmacist;
-import org.example.entity.AppointmentOutcomeRecord
+import org.example.entity.AppointmentOutcomeRecord;
 import org.example.repository.AppointmentOutcomeRecordRepository;
 import org.example.repository.MedicineRepository;
 import org.example.repository.StaffRepository;

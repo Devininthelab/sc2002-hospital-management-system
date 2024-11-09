@@ -1,6 +1,8 @@
 package org.example.entity;
 
-import org.example.utils.Gender;
+import org.example.repository.AppointmentRepository;
+import org.example.repository.MedicineRepository;
+import org.example.repository.StaffRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,17 +10,31 @@ import java.util.List;
 public class Administrator extends Staff {
     private List<Staff> staffs; // List of hospital staff
     private List<String> appointments; // List of appointment details
-    private final Inventory inventory; // Manages inventory of medications
+    private AppointmentRepository appointmentRepository; // Appointment repository for accessing appointment data
+    private StaffRepository staffRepository; // Staff repository for accessing staff data
+    private MedicineRepository medicineRepository;// Medicine repository for accessing medicine data
 
-    public Administrator(String id, String name, String role, Gender gender, int age, String password) {
-        super(username, password, "Administrator", contact); // Role is set as "Administrator"
-        this.staff = new ArrayList<>();
-        this.appointments = new ArrayList<>();
-        this.inventory = new Inventory();
+    public Administrator(String id, String name, String gender, int age, String password){
+        super(id, name, "Administrator", gender, age, password);
+        staffs = loadStaffsFromCSV();
+        appointmentRepository = new AppointmentRepository();
+        staffRepository = new StaffRepository();
+        medicineRepository = new MedicineRepository();
     }
 
-    // Add a new staff member
-    public void addStaff(User newStaff) {
+    /**
+     * Load staff data from CSV file
+     * @return List of staff members
+     */
+    private List<Staff> loadStaffsFromCSV() {
+        List<Staff> staffList = new ArrayList<>();
+
+        return staffList;
+    }
+
+
+
+    public void addStaff(Staff newStaff) {
         staff.add(newStaff);
         System.out.println("Staff member " + newStaff.getUsername() + " added successfully.");
     }
@@ -49,10 +65,6 @@ public class Administrator extends Staff {
         }
     }
 
-    // View current inventory of medications
-    public void viewInventory() {
-        inventory.viewInventory();
-    }
 
     // Manage inventory - add medicine
     public void addMedicine(String medicineName, int stockLevel, int lowStockLevel) {
