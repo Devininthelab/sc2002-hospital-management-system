@@ -4,23 +4,13 @@ public class Medicine {
     private String name;
     private int stockLevel;
     private int lowStockAlert;
-    private boolean requested;  // New field for tracking replenishment requests
 
     public Medicine(String name, int stockLevel, int lowStockAlert) {
         this.name = name;
         this.stockLevel = stockLevel;
         this.lowStockAlert = lowStockAlert;
-        this.requested = false;  // Default to false
     }
 
-    // Getter and Setter for requested
-    public boolean isRequested() {
-        return requested;
-    }
-
-    public void setRequested(boolean requested) {
-        this.requested = requested;
-    }
 
     //Getters and Setters
     public String getName() {
@@ -46,7 +36,6 @@ public class Medicine {
                 "medicineName='" + name + '\'' +
                 ", stockLevel=" + stockLevel +
                 ", lowStockAlert=" + lowStockAlert +
-                ", requested=" + requested +
                 '}';
     }
 }

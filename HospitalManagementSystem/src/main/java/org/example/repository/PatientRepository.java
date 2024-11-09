@@ -1,15 +1,20 @@
 package org.example.repository;
 
+import org.example.entity.Appointment;
+import org.example.entity.AppointmentOutcomeRecord;
 import org.example.entity.Patient;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PatientRepository {
     private List<Patient> patients;
+    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
+    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final String csvPath = "src/main/resources/Patient_List.csv";
 
@@ -30,11 +35,16 @@ public class PatientRepository {
                 String gender = values[4].trim();
                 String contact = values[5].trim();
                 String bloodType = values[6].trim().toUpperCase();
-
-                this.patients.add(new Patient(id, password, name, dateOfBirth, gender, contact, bloodType));
+                Patient patient = new Patient(id, password, name, dateOfBirth, gender, contact, bloodType);
                 // load diagnoses and treatment
-                // load appointments
-                // load appointments outcome records
+                List<String> diagnoses = Arrays.asList(values[7].trim().split(";"));
+                List<String> treatment = Arrays.asList(values[8].trim().split(";"));
+                List<String> prescription = Arrays.asList(values[9].trim().split(";"));
+                //IMPORTANT: no need to load appointment and outcome record here
+                patient.setDiagnoses(diagnoses);
+                patient.setTreatments(treatment);
+                patient.setPrescriptions(prescription);
+                patients.add(patient);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,15 +4,12 @@ import java.time.LocalDate;
 
 public class Appointment {
     // might need to store this somewhere to get persistence
-    public enum Status {
-        PENDING, CONFIRMED, CANCELLED, COMPLETED
-    }
     private int id;
     private String doctorId;
     private String patientId;
     private String date;
     private int timeslot; // 8 hours a day, 6 days a week = 8 x 6 = 48 timeslots ranging from 0 to 47
-    private Status status;
+    private String status;
     private AppointmentOutcomeRecord outcome = null;
     //AVOID DUPLICATE ID WHEN WORKING WITH DATABASE AND COUNTER
     // Constructor for creating an appointment (patient perspective)
@@ -22,11 +19,12 @@ public class Appointment {
         this.doctorId = doctorId;
         this.date = date;
         this.timeslot = timeslot;
-        this.status = Status.PENDING;
+        this.status = "PENDING";
     }
 
-    public void reSchedule(String doctorId, int timeslot) {
+    public void reschedule(String doctorId, String date, int timeslot) {
         this.doctorId = doctorId;
+        this.date = date;
         this.timeslot = timeslot;
     }
 
@@ -76,11 +74,11 @@ public class Appointment {
         this.timeslot = timeslot;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
     public AppointmentOutcomeRecord getAppointmentOutcomeRecord() {
@@ -103,11 +101,11 @@ public class Appointment {
     }
     
     // Method to create an AppointmentOutcomeRecord if status is completed
+    //TODO: improve this
     public AppointmentOutcomeRecord createOutcomeRecordIfCompleted() {
-        if (status == Status.COMPLETED) {
+        if (status == "COMPLETED") {
 			AppointmentOutcomeRecord outcomeRecord = new AppointmentOutcomeRecord(id, date, timeslot);
             this.outcome = outcomeRecord;
-            //TODO how to add parameters.
             System.out.println("Outcome record created: " + outcomeRecord);
             return outcomeRecord;
         } else {

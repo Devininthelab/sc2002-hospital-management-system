@@ -15,12 +15,7 @@ public class Patient {
     private String bloodType;
     private List<String> diagnoses;
     private List<String> treatments;
-
-    // appointment management
-    private List<Appointment> appointments;
-    private List<AppointmentOutcomeRecord> appointmentOutcomes;
-    // patient hold list of pending appointment and list of completed outcome record
-
+    private List<String> prescriptions;
 
     public Patient(String id, String password, String name, LocalDate dateOfBirth,
                    String gender, String contact, String bloodType) {
@@ -34,8 +29,7 @@ public class Patient {
         // to be populated when reading database
         this.diagnoses = new ArrayList<>();
         this.treatments = new ArrayList<>();
-        this.appointments = new ArrayList<>();
-        this.appointmentOutcomes = new ArrayList<>();
+
     }
 
 
@@ -82,6 +76,18 @@ public class Patient {
 
     public void setBloodType(String bloodType) {
         this.bloodType = bloodType;
+    }
+
+    public void setDiagnoses(List<String> diagnoses) {
+        this.diagnoses = diagnoses;
+    }
+
+    public void setTreatments(List<String> treatments) {
+        this.treatments = treatments;
+    }
+
+    public void setPrescriptions(List<String> prescriptions) {
+        this.prescriptions = prescriptions;
     }
 
     public String medicalRecord() {
