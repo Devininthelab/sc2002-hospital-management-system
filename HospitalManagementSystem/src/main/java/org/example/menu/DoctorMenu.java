@@ -34,7 +34,6 @@ public class DoctorMenu implements Menu {
     }
 
     public void start() {
-        //Doctor doctor = (Doctor) user;  // Cast User to Doctor
         login();
         int choice;
         do {
