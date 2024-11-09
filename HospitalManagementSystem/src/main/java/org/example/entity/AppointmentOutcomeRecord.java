@@ -1,12 +1,9 @@
 package org.example.entity;
 
-import org.example.repository.MedicationRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentOutcomeRecord {
-    private final MedicationRepository repo = new MedicationRepository();
     private int appointmentId;
     private int timeslot;
     private String date;
@@ -21,8 +18,7 @@ public class AppointmentOutcomeRecord {
         this.timeslot = timeslot;
         this.typeOfService = new ArrayList<>();
         this.consultationNotes = "";
-        repo.loadMedicationsFromCSV();
-        this.medications = repo.getMedicationsById(appointmentId);
+        this.medications = new ArrayList<>(); // Initialize empty, to be populated by the repository
     }
 
     public AppointmentOutcomeRecord(int appointmentId, String date, int timeslot, String consultationNotes) {
@@ -31,8 +27,7 @@ public class AppointmentOutcomeRecord {
         this.timeslot = timeslot;
         this.consultationNotes = consultationNotes;
         this.typeOfService = new ArrayList<>();
-        repo.loadMedicationsFromCSV();
-        this.medications = repo.getMedicationsById(appointmentId);
+        this.medications = new ArrayList<>() ;
     }
 
     public AppointmentOutcomeRecord(int appointmentId, String date, int timeslot, String consultationNotes, ArrayList<String> typeOfService) {
@@ -41,12 +36,14 @@ public class AppointmentOutcomeRecord {
         this.timeslot = timeslot;
         this.consultationNotes = consultationNotes;
         this.typeOfService = typeOfService;
-        repo.loadMedicationsFromCSV();
-        this.medications = repo.getMedicationsById(appointmentId);
+        this.medications = new ArrayList<>();
     }
 
     public List<Medication> getMedications() {
         return medications;
+    }
+    public void setMedications(List<Medication> medications) {
+        this.medications = medications;
     }
 
     public void addMedication(Medication medication) {

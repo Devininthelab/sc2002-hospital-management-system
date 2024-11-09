@@ -16,12 +16,9 @@ public class Appointment {
     private Status status;
     private AppointmentOutcomeRecord outcome = null;
     //AVOID DUPLICATE ID WHEN WORKING WITH DATABASE AND COUNTER
-    public static void setCounter(int highestId) {
-        counter = highestId + 1;
-    }
     // Constructor for creating an appointment (patient perspective)
-    public Appointment(String patientId, String doctorId, String date, int timeslot) {
-        this.id = counter++;
+    public Appointment(int id, String patientId, String doctorId, String date, int timeslot) {
+        this.id = id;
         this.patientId = patientId;
         this.doctorId = doctorId;
         this.date = date;
@@ -43,7 +40,6 @@ public class Appointment {
         this.date = date;
         this.timeslot = timeslot;
         this.status = status;
-        //this.prescription = new Prescription(id, patientId, doctorId)
     }
     // Getters and Setters
     public int getId() {

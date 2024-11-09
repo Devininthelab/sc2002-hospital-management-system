@@ -1,13 +1,11 @@
 package org.example.repository;
 
 import org.example.entity.Doctor;
-import org.example.entity.Patient;
 import org.example.entity.Pharmacist;
 import org.example.entity.Staff;
 import org.example.utils.Gender;
 
 import java.io.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class StaffRepository {
                 String password = values[5].trim();
 
 
-                this.staffList.add(new Staff(id, name, role, gender, age, password, contact));
+                this.staffList.add(new Staff(id, name, role, gender, age, password));
                 // load diagnoses and treament
                 // load appointments
                 // load appointments outcome records

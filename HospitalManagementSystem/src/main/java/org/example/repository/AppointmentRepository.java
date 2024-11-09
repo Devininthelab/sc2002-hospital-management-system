@@ -12,9 +12,9 @@ import java.util.List;
 
 public class AppointmentRepository {
     private List<Appointment> appointments = new ArrayList<>();
+    private static int counter = 0;
 
     private final String filePath = "src/main/resources/Appointment_List.csv";
-
 
     public AppointmentRepository() {
         loadAppointmentsFromCSV();
@@ -33,7 +33,7 @@ public class AppointmentRepository {
                 highestId = appointment.getId();
             }
         }
-        Appointment.setCounter(highestId);  // Set counter to the next available ID
+        counter = highestId + 1;  // Update counter to next available ID
     }
 
 
@@ -72,9 +72,10 @@ public class AppointmentRepository {
         return appointments;
     }
 
-    public void addAppointment(Appointment appointment) {
+    public void addAppointment(String patientId, String doctorId, String date, int timeslot) {
+        // Use counter to assign a unique ID
+        Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot);
         appointments.add(appointment);
-        Appointment.setCounter(appointment.getId());
         saveAppointmentToCSV(appointment, filePath);
         System.out.println("Appointment added: " + appointment);
     }
