@@ -12,7 +12,7 @@ public class AdministratorMenu implements Menu {
     private final StaffRepository staffRepository = new StaffRepository();
     private final AppointmentRepository appointmentRepository = new AppointmentRepository();
     private final MedicineRepository medicineRepository = new MedicineRepository();
-    private Administrator administrator; // current addministrator interacting with the menu
+    private Administrator administrator;
     private Scanner scanner = new Scanner(System.in);
 
     /**
@@ -31,7 +31,7 @@ public class AdministratorMenu implements Menu {
     }
 
     /**
-     * Log in to the system, a patient should enter their id and password UNTIL they are correct
+     * Log in to the system, an administrator should enter his id and password UNTIL they are correct
      */
     public void login() {
         while (true) {
@@ -39,18 +39,13 @@ public class AdministratorMenu implements Menu {
             String id = scanner.nextLine();
             System.out.print("Please enter your password: ");
             String password = scanner.nextLine();
-            administrator = staffRepository.getAdministratorById(id);
+            administrator = staffRepository.getAdministratorByCredentials(id, password);
             if (administrator == null) {
-                System.out.println("Administrator not found. Try again");
+                System.out.println("Incorrect id or password. Please try again.");
                 continue;
             }
-
-            if (administrator.getPassword().equals(password)) {
-                System.out.println("You are logged in.");
-                break;
-            }
-
-            System.out.println("Wrong password. Try again");
+            System.out.println("Welcome, " + administrator.getName() + "!");
+            break;
         }
     }
 
@@ -160,6 +155,13 @@ public class AdministratorMenu implements Menu {
      * Update an existing staff member's information
      */
     public void updateStaff() {
+        System.out.println("Enter the staff member's id: ");
+        String id = scanner.nextLine();
+        System.out.println("Enter the field to be updated (name, role, password, gender, age): ");
+        String field = scanner.nextLine();
+        System.out.println("Enter the new value: ");
+        String newValue = scanner.nextLine();
+        staffRepository.updateStaffRepo(id, field, newValue);
     }
 
 
@@ -167,14 +169,20 @@ public class AdministratorMenu implements Menu {
      * Remove a staff member from the system
      */
     public void removeStaff() {
-
+        System.out.println("Enter the staff member's id: ");
+        String id = scanner.nextLine();
+        if (id.equals(administrator.getId())) {
+            System.out.println("You cannot remove yourself.");
+            return;
+        }
+        staffRepository.removeStaffRepo(id);
     }
 
     /**
      * View the list of staff members
      */
     public void viewStaffList() {
-
+        staffRepository.viewStaffListRepo();
     }
 
 
