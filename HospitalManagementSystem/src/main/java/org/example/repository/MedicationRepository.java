@@ -48,7 +48,6 @@ public class MedicationRepository {
         } catch (IOException e) {
             System.out.println("Error writing to CSV file: " + e.getMessage());
         }
-    }
 
     public List<Medication> getMedicationsById(int prescriptionId) {
         List<Medication> result = new ArrayList<>();
