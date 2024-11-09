@@ -1,5 +1,8 @@
 package org.example.repository;
 
+import org.example.entity.Administrator;
+import org.example.entity.Doctor;
+import org.example.entity.Pharmacist;
 import org.example.entity.Staff;
 
 import java.io.*;
@@ -17,6 +20,7 @@ public class StaffRepository {
 
     /**
      * Load staff data from CSV file, then return a list of staff members
+     *
      * @return List of staff members
      */
     private List<Staff> loadStaffsFromCSV() {
@@ -59,8 +63,9 @@ public class StaffRepository {
 
     /**
      * Check if whether the staff has existed in the staff list
+     *
      * @param id The staff id
-     *           @return true if the staff id exists, false otherwise
+     * @return true if the staff id exists, false otherwise
      */
     private boolean isStaffIdExist(String id) {
         for (Staff staff : staffList) {
@@ -72,9 +77,9 @@ public class StaffRepository {
     }
 
 
-
     /**
      * Add a staff into the CSV file
+     *
      * @param staff The staff to be added
      */
     public void addStaffRepo(Staff staff) {
@@ -89,8 +94,9 @@ public class StaffRepository {
 
     /**
      * Update the staff details in the CSV file
-     * @param staffId The staff id to be updated
-     * @param field Fileld to be updated
+     *
+     * @param staffId  The staff id to be updated
+     * @param field    Fileld to be updated
      * @param newValue The new value to be updated
      */
     public void updateStaffRepo(String staffId, String field, String newValue) {
@@ -121,6 +127,7 @@ public class StaffRepository {
 
     /**
      * Remove a staff from the CSV file
+     *
      * @param staffId The staff id to be removed
      */
     public void removeStaffRepo(String staffId) {
@@ -128,4 +135,65 @@ public class StaffRepository {
         saveStaffsToCSV();
         System.out.println("Staff member with ID " + staffId + " removed successfully.");
     }
+
+
+    /**
+     * Get Administrator by credentials
+     *
+     * @return a specific administrator if credentials are correct, null otherwise
+     */
+    public Administrator getAdministratorByCredentials(String id, String password) {
+        for (Staff staff : staffList) {
+            if (staff.getId().equals(id) && staff.getPassword().equals(password)) {
+                return (Administrator) staff;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Get Doctor by credentials
+     *
+     * @return a specific doctor if credentials are correct, null otherwise
+     */
+    public Doctor getDoctorByCredentials(String id, String password) {
+        for (Staff staff : staffList) {
+            if (staff.getId().equals(id) && staff.getPassword().equals(password)) {
+                return (Doctor) staff;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get Pharmacist by credentials
+     *
+     * @return a specific pharmacist if credentials are correct, null otherwise
+     */
+    public Pharmacist getPharmacistByCredentials(String id, String password) {
+        for (Staff staff : staffList) {
+            if (staff.getId().equals(id) && staff.getPassword().equals(password)) {
+                return (Pharmacist) staff;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * View the list of staff members
+     * Current format is like this:
+     * List of staff members:
+     * ID: 1,   Name: John Doe,     Role: Doctor, ...
+     * ....
+     */
+    public void viewStaffListRepo() {
+        System.out.println("List of staff members:");
+        for (Staff staff : staffList) {
+            System.out.println(staff.toString());
+        }
+    }
+
+
+
 }
