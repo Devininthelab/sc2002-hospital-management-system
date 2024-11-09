@@ -1,13 +1,11 @@
 
-
-
 package org.example.entity;
 
-import org.example.repository.MedicationRepository;
 
 import java.util.List;
 
 public class Prescription {
+    /*
     private int prescriptionId;
     private List<Medication> medications;
     private final MedicationRepository repo = new MedicationRepository();
@@ -48,4 +46,5 @@ public class Prescription {
                 ", medications=" + medications +
                 '}';
     }
+     */
 }
