@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 public class Appointment {
     // might need to store this somewhere to get persistence
-    private static int counter = 0;
     public enum Status {
         PENDING, CONFIRMED, CANCELLED, COMPLETED
     }
@@ -45,19 +44,19 @@ public class Appointment {
     public int getId() {
         return id;
     }
-    public String getPatientID() {
+    public String getPatientId() {
         return patientId;
     }
 
-    public void setPatientID(String patientID) {
+    public void setPatientId(String patientID) {
         this.patientId = patientID;
     }
 
-    public String getDoctorID() {
+    public String getDoctorId() {
         return doctorId;
     }
 
-    public void setDoctorID(String doctorID) {
+    public void setDoctorId(String doctorID) {
         this.doctorId = doctorID;
     }
 
