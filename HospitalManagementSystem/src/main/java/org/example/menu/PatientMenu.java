@@ -39,11 +39,12 @@ public class PatientMenu implements Menu {
 
     /**
      * Log in to the system, a patient should enter their id and password UNTIL they are correct
+     * Patient state is stored in this phase
      */
     public void login() {
         while (true) {
             System.out.print("Please enter your user id: ");
-            int id = scanner.nextInt();
+            String id = scanner.nextLine();
             System.out.print("Please enter your password: ");
             String password = scanner.nextLine();
             patient = patientRepository.getPatientById(id);

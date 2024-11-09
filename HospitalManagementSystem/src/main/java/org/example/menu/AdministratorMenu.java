@@ -4,57 +4,135 @@ import org.example.entity.Administrator;
 import org.example.repository.AppointmentRepository;
 import org.example.repository.MedicineRepository;
 import org.example.repository.StaffRepository;
+import org.example.entity.Staff;
 
 import java.util.Scanner;
 
 public class AdministratorMenu implements Menu {
-    private Administrator administrator; // current addministrator interacting with the menu
-    private Scanner scanner = new Scanner(System.in);
     private final StaffRepository staffRepository = new StaffRepository();
     private final AppointmentRepository appointmentRepository = new AppointmentRepository();
     private final MedicineRepository medicineRepository = new MedicineRepository();
+    private Administrator administrator; // current addministrator interacting with the menu
+    private Scanner scanner = new Scanner(System.in);
 
-
-
-
-
-    public void displayMenu() {
-        System.out.println("=====ADMINISTRATOR MENU=====");
-        System.out.println("1. View and Manage Hospital Staff\n2. View Appointment Details\n3. View and Manage Medication Inventory\n4. Approve Replenishment Requests\n5. Logout");
-    }
-
-    public void handleChoice(int choice, User user) {
-        Administrator admin = (Administrator) user;  // Cast User to Administrator
-        switch (choice) {
-            case 1:
-                viewAndManageHospitalStaff(admin);
-                break;
-            case 2:
-                viewAppointmentDetails(admin);
-                break;
-            case 3:
-                viewAndManageMedicationInventory(admin);
-                break;
-            case 4:
-                approveReplenishmentRequests(admin);
-                break;
-            case 5:
-                logout(admin);
-                break;
-            default:
-                System.out.println("Invalid choice. Please try again.");
-        }
-    }
-
-    public void start(User user) {
-        Administrator admin = (Administrator) user;  // Cast User to Administrator
+    /**
+     * Start the Administrator menu, which requires the administrator to log in first
+     */
+    public void start() {
         Scanner sc = new Scanner(System.in);
+        login();
         int choice;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
             choice = sc.nextInt();
-            handleChoice(choice, admin);
-        } while (choice != 5);  // Exit when logout is chosen
+            handleChoice(choice);
+        } while (choice != 9);  // Exit when logout is chosen
     }
+
+    /**
+     * Log in to the system, a patient should enter their id and password UNTIL they are correct
+     */
+    public void login() {
+        while (true) {
+            System.out.print("Please enter your administrator id: ");
+            String id = scanner.nextLine();
+            System.out.print("Please enter your password: ");
+            String password = scanner.nextLine();
+            administrator = staffRepository.getAdministratorById(id);
+            if (administrator == null) {
+                System.out.println("Administrator not found. Try again");
+                continue;
+            }
+
+            if (administrator.getPassword().equals(password)) {
+                System.out.println("You are logged in.");
+                break;
+            }
+
+            System.out.println("Wrong password. Try again");
+        }
+    }
+
+    /**
+     * Display the Administrator menu, showing the available options
+     */
+    public void displayMenu() {
+        System.out.println("=====Administrator MENU=====");
+        System.out.println("1. Add Staff Member\n" +
+                "2. Update Staff Information\n" +
+                "3. Remove Staff Member\n" +
+                "4. View Staff List\n" +
+                "5. View Scheduled Appointments\n" +
+                "6. Update Appointment Status\n" +
+                "7. Record Appointment Outcome\n" +
+                "8. View Appointment Outcome Record\n" +
+                "9. Add Medication to Inventory\n" +
+                "10. Update Inventory Stock Levels\n" +
+                "11. Remove Medication from Inventory\n" +
+                "12. Set Low Stock Alert Level\n" +
+                "13. View Low Stock Inventory Items\n" +
+                "14. Approve Replenishment Request\n" +
+                "15. Generate Low Stock Report\n" +
+                "16. Logout");
+    }
+
+
+    /**
+     * Handle the Administrator's choice from the menu
+     * @param choice the Administrator's choice
+     */
+    public void handleChoice(int choice) {
+        switch (choice) {
+            case 1:
+                addStaff();
+                break;
+            case 2:
+                updateStaff();
+                break;
+            case 3:
+                removeStaff();
+                break;
+            case 4:
+                viewStaffList();
+                break;
+            case 5:
+                viewScheduledAppointments();
+                break;
+            case 6:
+                updateAppointmentStatus();
+                break;
+            case 7:
+                recordAppointmentOutcome();
+                break;
+            case 8:
+                viewAppointmentOutcomeRecord();
+                break;
+            case 9:
+                addMedicationToInventory();
+                break;
+            case 10:
+                updateInventoryStockLevels();
+                break;
+            case 11:
+                removeMedicationFromInventory();
+                break;
+            case 12:
+                setLowStockAlertLevel();
+                break;
+            case 13:
+                viewLowStockInventoryItems();
+                break;
+            case 14:
+                approveReplenishmentRequest();
+                break;
+            case 15:
+                generateLowStockReport();
+                break;
+            case 16:
+                System.out.println("Logging out...");
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+        }
 }
