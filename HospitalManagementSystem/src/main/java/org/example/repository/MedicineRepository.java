@@ -66,7 +66,7 @@ public class MedicineRepository {
         return medicines;
     }
 
-    public void displayMedications() {
-
+    public boolean medicineExists(String medicineName) {
+        return true;
     }
 }
