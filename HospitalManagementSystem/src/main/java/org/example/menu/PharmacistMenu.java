@@ -1,12 +1,15 @@
 package org.example.menu;
 
 import org.example.entity.Medicine;
+import org.example.entity.MedicineRequest;
 import org.example.entity.Pharmacist;
 import org.example.entity.AppointmentOutcomeRecord
 import org.example.repository.AppointmentOutcomeRecordRepository;
 import org.example.repository.MedicineRepository;
+import org.example.repository.MedicineRequestRepository;
 import org.example.repository.StaffRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,6 +18,7 @@ public class PharmacistMenu implements Menu {
     private final StaffRepository staffRepository = new StaffRepository();
     private final MedicineRepository medicineRepository = new MedicineRepository();
     private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
+    private final MedicineRequestRepository medicineRequestRepository = new MedicineRequestRepository();
     private Pharmacist pharmacist;
 
     public void displayMenu() {
@@ -121,7 +125,27 @@ public class PharmacistMenu implements Menu {
         medicines.forEach(System.out::println);
     }
 
+    /**
+     * Prompt pharmacist for list of medicine, submit request to request list for admin to see
+     */
     public void submitReplenishmentRequest() {
-        
+        System.out.println("Replenishment request");
+        List<String> medicines = new ArrayList<>();
+        while (true) {
+            System.out.print("Enter medicine name (empty to finish): ");
+            String medicineName = scanner.nextLine();
+            if (medicineName.trim().isEmpty()) {
+                break;
+            }
+
+            if (!medicineRepository.medicineExists(medicineName)) {
+                System.out.println("Medicine not found. Try again");
+                continue;
+            }
+            
+            medicines.add(medicineName);
+        }
+
+        medicineRequestRepository.addMedicineRequest(medicines);
     }
 }

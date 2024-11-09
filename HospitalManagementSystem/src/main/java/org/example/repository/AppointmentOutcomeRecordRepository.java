@@ -100,7 +100,11 @@ public class AppointmentOutcomeRecordRepository {
         records.forEach(System.out::println);
     }
 
-    // Get record by ID
+    /**
+     * Query the records for matching id
+     * @param id
+     * @return AppointmentOutcomeRecord object, or null if
+     */
     public AppointmentOutcomeRecord getRecordById(int id) {
         for (AppointmentOutcomeRecord record : records) {
             if (record.getAppointmentId() == id) {
