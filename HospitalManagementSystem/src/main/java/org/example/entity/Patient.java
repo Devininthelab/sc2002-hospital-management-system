@@ -6,24 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Patient {
-    public enum Gender {
-        MALE, FEMALE
-    }
-
-    public enum BloodType {
-        Apos, Aneg,
-        Bpos, Bneg,
-        ABpos, ABneg,
-        Opos, Oneg
-    }
-    // implicit medical record
     private String id;
     private String password;
     private String name;
     private LocalDate dateOfBirth;
-    private Patient.Gender gender;
+    private String gender;
     private String contact;
-    private Patient.BloodType bloodType;
+    private String bloodType;
     private List<String> diagnoses;
     private List<String> treatments;
 
@@ -34,7 +23,7 @@ public class Patient {
 
 
     public Patient(String id, String password, String name, LocalDate dateOfBirth,
-                   Gender gender, String contact, BloodType bloodType) {
+                   String gender, String contact, String bloodType) {
         this.id = id;
         this.password = password;
         this.name = name;
@@ -64,11 +53,11 @@ public class Patient {
         return dateOfBirth;
     }
 
-    public Gender getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public BloodType getBloodType() {
+    public String getBloodType() {
         return bloodType;
     }
 
@@ -87,11 +76,11 @@ public class Patient {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public void setBloodType(BloodType bloodType) {
+    public void setBloodType(String bloodType) {
         this.bloodType = bloodType;
     }
 
@@ -105,7 +94,7 @@ public class Patient {
                 + "\nDate of birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                 + "\nGender: " + gender
                 + "\nContact: " + contact
-                + "\nBlood type: " + bloodType.name()
+                + "\nBlood type: " + bloodType
                 + diagnoses_treatments;
     }
 

@@ -1,9 +1,6 @@
 package org.example.repository;
 
-import org.example.entity.Doctor;
-import org.example.entity.Pharmacist;
 import org.example.entity.Staff;
-import org.example.utils.Gender;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,66 +12,120 @@ public class StaffRepository {
     private static final String csvPath = "src/main/resources/Staff_List.csv";
 
     public StaffRepository() {
-        staffList = new ArrayList<>();
+        staffList = loadStaffsFromCSV();
     }
 
-    private void loadStaffsFromCSV(String csvPath) {
-        try (BufferedReader br = new BufferedReader(new FileReader("book.csv"))) {
+    /**
+     * Load staff data from CSV file, then return a list of staff members
+     * @return List of staff members
+     */
+    private List<Staff> loadStaffsFromCSV() {
+        List<Staff> staffList = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 String id = values[0].trim();
                 String name = values[1].trim();
                 String role = values[2].trim();
-                Gender gender = Gender.valueOf(values[3].trim());
+                String gender = values[3].trim();
                 int age = Integer.parseInt(values[4].trim());
                 String password = values[5].trim();
-
-
-                this.staffList.add(new Staff(id, name, role, gender, age, password));
-                // load diagnoses and treament
-                // load appointments
-                // load appointments outcome records
-
+                staffList.add(new Staff(id, name, role, gender, age, password));
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NumberFormatException e) {
             System.err.println("Error parsing number");
         }
+        return staffList;
     }
 
-    public List<Doctor> getAllDoctors() {
-        List<Doctor> doctors = new ArrayList<>();
-        for (Staff staff : staffList) {
-            if (staff.getId().startsWith("D")) {
-                Doctor doctor = (Doctor) staff;
-                doctors.add(doctor);
+
+    /**
+     * Save staff data to the CSV file
+     * This function will be called everytime there is a change in the staff list (CREATE, UPDATE, DELETE)
+     */
+    public void saveStaffsToCSV() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {
+            for (Staff staff : staffList) {
+                bw.write(staff.getId() + "," + staff.getName() + "," + staff.getRole() + "," + staff.getGender() + "," + staff.getAge() + "," + staff.getPassword());
+                bw.newLine();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return doctors;
     }
 
     /**
-     * Query the staff list for pharmacist with the matching id
-     * @param id
-     * @return
+     * Check if whether the staff has existed in the staff list
+     * @param id The staff id
+     *           @return true if the staff id exists, false otherwise
      */
-    public Pharmacist getPharmacistById(String id) {
+    private boolean isStaffIdExist(String id) {
         for (Staff staff : staffList) {
-            if (staff.getRole().equals("pharmacist") && staff.getId().equals(id)) {
-                return (Pharmacist) staff;
+            if (staff.getId().equals(id)) {
+                return true;
             }
         }
-        return null;
+        return false;
+    }
+
+
+
+    /**
+     * Add a staff into the CSV file
+     * @param staff The staff to be added
+     */
+    public void addStaffRepo(Staff staff) {
+        if (!isStaffIdExist(staff.getId())) {
+            staffList.add(staff);
+            saveStaffsToCSV();
+            System.out.println("Staff member " + staff.getName() + " added successfully.");
+        } else {
+            System.out.println("Staff member with ID " + staff.getId() + " already exists.");
+        }
     }
 
     /**
-     * Add staff to the database if staff do not exist
-     * @param staff
+     * Update the staff details in the CSV file
+     * @param staffId The staff id to be updated
+     * @param field Fileld to be updated
+     * @param newValue The new value to be updated
      */
-    public void addStaff(Staff staff) {
-        staffList.add(staff);
-        saveStaffsToCSV(csvPath);
+    public void updateStaffRepo(String staffId, String field, String newValue) {
+        for (Staff staff : staffList) {
+            if (staff.getId().equals(staffId)) {
+                switch (field) {
+                    case "name":
+                        staff.setName(newValue);
+                        break;
+                    case "role":
+                        staff.setRole(newValue);
+                        break;
+                    case "password":
+                        staff.setPassword(newValue);
+                        break;
+                    case "gender":
+                        staff.setGender(newValue);
+                        break;
+                    case "age":
+                        staff.setAge(Integer.parseInt(newValue));
+                        break;
+                }
+                saveStaffsToCSV();
+            }
+        }
+        System.out.println("Staff member with ID " + staffId + " not found.");
+    }
+
+    /**
+     * Remove a staff from the CSV file
+     * @param staffId The staff id to be removed
+     */
+    public void removeStaffRepo(String staffId) {
+        staffList.removeIf(staff -> staff.getId().equals(staffId));
+        saveStaffsToCSV();
+        System.out.println("Staff member with ID " + staffId + " removed successfully.");
     }
 }

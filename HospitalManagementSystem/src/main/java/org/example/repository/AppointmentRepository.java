@@ -2,9 +2,7 @@ package org.example.repository;
 
 import org.example.entity.Appointment;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,8 +39,6 @@ public class AppointmentRepository {
         counter = highestId + 1;  // Update counter to next available ID
     }
 
-
-
     public void loadAppointmentsFromCSV() {
         String line;
         //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -69,8 +65,17 @@ public class AppointmentRepository {
         }
     }
 
-    public void saveAppointmentToCSV() {
-        //TODO: rewrite entire csv
+    public void saveAppointmentToCSV(Appointment appointment, String filePath) {
+        try (FileWriter writer = new FileWriter(filePath, true)) {
+            writer.append(String.valueOf(appointment.getId())).append(",")
+                    .append(appointment.getPatientId()).append(",")
+                    .append(appointment.getDoctorId()).append(",")
+                    .append(appointment.getDate()).append(",")
+                    .append(String.valueOf(appointment.getTimeslot())).append(",")
+                    .append(appointment.getStatus().toString()).append("\n");
+        } catch (IOException e) {
+            System.out.println("Error writing to CSV file: " + e.getMessage());
+        }
     }
 
     public List<Appointment> getAppointments() {

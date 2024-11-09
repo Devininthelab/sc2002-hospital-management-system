@@ -1,7 +1,5 @@
 package org.example.entity;
 
-import org.example.utils.Gender;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,7 @@ public class Doctor extends Staff {
     private String[][] schedule;
     private List<Appointment> appointments;
 
-    public Doctor(String id, String name, String role, String password, Gender gender, int age) {
+    public Doctor(String id, String name, String role, String password, String gender, int age) {
         super(id, name, role, gender, age, password);
         schedule = new String[20][7];
         appointments = new ArrayList<>();
