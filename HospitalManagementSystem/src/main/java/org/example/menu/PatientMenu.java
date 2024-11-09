@@ -10,8 +10,7 @@ import org.example.repository.PatientRepository;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class PatientMenu implements Menu {
 
@@ -125,7 +124,10 @@ public class PatientMenu implements Menu {
     }
 
     private void updatePersonalInformation() {
-        System.out.println("Choose information to update: \n1. Name\n2. Date of Birth\n3. Gender\n4. Blood Type");
+        System.out.println("You can only update: \n" +
+                "1. Name\n" +
+                "2. Date of Birth\n" +
+                "3. Contact\n");
         Scanner sc = new Scanner(System.in);
         int choice = sc.nextInt();
         do {
@@ -204,38 +206,54 @@ public class PatientMenu implements Menu {
         }
     }
 
+    /**
+     * Reschedule an appointment
+     * Uniquely identify appointment by id, reference by viewScheduledAppointment()
+     * Give the choice to keep the same doctor
+     * Give the choice to change date and timeslot
+     * Update availability before and after rescheduling
+     */
     private void rescheduleAppointment() {
         System.out.print("Select appointment ID:");
         int id = scanner.nextInt();
+        Appointment appointment = appointmentRepository.getAppointmentById(id);
+        // free up slot
+        doctorRepository.freeDoctorSchedule(appointment.getDoctorId(), appointment.getDate(), appointment.getTimeslot());
         System.out.println("Change doctor? empty to keep same");
         String doctorId = scanner.nextLine();
         if (doctorId.isEmpty()) {
-            doctorId = appointmentRepository.getAppointmentById(id).getDoctorID();
+            doctorId = appointment.getDoctorId();
         }
         System.out.print("Date(Monday to Sunday): ");
         String date = scanner.nextLine();
         System.out.print("Timeslot:");
         int timeslot = scanner.nextInt();
-        appointmentRepository.rescheduleAppointment(id, date, timeslot);
+        appointmentRepository.rescheduleAppointment(id, doctorId, date, timeslot);
+        // occupy slot
+        doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "unavailable");
     }
 
+    /**
+     * Simply remove appointment using appointmentRepository
+     */
     private void cancelAppointment() {
-        System.out.print("Select doctor ID:");
-        int doctorId = scanner.nextInt();
-        System.out.print("Date(Monday to Sunday): ");
-        String date = scanner.nextLine();
-        System.out.print("Timeslot:");
-        int timeslot = scanner.nextInt();
-        appointmentRepository.cancelAppointment(doctorId, date, timeslot);
+        System.out.println("Cancelling appointment");
+        System.out.println("Enter appointment ID: ");
+        int id = scanner.nextInt();
+        appointmentRepository.deleteAppointmentById(id);
     }
 
+    /**
+     * Use appointmentRepository to
+     */
     private void viewScheduledAppointment() {
         // detail and status of scheduled appointment
-        List<Appointment> appointments = patientRepository.getScheduledAppointments();
-        for (Appointment appointment : appointments) {
+        List<Appointment> appointments = appointmentRepository.getAppointmentsByPatientId(patient.getId());
+        System.out.println("Scheduled Appointment:");
+        for (Appointment appointment : appointments.stream()
+                .filter(appointment -> appointment.getStatus().equals())) {
             System.out.println(appointment);
         }
-        System.out.println("Scheduled Appointment:");
     }
 
 

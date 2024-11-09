@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * AppointmentRepository
@@ -16,7 +17,6 @@ import java.util.List;
 public class AppointmentRepository {
     private List<Appointment> appointments = new ArrayList<>();
     private static int counter = 0;
-
     private final String filePath = "src/main/resources/Appointment_List.csv";
 
     public AppointmentRepository() {
@@ -65,14 +65,16 @@ public class AppointmentRepository {
         }
     }
 
-    public void saveAppointmentToCSV(Appointment appointment, String filePath) {
+    public void saveAppointmentsToCSV() {
         try (FileWriter writer = new FileWriter(filePath, true)) {
-            writer.append(String.valueOf(appointment.getId())).append(",")
-                    .append(appointment.getPatientId()).append(",")
-                    .append(appointment.getDoctorId()).append(",")
-                    .append(appointment.getDate()).append(",")
-                    .append(String.valueOf(appointment.getTimeslot())).append(",")
-                    .append(appointment.getStatus().toString()).append("\n");
+            for (Appointment appointment : appointments) {
+                writer.write(appointment.getId() + "," +
+                        appointment.getPatientId() + "," +
+                        appointment.getDoctorId() + "," +
+                        appointment.getDate() + "," +
+                        appointment.getTimeslot() + "," +
+                        appointment.getStatus() + "\n");
+            }
         } catch (IOException e) {
             System.out.println("Error writing to CSV file: " + e.getMessage());
         }
@@ -86,7 +88,7 @@ public class AppointmentRepository {
         // Use counter to assign a unique ID
         Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot);
         appointments.add(appointment);
-        saveAppointmentToCSV();
+        saveAppointmentsToCSV();
         System.out.println("Appointment added: " + appointment);
         return true;
     }
@@ -108,13 +110,23 @@ public class AppointmentRepository {
      */
     public void rescheduleAppointment(int id, String doctorId, String date, int timeslot) {
         Appointment appointment = getAppointmentById(id);
-        //TODO: change date and timeslot
-        appointment.setDate(date);
-        appointment.setTimeslot(timeslot);
-        appointment.setDoctorID(doctorId);
-        saveAppointmentToCSV();
+        appointment.reschedule(doctorId, date, timeslot);
+        saveAppointmentsToCSV();
     }
 
+    /**
+     * Delete appointment from Appointment List
+     * @param id
+     */
+    public void deleteAppointmentById(int id) {
+        Appointment appointment = getAppointmentById(id);
+        appointments.remove(appointment);
+        saveAppointmentsToCSV();
+    }
 
-
+    public List<Appointment> getAppointmentsByPatientId(String patientId) {
+        return appointments.stream()
+                .filter(appointment -> appointment.getPatientId().equals(patientId))
+                .collect(Collectors.toList());
+    }
 }

@@ -70,6 +70,10 @@ public class DoctorRepository {
         saveDoctorSchedule(doctorId);
     }
 
+    public void freeDoctorSchedule(String doctorId, String date, int time) {
+        updateDoctorSchedule(doctorId, date, time, "available");
+    }
+
     public void saveDoctorSchedule(String doctorId) {
         Doctor doctor = getDoctorById(doctorId);
         String[][] schedule = doctor.getSchedule();

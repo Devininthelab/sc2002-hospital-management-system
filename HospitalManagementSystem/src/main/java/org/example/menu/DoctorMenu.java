@@ -17,7 +17,7 @@ public class DoctorMenu implements Menu {
     private final PatientRepository patientRepository = new PatientRepository();
     private final StaffRepository staffRepository = new StaffRepository();
     private final DoctorRepository doctorRepository = new DoctorRepository();
-    private AppointmentRepository appointmentRepository = new AppointmentRepository();
+    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
 
 
     public void displayMenu() {
@@ -121,6 +121,7 @@ public class DoctorMenu implements Menu {
         Patient patient = patientRepository.getPatientById(patientId);
         System.out.println("Add new ");
         //TODO: implement update medical record field in PatientRepository
+
     }
 
     public void viewPersonalSchedule() {
@@ -172,6 +173,7 @@ public class DoctorMenu implements Menu {
         System.out.print("Enter type of service: ");
         String service = scanner.nextLine();
         //TODO: prompt for list of prescription
+
         //TODO: appointment outcome record repository to save new outcome record
     }
 
