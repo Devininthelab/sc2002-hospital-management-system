@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Inventory {
+    /*
     // Inventory attributes
     private List<Medicine> medicines; // List to store all medications
 
@@ -96,4 +97,14 @@ public class Inventory {
                     "\nLow Stock Level: " + medicine.getLowStockAlert());
         }
     }
+    public List<Medicine> getLowStockMedicines() {
+        List<Medicine> lowStockMedicines = new ArrayList<>();
+        for (Medicine medicine : medicines) {
+            if (medicine.getStockLevel() < medicine.getLowStockAlert()) {
+                lowStockMedicines.add(medicine);
+            }
+        }
+        return lowStockMedicines;
+    }
+    */
 }
