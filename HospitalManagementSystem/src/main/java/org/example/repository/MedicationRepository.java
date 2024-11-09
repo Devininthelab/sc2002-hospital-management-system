@@ -35,6 +35,10 @@ public class MedicationRepository {
         }
     }
 
+    public void updateMedicationStatus(int id, String medicationName, Medication.Status status) {
+
+    }
+
     public List<Medication> getMedicationsById(int prescriptionId) {
         List<Medication> result = new ArrayList<>();
         for (Medication medication : medications) {

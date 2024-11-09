@@ -96,10 +96,6 @@ public class AppointmentOutcomeRecordRepository {
         return records;
     }
 
-    public void displayRecords() {
-        records.forEach(System.out::println);
-    }
-
     /**
      * Query the records for matching id
      * @param id

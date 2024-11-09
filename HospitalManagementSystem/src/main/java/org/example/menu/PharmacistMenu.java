@@ -1,13 +1,7 @@
 package org.example.menu;
 
-import org.example.entity.Medicine;
-import org.example.entity.MedicineRequest;
-import org.example.entity.Pharmacist;
-import org.example.entity.AppointmentOutcomeRecord
-import org.example.repository.AppointmentOutcomeRecordRepository;
-import org.example.repository.MedicineRepository;
-import org.example.repository.MedicineRequestRepository;
-import org.example.repository.StaffRepository;
+import org.example.entity.*;
+import org.example.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +13,14 @@ public class PharmacistMenu implements Menu {
     private final MedicineRepository medicineRepository = new MedicineRepository();
     private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
     private final MedicineRequestRepository medicineRequestRepository = new MedicineRequestRepository();
+    private final MedicationRepository medicationRepository = new MedicationRepository();
     private Pharmacist pharmacist;
 
-    public void displayMenu() {
-        System.out.println("=====PHARMACIST MENU=====");
-        System.out.println("1. View Appointment Outcome Record\n" +
-                "2. Update Prescription Status\n" +
-                "3. View Medication Inventory\n" +
-                "4. Submit Replenishment Request\n" +
-                "5. Logout");
-    }
-
+    /**
+     * Start pharmacist menu
+     * Pharmacist login
+     * Display choice for user to choose and redirect to respective handler function
+     */
     public void start() {
         int choice;
         login();
@@ -66,6 +57,18 @@ public class PharmacistMenu implements Menu {
 
             System.out.println("Wrong password. Try again");
         }
+    }
+
+    /**
+     * Display pharmacist menu
+     */
+    public void displayMenu() {
+        System.out.println("=====PHARMACIST MENU=====");
+        System.out.println("1. View Appointment Outcome Record\n" +
+                "2. Update Prescription Status\n" +
+                "3. View Medication Inventory\n" +
+                "4. Submit Replenishment Request\n" +
+                "5. Logout");
     }
 
     /**
@@ -107,15 +110,27 @@ public class PharmacistMenu implements Menu {
     /**
      * Update prescription status in appointment outcome record
      * Prompt pharmacist for record id, and print out the detail of that id
-     * Then prompt for new status, save through appointment outcome record
+     * Then repeated prompt for prescription with new status,
+     * save through appointment outcome record, until user enter empty line
      */
     public void updatePrescriptionStatus() {
         System.out.print("Enter appointment id: ");
         int appointmentId = scanner.nextInt();
         System.out.println(appointmentOutcomeRecordRepository.getRecordById(appointmentId));
-        System.out.print("Enter new prescription status: ");
-        String status = scanner.nextLine();
-        appointmentOutcomeRecordRepository.updatePrescriptionStatus(appointmentId, status);
+        while (true) {
+            System.out.print("Enter name of prescription with changed status (empty to finish): ");
+            String presciptionName = scanner.nextLine();
+            if (presciptionName.isEmpty()) {
+                break;
+            }
+
+            //TODO: Input validation
+
+            System.out.print("Enter new prescription status: ");
+            String status = scanner.nextLine();
+            medicationRepository.updateMedicationStatus(appointmentId, presciptionName, Medication.stringToStatus(status));
+        }
+        System.out.println("Prescription status updated.");
     }
 
 
