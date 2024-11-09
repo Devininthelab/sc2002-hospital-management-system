@@ -68,4 +68,13 @@ public class StaffRepository {
         }
         return null;
     }
+
+    /**
+     * Add staff to the database if staff do not exist
+     * @param staff
+     */
+    public void addStaff(Staff staff) {
+        staffList.add(staff);
+        saveStaffsToCSV(csvPath);
+    }
 }
