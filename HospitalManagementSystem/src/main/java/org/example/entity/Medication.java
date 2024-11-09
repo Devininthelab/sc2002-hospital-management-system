@@ -42,6 +42,7 @@ public class Medication {
         return "Medication{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", quantity=" + quantity +
                 ", status=" + status +
                 '}';
     }
