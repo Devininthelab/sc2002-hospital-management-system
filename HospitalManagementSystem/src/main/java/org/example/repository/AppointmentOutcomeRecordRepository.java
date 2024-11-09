@@ -54,7 +54,7 @@ public class AppointmentOutcomeRecordRepository {
     }
 
     // Method to save a record to CSV
-    public void saveRecordToCSV(AppointmentOutcomeRecord record) {
+    public void saveRecordsToCSV(AppointmentOutcomeRecord record) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             // Convert record fields into a CSV string
             String csvLine = recordToCSV(record);
@@ -96,11 +96,11 @@ public class AppointmentOutcomeRecordRepository {
         return records;
     }
 
-    public void displayRecords() {
-        records.forEach(System.out::println);
-    }
-
-    // Get record by ID
+    /**
+     * Query the records for matching id
+     * @param id
+     * @return AppointmentOutcomeRecord object, or null if
+     */
     public AppointmentOutcomeRecord getRecordById(int id) {
         for (AppointmentOutcomeRecord record : records) {
             if (record.getAppointmentId() == id) {
