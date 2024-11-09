@@ -23,13 +23,13 @@ public class PatientRepository {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                int id = Integer.parseInt(values[0].trim());
+                String id = values[0].trim();
                 String password = values[1].trim();
                 String name = values[2].trim();
                 LocalDate dateOfBirth = LocalDate.parse(values[3].trim(), DATE_FORMATTER);
-                Patient.Gender gender = Patient.Gender.valueOf(values[4].trim().toUpperCase());
+                String gender = values[4].trim();
                 String contact = values[5].trim();
-                Patient.BloodType bloodType = Patient.BloodType.valueOf(values[6].trim().toUpperCase());
+                String bloodType = values[6].trim().toUpperCase();
 
                 this.patients.add(new Patient(id, password, name, dateOfBirth, gender, contact, bloodType));
                 // load diagnoses and treatment
@@ -52,7 +52,7 @@ public class PatientRepository {
         return null;
     }
 
-    public void updatePatientField(int id, String field, String newValue) {
+    public void updatePatientField(String id, String field, String newValue) {
         Patient patient = getPatientById(id);
         if (patient == null) {
             System.out.println("Patient with ID " + id + " not found.");
@@ -71,10 +71,10 @@ public class PatientRepository {
                 patient.setDateOfBirth(LocalDate.parse(newValue, DATE_FORMATTER));
                 break;
             case "gender":
-                patient.setGender(Patient.Gender.valueOf(newValue.toUpperCase()));
+                patient.setGender(newValue);
                 break;
             case "bloodtype":
-                patient.setBloodType(Patient.BloodType.valueOf(newValue.toUpperCase().replace("+", "_POSITIVE").replace("-", "_NEGATIVE")));
+                patient.setBloodType(newValue);
                 break;
             default:
                 System.out.println("Field not recognized.");

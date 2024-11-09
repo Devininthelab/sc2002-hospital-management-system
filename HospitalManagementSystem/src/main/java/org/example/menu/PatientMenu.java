@@ -145,9 +145,9 @@ public class PatientMenu implements Menu {
                     System.out.println("Choose gender:\n1. Male\n2. Female");
                     int gender = sc.nextInt();
                     if (gender == 1) {
-                        patient.setGender(Patient.Gender.MALE);
+                        patient.setGender("Male");
                     } else if (gender == 2) {
-                        patient.setGender(Patient.Gender.FEMALE);
+                        patient.setGender("Female");
                     }
                     break;
             }
