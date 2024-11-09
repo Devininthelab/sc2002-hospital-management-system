@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class DoctorMenu implements Menu {
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
     private Doctor doctor;
     private final PatientRepository patientRepository = new PatientRepository();
     private final StaffRepository staffRepository = new StaffRepository();
-    private DoctorRepository doctorRepository = new DoctorRepository();
+    private final DoctorRepository doctorRepository = new DoctorRepository();
     private AppointmentRepository appointmentRepository = new AppointmentRepository();
 
 
@@ -34,6 +34,7 @@ public class DoctorMenu implements Menu {
     }
 
     public void start() {
+
         login();
         int choice;
         do {
@@ -102,7 +103,11 @@ public class DoctorMenu implements Menu {
 
     public void viewPatientMedicalRecords() {
         System.out.print("Enter patient's id: ");
+
         String patientId = scanner.nextLine();
+
+  
+
         Patient patient = patientRepository.getPatientById(patientId);
         System.out.println("Patient Medical Records");
         System.out.println(patient.medicalRecord());
@@ -110,10 +115,11 @@ public class DoctorMenu implements Menu {
 
     public void updatePatientMedicalRecords() {
         System.out.println("Enter patient's id: ");
+
         String patientId = scanner.nextLine();
+
         Patient patient = patientRepository.getPatientById(patientId);
         System.out.println("Add new ");
-
     }
 
     public void viewPersonalSchedule() {
@@ -150,14 +156,20 @@ public class DoctorMenu implements Menu {
         }
     }
 
+    /**
+     * Used to mark an appointment as completed. Doctor must fill out the outcome record
+     * before it can be marked as completed
+     * Input: Appointment id, date of completion, type of service
+     */
     public void recordAppointmentOutcome() {
+        System.out.println("Mark appointment as completed");
         System.out.print("Enter appointment's id: ");
         String appointmentId = scanner.nextLine();
         System.out.print("Enter date: ");
         String date = scanner.nextLine();
         System.out.print("Enter type of service: ");
         String service = scanner.nextLine();
-
+        // enter list of
     }
 
     public void logout() {
