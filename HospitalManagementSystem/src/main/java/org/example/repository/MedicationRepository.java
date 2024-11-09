@@ -3,9 +3,7 @@ package org.example.repository;
 import org.example.entity.Medication;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,6 @@ public class MedicationRepository {
 
     public void loadMedicationsFromCSV() {
         String line;
-        medications.clear(); // Clear list before loading to avoid duplicates
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             while ((line = br.readLine()) != null) {
@@ -38,16 +35,9 @@ public class MedicationRepository {
         }
     }
 
-    public void saveMedicationsToCSV() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
-            for (Medication medication : medications) {
-                bw.write(medication.getId() + "," + medication.getName() + "," +
-                        medication.getQuantity() + "," + medication.getStatus());
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Error writing to CSV file: " + e.getMessage());
-        }
+    public void updateMedicationStatus(int id, String medicationName, Medication.Status status) {
+
+    }
 
     public List<Medication> getMedicationsById(int prescriptionId) {
         List<Medication> result = new ArrayList<>();
@@ -57,17 +47,5 @@ public class MedicationRepository {
             }
         }
         return result;
-    }
-
-    // Additional method to add a new medication and save to CSV
-    public void addMedication(Medication medication) {
-        medications.add(medication);
-        saveMedicationsToCSV(); // Save changes after adding
-    }
-
-    public void addMedication(int id, String name, int quantity) {
-        Medication medication = new Medication(id, name, quantity);
-        medications.add(medication);
-        saveMedicationsToCSV();
     }
 }

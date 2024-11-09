@@ -49,10 +49,6 @@ public class AppointmentOutcomeRecord {
     public void addMedication(Medication medication) {
         this.medications.add(medication);
     }
-    public void addMedication(String name, int quantity) {
-        Medication medication = new Medication(appointmentId, name, quantity);
-        this.medications.add(medication);
-    }
 
     public void addTypeOfService(String typeOfService) {
         this.typeOfService.add(typeOfService);
