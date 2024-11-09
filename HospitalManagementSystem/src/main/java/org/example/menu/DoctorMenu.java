@@ -103,7 +103,7 @@ public class DoctorMenu implements Menu {
 
     public void viewPatientMedicalRecords() {
         System.out.print("Enter patient's id: ");
-        int patientId = scanner.nextInt();
+        String patientId = scanner.next();
         Patient patient = patientRepository.getPatientById(patientId);
         System.out.println("Patient Medical Records");
         System.out.println(patient.medicalRecord());
@@ -111,10 +111,9 @@ public class DoctorMenu implements Menu {
 
     public void updatePatientMedicalRecords() {
         System.out.println("Enter patient's id: ");
-        int patientId = scanner.nextInt();
+        String patientId = scanner.next();
         Patient patient = patientRepository.getPatientById(patientId);
         System.out.println("Add new ");
-
     }
 
     public void viewPersonalSchedule() {
