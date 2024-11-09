@@ -54,7 +54,7 @@ public class AppointmentOutcomeRecordRepository {
     }
 
     // Method to save a record to CSV
-    public void saveRecordToCSV(AppointmentOutcomeRecord record) {
+    public void saveRecordsToCSV(AppointmentOutcomeRecord record) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             // Convert record fields into a CSV string
             String csvLine = recordToCSV(record);

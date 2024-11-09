@@ -35,11 +35,15 @@ public class MedicineRepository {
             System.out.println("Error reading CSV file: " + e.getMessage());
         }
     }
-    public void saveMedicineToCSV(Medicine medicine, String filePath) {
-        try (FileWriter writer = new FileWriter(filePath, true)) {
-            writer.append(medicine.getName()).append(",")
-                    .append(String.valueOf(medicine.getStockLevel())).append(",")
-                    .append(String.valueOf(medicine.getLowStockAlert())).append("\n");
+
+    private void saveMedicinesToCSV() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (Medicine medicine : medicines) {
+                writer.write(medicine.getName() + ","
+                        + medicine.getStockLevel() + ","
+                        + medicine.getLowStockAlert());
+                writer.newLine();
+            }
         } catch (IOException e) {
             System.out.println("Error writing to CSV file: " + e.getMessage());
         }
@@ -47,9 +51,10 @@ public class MedicineRepository {
 
     public void addMedicine(Medicine medicine) {
         medicines.add(medicine);
-        saveMedicineToCSV(medicine, filePath);
+        saveMedicinesToCSV();
     }
-    public Medicine getMedication(String name) {
+
+    public Medicine getMedicine(String name) {
         for (Medicine medicine : medicines) {
             if (medicine.getName().equalsIgnoreCase(name)) {
                 return medicine;
@@ -57,9 +62,13 @@ public class MedicineRepository {
         }
         return null;
     }
+    public void removeMedicine(Medicine medicine) {
+        medicines.remove(medicine);
+        saveMedicinesToCSV();
+    }
 
     public void updateStockLevel(String name, int newStockLevel) {
-        Medicine medicine = getMedication(name);
+        Medicine medicine = getMedicine(name);
         if (medicine != null) {
             medicine.setStockLevel(newStockLevel);
             if (newStockLevel < medicine.getLowStockAlert()) {
@@ -71,7 +80,7 @@ public class MedicineRepository {
     }
 
     public void updateLowStockAlert(String name, int newLowStockAlert) {
-        Medicine medicine = getMedication(name);
+        Medicine medicine = getMedicine(name);
         if (medicine != null) {
             medicine.setLowStockAlert(newLowStockAlert);
             if (medicine.getStockLevel() < newLowStockAlert) {
@@ -96,6 +105,6 @@ public class MedicineRepository {
     }
 
     public boolean medicineExists(String medicineName) {
-        return getMedication(medicineName) != null;
+        return getMedicine(medicineName) != null;
     }
 }
