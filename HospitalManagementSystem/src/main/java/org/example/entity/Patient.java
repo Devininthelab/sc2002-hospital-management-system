@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Patient {
     private String id;
@@ -109,4 +110,19 @@ public class Patient {
     }
 
 
+    public String getContact() {
+        return contact;
+    }
+
+    public List<String> getDiagnoses() {
+        return diagnoses;
+    }
+
+    public List<String> getTreatments() {
+        return treatments;
+    }
+
+    public List<String> getPrescriptions() {
+        return prescriptions;
+    }
 }

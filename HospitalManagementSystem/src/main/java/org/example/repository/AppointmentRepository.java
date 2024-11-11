@@ -28,7 +28,6 @@ public class AppointmentRepository {
      * Auto increment the appointment ID counter to the highest ID in the list
      * meaning that the next appointment ID will be unique
      */
-
     private void setHighestAppointmentId() {
         int highestId = 0;
         for (Appointment appointment : appointments) {
@@ -39,6 +38,9 @@ public class AppointmentRepository {
         counter = highestId + 1;  // Update counter to next available ID
     }
 
+    /**
+     * Load appointments from CSV file
+     */
     public void loadAppointmentsFromCSV() {
         String line;
         //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -52,7 +54,7 @@ public class AppointmentRepository {
                     String doctorId = values[2].trim();
                     String date = values[3].trim();
                     int timeslot = Integer.parseInt(values[4].trim());
-                    Appointment.Status status = Appointment.Status.valueOf(values[5].trim().toUpperCase());
+                    String status = values[5].trim().toUpperCase();
 
                     Appointment appointment = new Appointment(id, patientId, doctorId, date, timeslot, status);
                     appointments.add(appointment);
@@ -65,6 +67,9 @@ public class AppointmentRepository {
         }
     }
 
+    /**
+     * Save appointments to CSV file
+     */
     public void saveAppointmentsToCSV() {
         try (FileWriter writer = new FileWriter(filePath, true)) {
             for (Appointment appointment : appointments) {
@@ -84,9 +89,18 @@ public class AppointmentRepository {
         return appointments;
     }
 
-    public boolean addAppointment(String patientId, String doctorId, String date, int timeslot) {
+    /**
+     * Add an appointment to the Appointment List
+     * @param patientId
+     * @param doctorId
+     * @param date
+     * @param timeslot
+     * @param status
+     * @return
+     */
+    public boolean addAppointment(String patientId, String doctorId, String date, int timeslot, String status) {
         // Use counter to assign a unique ID
-        Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot);
+        Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot, "PENDING");
         appointments.add(appointment);
         saveAppointmentsToCSV();
         System.out.println("Appointment added: " + appointment);
@@ -124,12 +138,21 @@ public class AppointmentRepository {
         saveAppointmentsToCSV();
     }
 
+    /**
+     * Get all appointments for a specific patient
+     * @param patientId
+     * @return
+     */
     public List<Appointment> getAppointmentsByPatientId(String patientId) {
         return appointments.stream()
                 .filter(appointment -> appointment.getPatientId().equals(patientId))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Mark an appointment as completed
+     * @param id
+     */
     public void markAsCompleted(int id) {
         Appointment appointment = getAppointmentById(id);
         appointment.setStatus("COMPLETED");

@@ -2,42 +2,39 @@ package org.example.entity;
 
 import java.time.LocalDate;
 
+/**
+ * Appointment
+ * Depend on
+ * - AppointmentOutcomeRecord
+ */
 public class Appointment {
-    // might need to store this somewhere to get persistence
     private int id;
     private String doctorId;
     private String patientId;
     private String date;
     private int timeslot; // 8 hours a day, 6 days a week = 8 x 6 = 48 timeslots ranging from 0 to 47
     private String status;
-    private AppointmentOutcomeRecord outcome = null;
-    //AVOID DUPLICATE ID WHEN WORKING WITH DATABASE AND COUNTER
-    // Constructor for creating an appointment (patient perspective)
-    public Appointment(int id, String patientId, String doctorId, String date, int timeslot) {
-        this.id = id;
-        this.patientId = patientId;
-        this.doctorId = doctorId;
-        this.date = date;
-        this.timeslot = timeslot;
-        this.status = "PENDING";
-    }
+    private AppointmentOutcomeRecord outcome;
 
-    public void reschedule(String doctorId, String date, int timeslot) {
-        this.doctorId = doctorId;
-        this.date = date;
-        this.timeslot = timeslot;
-    }
-
-    // Parameterized constructor
-    // Constructor when retrieving from database
-    public Appointment(int id, String patientId, String doctorId, String date, int timeslot, Status status) {
+    /**
+     * Constructor for creating an appointment
+     * @param id
+     * @param patientId
+     * @param doctorId
+     * @param date
+     * @param timeslot
+     * @param status
+     */
+    public Appointment(int id, String patientId, String doctorId, String date, int timeslot, String status) {
         this.id = id;
         this.patientId = patientId;
         this.doctorId = doctorId;
         this.date = date;
         this.timeslot = timeslot;
         this.status = status;
+        this.outcome = null;
     }
+
     // Getters and Setters
     public int getId() {
         return id;
@@ -99,18 +96,16 @@ public class Appointment {
                 ", status='" + status + '\'' +
                 '}';
     }
-    
-    // Method to create an AppointmentOutcomeRecord if status is completed
-    //TODO: improve this
-    public AppointmentOutcomeRecord createOutcomeRecordIfCompleted() {
-        if (status == "COMPLETED") {
-			AppointmentOutcomeRecord outcomeRecord = new AppointmentOutcomeRecord(id, date, timeslot);
-            this.outcome = outcomeRecord;
-            System.out.println("Outcome record created: " + outcomeRecord);
-            return outcomeRecord;
-        } else {
-            System.out.println("Appointment is not completed. No outcome record created.");
-            return null;
-        }
+
+    /**
+     * Reschedule an appointment
+     * @param doctorId
+     * @param date
+     * @param timeslot
+     */
+    public void reschedule(String doctorId, String date, int timeslot) {
+        this.doctorId = doctorId;
+        this.date = date;
+        this.timeslot = timeslot;
     }
 }
