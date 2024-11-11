@@ -129,4 +129,10 @@ public class AppointmentRepository {
                 .filter(appointment -> appointment.getPatientId().equals(patientId))
                 .collect(Collectors.toList());
     }
+
+    public void markAsCompleted(int id) {
+        Appointment appointment = getAppointmentById(id);
+        appointment.setStatus("COMPLETED");
+        saveAppointmentsToCSV();
+    }
 }

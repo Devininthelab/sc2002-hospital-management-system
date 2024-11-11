@@ -1,13 +1,10 @@
 package org.example.menu;
 
-import org.example.entity.Appointment;
-import org.example.entity.Doctor;
-import org.example.entity.Patient;
-import org.example.repository.AppointmentRepository;
-import org.example.repository.DoctorRepository;
-import org.example.repository.PatientRepository;
-import org.example.repository.StaffRepository;
+import org.example.entity.*;
+import org.example.repository.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,6 +15,8 @@ public class DoctorMenu implements Menu {
     private final StaffRepository staffRepository = new StaffRepository();
     private final DoctorRepository doctorRepository = new DoctorRepository();
     private final AppointmentRepository appointmentRepository = new AppointmentRepository();
+    private final MedicationRepository medicationRepository = new MedicationRepository();
+    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
 
 
     public void displayMenu() {
@@ -89,7 +88,7 @@ public class DoctorMenu implements Menu {
                 viewUpcomingAppointments();
                 break;
             case 7:
-                recordAppointmentOutcome();
+                completeAppointment();
                 break;
             case 8:
                 logout();
@@ -105,8 +104,6 @@ public class DoctorMenu implements Menu {
         System.out.print("Enter patient's id: ");
 
         String patientId = scanner.nextLine();
-
-
 
         Patient patient = patientRepository.getPatientById(patientId);
         System.out.println("Patient Medical Records");
@@ -164,17 +161,43 @@ public class DoctorMenu implements Menu {
      * before it can be marked as completed
      * Input: Appointment id, date of completion, type of service
      */
-    public void recordAppointmentOutcome() {
+    public void completeAppointment() {
         System.out.println("Mark appointment as completed");
         System.out.print("Enter appointment's id: ");
-        String appointmentId = scanner.nextLine();
-        System.out.print("Enter date: ");
-        String date = scanner.nextLine();
-        System.out.print("Enter type of service: ");
-        String service = scanner.nextLine();
-        //TODO: prompt for list of prescription
+        int appointmentId = scanner.nextInt();
+        // mark appointment as complete
+        appointmentRepository.markAsCompleted(appointmentId);
 
+        System.out.print("Enter date(dd/MM/yyyy): ");
+        LocalDate date = LocalDate.parse(scanner.nextLine());
+        List<String> services = new ArrayList<>();
+        while (true) {
+            System.out.print("Enter type of service (leave empty to finish): ");
+            String service = scanner.nextLine();
+            if (service.equals("")) {
+                break;
+            }
+
+            services.add(service);
+        }
+        //TODO: prompt for list of prescription
+        List<Medication> prescribeMedications = new ArrayList<>();
+        while (true) {
+            System.out.print("Enter medications (leave empty to finish): ");
+            String medicationName = scanner.nextLine();
+            if (medicationName.equals("")) {
+                break;
+            }
+
+            int quantity = scanner.nextInt();
+            medicationRepository.addMedication(new Medication(appointmentId, medicationName, quantity));
+        }
+
+        System.out.print("Consultation Notes: ");
+        String notes = scanner.nextLine();
         //TODO: appointment outcome record repository to save new outcome record
+        AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(appointmentId, date, notes, services, prescribeMedications);
+        appointmentOutcomeRecordRepository.addAppointmentOutcomeRecord(record);
     }
 
     public void logout() {

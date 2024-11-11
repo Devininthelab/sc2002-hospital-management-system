@@ -2,8 +2,10 @@ package org.example.menu;
 
 
 import org.example.entity.Appointment;
+import org.example.entity.AppointmentOutcomeRecord;
 import org.example.entity.Doctor;
 import org.example.entity.Patient;
+import org.example.repository.AppointmentOutcomeRecordRepository;
 import org.example.repository.AppointmentRepository;
 import org.example.repository.DoctorRepository;
 import org.example.repository.PatientRepository;
@@ -17,6 +19,7 @@ public class PatientMenu implements Menu {
     private final PatientRepository patientRepository = new PatientRepository();
     private final DoctorRepository doctorRepository = new DoctorRepository();
     private final AppointmentRepository appointmentRepository = new AppointmentRepository();
+    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
     private Patient patient;
     private Scanner scanner = new Scanner(System.in);
 
@@ -259,6 +262,10 @@ public class PatientMenu implements Menu {
 
     private void viewPastAppointmentOutcomeRecord() {
         System.out.println("Past Appointment Outcome Record:");
+        List<AppointmentOutcomeRecord> records = new ArrayList<>();
+        for (Appointment appointment : appointmentRepository.getAppointmentsByPatientId(patient.getId())) {
+            records.add(appointmentOutcomeRecordRepository.getRecordById(appointment.getId()));
+        }
     }
 }
 

@@ -27,7 +27,6 @@ public class DoctorRepository {
      * @return a 2D array of the doctor's schedule
      */
     public String[][] loadDoctorSchedule(String doctorId) {
-        Doctor doctor = getDoctorById(doctorId);
         String[][] schedule = new String[20][7];
         try (BufferedReader br = new BufferedReader(new FileReader(doctorId + "_availability.csv"))) {
             String line;
