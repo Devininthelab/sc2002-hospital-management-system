@@ -27,7 +27,7 @@ public class DoctorMenu implements Menu {
                 "4. Set Availability for Appointments\n" +
                 "5. Manage Appointment Requests\n" +
                 "6. View Upcoming Appointments\n" +
-                "7. Record Appointment Outcome\n" +
+                "7. Complete an appointment\n" +
                 "8. Change password" +
                 "9. Logout");
     }
@@ -122,11 +122,8 @@ public class DoctorMenu implements Menu {
     }
 
     public void viewPersonalSchedule() {
-        String[][] schedule = doctor.getSchedule();
-        System.out.printf("| %-8s | %-9s | %-9s | %-9s | %-9s | %-9s | %-9s |%n", "", "MONDAY", "TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY");
-        for (int i = 0; i < 20; i++) {
-            System.out.printf("| %-8s | %-9s | %-9s | %-9s | %-9s | %-9s | %-9s |%n", schedule[i][0], schedule[i][1], schedule[i][2], schedule[i][3], schedule[i][4], schedule[i][5], schedule[i][6]);
-        }
+        System.out.println("Your personal schedule:");
+        doctor.printSchedule();
     }
 
     public void setAvailabilityForAppointments() {
