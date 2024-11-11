@@ -1,42 +1,24 @@
 package org.example.entity;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentOutcomeRecord {
     private int appointmentId;
-    private int timeslot;
-    private String date;
-    private ArrayList<String> typeOfService;
+    private LocalDate date;
+    private List<String> typeOfService;
     private String consultationNotes;
     private List<Medication> medications;
 
-    // Constructor to initialize from a repository
-    public AppointmentOutcomeRecord(int appointmentId, String date, int timeslot) {
-        this.appointmentId = appointmentId;
-        this.date = date;
-        this.timeslot = timeslot;
-        this.typeOfService = new ArrayList<>();
-        this.consultationNotes = "";
-        this.medications = new ArrayList<>(); // Initialize empty, to be populated by the repository
-    }
 
-    public AppointmentOutcomeRecord(int appointmentId, String date, int timeslot, String consultationNotes) {
+    public AppointmentOutcomeRecord(int appointmentId, LocalDate date, String consultationNotes, List<String> typeOfService, List<Medication> medications) {
         this.appointmentId = appointmentId;
         this.date = date;
-        this.timeslot = timeslot;
-        this.consultationNotes = consultationNotes;
-        this.typeOfService = new ArrayList<>();
-        this.medications = new ArrayList<>() ;
-    }
-
-    public AppointmentOutcomeRecord(int appointmentId, String date, int timeslot, String consultationNotes, ArrayList<String> typeOfService) {
-        this.appointmentId = appointmentId;
-        this.date = date;
-        this.timeslot = timeslot;
         this.consultationNotes = consultationNotes;
         this.typeOfService = typeOfService;
-        this.medications = new ArrayList<>();
+        this.medications = medications;
     }
 
     public List<Medication> getMedications() {
@@ -62,7 +44,7 @@ public class AppointmentOutcomeRecord {
         this.typeOfService.remove(typeOfService);
     }
 
-    public ArrayList<String> getTypeOfService() {
+    public List<String> getTypeOfService() {
         return typeOfService;
     }
 
@@ -78,19 +60,11 @@ public class AppointmentOutcomeRecord {
         this.appointmentId = appointmentId;
     }
 
-    public int getTimeslot() {
-        return timeslot;
-    }
-
-    public void setTimeslot(int timeslot) {
-        this.timeslot = timeslot;
-    }
-
     public String getDate() {
-        return date;
+        return DateTimeFormatter.ofPattern("dd-MM-yyyy").format(date);
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -117,7 +91,6 @@ public class AppointmentOutcomeRecord {
         return "AppointmentOutcomeRecord{" +
                 "appointmentId=" + appointmentId +
                 ", date='" + date + '\'' +
-                ", timeslot=" + timeslot +
                 ", consultationNotes='" + consultationNotes + '\'' +
                 ", typeOfService=" + typeOfService +
                 ", Prescription:" +

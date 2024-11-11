@@ -2,8 +2,10 @@ package org.example.menu;
 
 
 import org.example.entity.Appointment;
+import org.example.entity.AppointmentOutcomeRecord;
 import org.example.entity.Doctor;
 import org.example.entity.Patient;
+import org.example.repository.AppointmentOutcomeRecordRepository;
 import org.example.repository.AppointmentRepository;
 import org.example.repository.DoctorRepository;
 import org.example.repository.PatientRepository;
@@ -17,6 +19,7 @@ public class PatientMenu implements Menu {
     private final PatientRepository patientRepository = new PatientRepository();
     private final DoctorRepository doctorRepository = new DoctorRepository();
     private final AppointmentRepository appointmentRepository = new AppointmentRepository();
+    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
     private Patient patient;
     private Scanner scanner = new Scanner(System.in);
 
@@ -61,7 +64,9 @@ public class PatientMenu implements Menu {
         }
     }
 
-
+    /**
+     * Display the menu options for the patient
+     */
     public void displayMenu() {
         System.out.println("=====PATIENT MENU=====");
         System.out.println("1. Change password" +
@@ -76,6 +81,11 @@ public class PatientMenu implements Menu {
                 "10. Logout");
     }
 
+    /**
+     * Handle the choice of the patient
+     * Wire the choice to the corresponding method
+     * @param choice the choice of the patient
+     */
     public void handleChoice(int choice) {  // Cast User to Patient
         switch (choice) {
             case 1:
@@ -113,16 +123,42 @@ public class PatientMenu implements Menu {
         }
     }
 
+    /**
+     * Change the password of the patient
+     * Patient should enter the new password
+     * Call the patientRepository to update the password
+     */
     private void changePassword() {
         System.out.print("Please enter new password: ");
         String password = scanner.nextLine();
         patientRepository.updatePatientField(patient.getId(), "password",password);
     }
 
+    /**
+     * View the medical record of the patient
+     * Call the medicalRecord method in the patient class
+     * TODO: Something doesn't seem right here,
+     * Printing format: id, name, date of birth, gender, contact, blood type
+     * Past diagnosis, treatment and prescription
+     */
     private void viewMedicalRecord() {
-        System.out.println(patient.medicalRecord());
+        System.out.println("Patient Medical Record:");
+        System.out.println("ID: " + patient.getId());
+        System.out.println("Name: " + patient.getName());
+        System.out.println("Date of Birth: " + patient.getDateOfBirth());
+        System.out.println("Gender: " + patient.getGender());
+        System.out.println("Contact: " + patient.getContact());
+        System.out.println("Blood Type: " + patient.getBloodType());
+        for (int i = 0; i < patient.getDiagnoses().size(); i++) {
+            System.out.printf("\nDiagnosis: %s.\nTreatment: %s.\nPrescription: %s", patient.getDiagnoses().get(i), patient.getTreatments().get(i), patient.getPrescriptions().get(i));
+        }
     }
 
+    /**
+     * Update the personal information of the patient
+     * Patient should be able to update their name, date of birth, and contact
+     * Call the patientRepository to update the patient's information
+     */
     private void updatePersonalInformation() {
         System.out.println("You can only update: \n" +
                 "1. Name\n" +
@@ -163,7 +199,8 @@ public class PatientMenu implements Menu {
      * View available appointment slots for a doctor
      * Patient should select a doctor to view their available appointment slots
      * (Use doctorRepository to interact with the doctor data)
-     * Then prinit the doctor's schedule
+     * Then print it the doctor's schedule
+     * TODO: Consider moving the display of doctor's schedule to the Doctor class
      */
     private void viewAvailableAppointmentSlots() {
         //implement method in Patient class
@@ -180,10 +217,7 @@ public class PatientMenu implements Menu {
         String doctorId = scanner.nextLine();
         Doctor doctor = doctorRepository.getDoctorById(doctorId);
         String[][] schedule = doctor.getSchedule();
-        System.out.printf("| %-8s | %-9s | %-9s | %-9s | %-9s | %-9s | %-9s |%n", "", "MONDAY", "TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY");
-        for (int i = 0; i < 20; i++) {
-            System.out.printf("| %-8s | %-9s | %-9s | %-9s | %-9s | %-9s | %-9s |%n", schedule[i][0], schedule[i][1], schedule[i][2], schedule[i][3], schedule[i][4], schedule[i][5], schedule[i][6]);
-        }
+        doctor.printSchedule();
     }
 
     /**
@@ -198,7 +232,7 @@ public class PatientMenu implements Menu {
         int timeslot = scanner.nextInt();
         System.out.print("Select doctor ID:");
         String doctorId = scanner.nextLine();
-        boolean success = appointmentRepository.addAppointment(patient.getId(), doctorId, date, timeslot);
+        boolean success = appointmentRepository.addAppointment(patient.getId(), doctorId, date, timeslot, "PENDING");
         if (success) {
             System.out.println("Appointment scheduled");
         } else {
@@ -231,6 +265,7 @@ public class PatientMenu implements Menu {
         appointmentRepository.rescheduleAppointment(id, doctorId, date, timeslot);
         // occupy slot
         doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "unavailable");
+        System.out.println("Appointment rescheduled");
     }
 
     /**
@@ -241,24 +276,32 @@ public class PatientMenu implements Menu {
         System.out.println("Enter appointment ID: ");
         int id = scanner.nextInt();
         appointmentRepository.deleteAppointmentById(id);
+        System.out.println("Appointment cancelled");
     }
 
     /**
-     * Use appointmentRepository to
+     * View the scheduled appointment of the patient
+     * Display the detail and status of the appointment
      */
     private void viewScheduledAppointment() {
         // detail and status of scheduled appointment
         List<Appointment> appointments = appointmentRepository.getAppointmentsByPatientId(patient.getId());
         System.out.println("Scheduled Appointment:");
-        for (Appointment appointment : appointments.stream()
-                .filter(appointment -> appointment.getStatus().equals())) {
-            System.out.println(appointment);
-        }
+        appointments.stream()
+                .filter(appointment -> appointment.getStatus().equals("PENDING"))
+                .forEach(System.out::println);
     }
 
-
+    /**
+     * View the past appointment outcome record of the patient
+     * Display the outcome record of the past appointment
+     */
     private void viewPastAppointmentOutcomeRecord() {
         System.out.println("Past Appointment Outcome Record:");
+        List<AppointmentOutcomeRecord> records = new ArrayList<>();
+        for (Appointment appointment : appointmentRepository.getAppointmentsByPatientId(patient.getId())) {
+            records.add(appointmentOutcomeRecordRepository.getRecordById(appointment.getId()));
+        }
     }
 }
 

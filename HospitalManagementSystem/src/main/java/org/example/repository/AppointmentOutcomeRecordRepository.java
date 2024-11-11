@@ -18,6 +18,9 @@ public class AppointmentOutcomeRecordRepository {
         loadRecordsFromCSV();
     }
 
+    /**
+     * Load records from CSV file
+     */
     private void loadRecordsFromCSV() {
         String line;
 
@@ -109,4 +112,10 @@ public class AppointmentOutcomeRecordRepository {
         }
         return null; // If not found
     }
+
+    public void addAppointmentOutcomeRecord(AppointmentOutcomeRecord record) {
+        records.add(record);
+        saveRecordsToCSV(record);
+    }
+
 }

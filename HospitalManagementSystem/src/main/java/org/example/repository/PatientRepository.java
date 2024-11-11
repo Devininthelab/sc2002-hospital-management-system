@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Repository class for managing patients.
+ */
 public class PatientRepository {
     private List<Patient> patients;
     private final AppointmentRepository appointmentRepository = new AppointmentRepository();
@@ -18,11 +21,21 @@ public class PatientRepository {
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final String csvPath = "src/main/resources/Patient_List.csv";
 
+    /**
+     * Constructor that initializes the list of patients by loading data from a CSV file.
+     * TODO: Implement depedency injection for every dependencies
+     */
     public PatientRepository() {
         this.patients = new ArrayList<>();
         loadPatientsFromCSV(csvPath);
     }
 
+    /**
+     * Load patients from a CSV file.
+     * The List of patients will be stored in the patients field.
+     * Diagnosis, treatment and prescription is parsed using ; as delimiter.
+     * @param csvPath the path to the CSV file
+     */
     private void loadPatientsFromCSV(String csvPath) {
         try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
             String line;
@@ -53,6 +66,11 @@ public class PatientRepository {
         }
     }
 
+    /**
+     * Get a list of all patients.
+     * TODO: Consider encapsulating the list of patients by returning a deep copy of the list.
+     * @return the list of patients
+     */
     public Patient getPatientById(String id) {
         for (Patient patient : patients) {
             if (patient.getId().equals(id)) {
@@ -62,6 +80,11 @@ public class PatientRepository {
         return null;
     }
 
+    /**
+     * Update a patient's field with a new value.
+     * The field is specified as a string, and the new value is also a string.
+     * Some component needs to convert different types of values to string before calling this method.
+     */
     public void updatePatientField(String id, String field, String newValue) {
         Patient patient = getPatientById(id);
         if (patient == null) {
@@ -95,6 +118,9 @@ public class PatientRepository {
         savePatientsToCSV();
     }
 
+    /**
+     * Save the list of patients back to the CSV file.
+     */
     private void savePatientsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {
             for (Patient patient : patients) {

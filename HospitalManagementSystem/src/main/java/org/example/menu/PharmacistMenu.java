@@ -134,7 +134,7 @@ public class PharmacistMenu implements Menu {
 
             System.out.print("Enter new prescription status: ");
             String status = scanner.nextLine();
-            medicationRepository.updateMedicationStatus(appointmentId, presciptionName, Medication.stringToStatus(status));
+            medicationRepository.updateMedicationStatus(appointmentId, presciptionName, status);
         }
         System.out.println("Prescription status updated.");
     }
