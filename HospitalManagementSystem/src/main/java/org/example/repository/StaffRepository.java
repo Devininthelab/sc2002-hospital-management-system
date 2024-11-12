@@ -195,5 +195,12 @@ public class StaffRepository {
     }
 
 
-
+    public Pharmacist getPharmacistById(String id) {
+        for (Staff staff : staffList) {
+            if (staff.getId().equals(id) && staff.getRole().equals("Pharmacist")) {
+                return (Pharmacist) staff;
+            }
+        }
+        return null;
+    }
 }

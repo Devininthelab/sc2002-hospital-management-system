@@ -4,23 +4,50 @@ package org.example.menu;
 import org.example.entity.Medicine;
 import org.example.entity.Pharmacist;
 import org.example.entity.AppointmentOutcomeRecord;
-import org.example.repository.AppointmentOutcomeRecordRepository;
-import org.example.repository.MedicineRepository;
-import org.example.repository.StaffRepository;
+import org.example.repository.*;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Pharmacist menu
+ * Pharmacist can view appointment outcome record, update prescription status, view medication inventory, submit replenishment request
+ * Menu keeps a pharmacist session id to keep track of user's state
+ * The following dependencies are injected:
+ * - StaffRepository - Pharmacist login
+ * - Medicine repository - View medication inventory, submit replenishment request
+ * - AppointmentOutcomeRecordRepository - View appointment outcome record, update prescription status
+ * - MedicineRequestRepository - Submit replenishment request
+ * - MedicationRepository - Update prescription status
+ */
 public class PharmacistMenu implements Menu {
-    private final Scanner scanner = new Scanner(System.in);
-    private final StaffRepository staffRepository = new StaffRepository();
-    private final MedicineRepository medicineRepository = new MedicineRepository();
-    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
-    private final MedicineRequestRepository medicineRequestRepository = new MedicineRequestRepository();
-    private final MedicationRepository medicationRepository = new MedicationRepository();
+    private Scanner scanner;
+    private StaffRepository staffRepository;
+    private MedicineRepository medicineRepository;
+    private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
+    private MedicineRequestRepository medicineRequestRepository;
+    private MedicationRepository medicationRepository;
     private Pharmacist pharmacist;
+
+    /**
+     * Constructor to inject dependencies
+     * @param scanner
+     * @param staffRepository
+     * @param medicineRepository
+     * @param appointmentOutcomeRecordRepository
+     * @param medicineRequestRepository
+     * @param medicationRepository
+     */
+    public PharmacistMenu(Scanner scanner, StaffRepository staffRepository, MedicineRepository medicineRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository, MedicineRequestRepository medicineRequestRepository, MedicationRepository medicationRepository) {
+        this.scanner = scanner;
+        this.staffRepository = staffRepository;
+        this.medicineRepository = medicineRepository;
+        this.appointmentOutcomeRecordRepository = appointmentOutcomeRecordRepository;
+        this.medicineRequestRepository = medicineRequestRepository;
+        this.medicationRepository = medicationRepository;
+    }
 
     /**
      * Start pharmacist menu
@@ -135,6 +162,11 @@ public class PharmacistMenu implements Menu {
             System.out.print("Enter new prescription status: ");
             String status = scanner.nextLine();
             medicationRepository.updateMedicationStatus(appointmentId, presciptionName, status);
+            if (status.equals("DISPENSED")) {
+                int quantity = medicationRepository.getMedicationsByNameAndId(appointmentId, presciptionName).getQuantity();
+                medicineRepository.decreaseStockLevel(presciptionName, quantity);
+            }
+
         }
         System.out.println("Prescription status updated.");
     }
