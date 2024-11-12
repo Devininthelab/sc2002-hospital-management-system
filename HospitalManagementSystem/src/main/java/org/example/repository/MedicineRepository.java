@@ -112,4 +112,12 @@ public class MedicineRepository {
     public boolean medicineExists(String medicineName) {
         return getMedicine(medicineName) != null;
     }
+
+    public void decreaseStockLevel(String presciptionName, int quantity) {
+        Medicine medicine = getMedicine(presciptionName);
+        if (medicine != null) {
+            medicine.setStockLevel(medicine.getStockLevel() - quantity);
+            saveMedicinesToCSV();
+        }
+    }
 }

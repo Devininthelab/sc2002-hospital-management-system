@@ -8,49 +8,22 @@ package org.example.entity;
  * and a status for request
  */
 public class Medication {
-    public enum Status {
-        PENDING, DISPENSED;
-    }
-
-    /**
-     * Convert user input/external service passed parameter
-     * to local enum
-     * @param status
-     * @return corresponding enum
-     */
-    public static Status stringToStatus(String status) {
-        switch (status) {
-            case "PENDING":
-                return Status.PENDING;
-            case "DISPENSED":
-                return Status.DISPENSED;
-            default:
-                return Status.PENDING;
-        }
-    }
-
     /**
      * id is the same as appointment id and appointment outcome record id
      */
     private int id;
     private String name;
     private int quantity;
-    private Status status;
+    private String status;
 
     // Database's Perspective
-    public Medication(int id, String name, int quantity, Status status) {
+    public Medication(int id, String name, int quantity, String status) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.status = status;
     }
-    // Doctor's Adding
-    public Medication(int id, String name, int quantity) {
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
-        this.status = Status.PENDING;
-    }
+
     public int getId() {
         return id;
     }
@@ -59,14 +32,14 @@ public class Medication {
         return name;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
     public int getQuantity() {
         return quantity;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
