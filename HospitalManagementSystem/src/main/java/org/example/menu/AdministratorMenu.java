@@ -1,11 +1,14 @@
 package org.example.menu;
 
 import org.example.entity.Administrator;
+import org.example.entity.Appointment;
+import org.example.entity.AppointmentOutcomeRecord;
 import org.example.repository.AppointmentRepository;
 import org.example.repository.MedicineRepository;
 import org.example.repository.StaffRepository;
 import org.example.entity.Staff;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class AdministratorMenu implements Menu {
@@ -187,24 +190,49 @@ public class AdministratorMenu implements Menu {
 
 
     /**
-     * View the list of scheduled appointments
+     * View the list of scheduled appointments of all patients
+     * Display the details and status of each appointment
+     * ON DEVELOPMENT
      */
     public void viewScheduledAppointments() {
-
+        List<Appointment> appointments = appointmentRepository.getAllAppointments();
+        if (appointments == null || appointments.isEmpty()) {
+            System.out.println("No scheduled appointments.");
+        } else {
+            System.out.println("Scheduled Appointments:");
+            appointments.stream().forEach(System.out::println);
+        }
     }
+
 
     /**
      * Update the status of an appointment
      */
     public void updateAppointmentStatus() {
-
+        System.out.println("Enter the appointment id: ");
+        int id = scanner.nextInt();
+        System.out.println("Enter the new status: ");
+        String status = scanner.nextLine();
+        Appointment appointment = appointmentRepository.getAppointmentById(id);
+        if (appointment == null) {
+            System.out.println("Appointment not found.");
+        }
+        else {
+            appointmentRepository.updateAppointmentStatus(id, status);
+        }
     }
 
     /**
      * Record the outcome of an appointment
+     * First need to link to the appointment
+     * ON DEVELOPMENT, NEED TO MAKE SURE AppointmentOutcomeRecord works first
      */
     public void recordAppointmentOutcome() {
-
+        System.out.println("Enter the appointment id: ");
+        int id = scanner.nextInt();
+        System.out.println("Enter the outcome record: ");
+        String outcomeRecord = scanner.nextLine();
+        AppointmentOutcomeRecord appointmentOutcomeRecord;
     }
 
 
