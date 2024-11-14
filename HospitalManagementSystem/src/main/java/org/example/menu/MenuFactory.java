@@ -30,13 +30,13 @@ public class MenuFactory {
 
     public Menu createMenu(String role) {
         switch (role) {
-            case "patient":
+            case "PATIENT":
                 return new PatientMenu(patientRepository,
                         doctorRepository,
                         appointmentRepository,
                         appointmentOutcomeRecordRepository,
                         scanner);
-            case "doctor":
+            case "DOCTOR":
                 return new DoctorMenu(scanner,
                         patientRepository,
                         staffRepository,
@@ -44,14 +44,14 @@ public class MenuFactory {
                         appointmentRepository,
                         prescriptionRepository,
                         appointmentOutcomeRecordRepository);
-            case "pharmacist":
+            case "PHARMACIST":
                 return new PharmacistMenu(scanner,
                         staffRepository,
                         medicineRepository,
                         appointmentOutcomeRecordRepository,
                         medicineRequestRepository,
                         prescriptionRepository);
-            case "administrator":
+            case "ADMINISTRATOR":
                 return new AdministratorMenu(staffRepository,
                         appointmentRepository,
                         appointmentOutcomeRecordRepository,

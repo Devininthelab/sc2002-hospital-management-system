@@ -155,8 +155,14 @@ public class PatientMenu implements Menu {
         System.out.println("Gender: " + patient.getGender());
         System.out.println("Contact: " + patient.getContact());
         System.out.println("Blood Type: " + patient.getBloodType());
-        for (int i = 0; i < patient.getDiagnoses().size(); i++) {
-            System.out.printf("\nDiagnosis: %s.\nTreatment: %s.\nPrescription: %s", patient.getDiagnoses().get(i), patient.getTreatments().get(i), patient.getPrescriptions().get(i));
+        for (String diagnosis : patient.getDiagnoses()) {
+            System.out.println("Diagnosis: " + diagnosis);
+        }
+        for (String treatment : patient.getTreatments()) {
+            System.out.println("Treatment: " + treatment);
+        }
+        for (String prescription : patient.getPrescriptions()) {
+            System.out.println("Prescription: " + prescription);
         }
     }
 
@@ -220,6 +226,7 @@ public class PatientMenu implements Menu {
         }
         // print doctor's name, and id
         System.out.print("Select a doctor, provide doctor's id: ");
+
         String doctorId = scanner.nextLine();
         Doctor doctor = doctorRepository.getDoctorById(doctorId);
         String[][] schedule = doctor.getSchedule();

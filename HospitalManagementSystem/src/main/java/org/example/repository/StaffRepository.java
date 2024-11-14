@@ -37,7 +37,18 @@ public class StaffRepository {
                 String gender = values[3].trim();
                 int age = Integer.parseInt(values[4].trim());
                 String password = values[5].trim();
-                staffList.add(new Staff(id, name, role, gender, age, password));
+                switch (role) {
+                    case "Doctor":
+                        staffList.add(new Doctor(id, name, role, gender, age, password));
+                        break;
+                    case "Pharmacist":
+                        staffList.add(new Pharmacist(id, name, role, gender, age, password));
+                        break;
+                    case "Administrator":
+                        staffList.add(new Administrator(id, name, role, gender, age, password));
+                        break;
+                }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -227,7 +238,7 @@ public class StaffRepository {
     public List<Doctor> getAllDoctors() {
         List<Doctor> doctors = new ArrayList<>();
         for (Staff staff : staffList) {
-            if (staff.getRole().equals("Doctor")) {
+            if (staff instanceof Doctor) {
                 doctors.add((Doctor) staff);
             }
         }
