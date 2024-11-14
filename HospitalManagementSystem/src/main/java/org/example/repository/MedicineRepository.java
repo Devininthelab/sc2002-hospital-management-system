@@ -20,7 +20,7 @@ public class MedicineRepository {
      */
     public MedicineRepository(String filePath) {
         this.filePath = filePath;
-        medicines = new ArrayList<>();
+        this.medicines = new ArrayList<>();
         loadMedicinesFromCSV(filePath);
     }
 
@@ -98,10 +98,10 @@ public class MedicineRepository {
 
     /**
      * Remove medicine from inventory
-     * @param medicine
+     * @param medicineName
      */
-    public void removeMedicine(Medicine medicine) {
-        medicines.remove(medicine);
+    public void removeMedicine(String medicineName) {
+        medicines.remove(getMedicine(medicineName));
         saveMedicinesToCSV();
     }
 
@@ -141,5 +141,31 @@ public class MedicineRepository {
 
     public boolean hasLowStockMedicines() {
         return medicines.stream().anyMatch(Medicine::isLowStock);
+    }
+
+    /**
+     * Update stock level of medicine
+     * @param medicineName, quantity
+     */
+    public void updateStockLevel(String medicineName, int quantity) {
+        Medicine medicine = getMedicine(medicineName);
+        if (medicine != null) { // run anyway, cuz check before. Can delete the if statement
+            medicine.setStockLevel(quantity);
+            saveMedicinesToCSV();
+        }
+    }
+
+
+    /**
+     * Update the low threshold of a medicine
+     * @param medicineName
+     * @param lowThreshold
+     */
+    public void updateLowThreshold(String medicineName, int lowThreshold) {
+        Medicine medicine = getMedicine(medicineName);
+        if (medicine != null) {
+            medicine.setLowThreshold(lowThreshold);
+            saveMedicinesToCSV();
+        }
     }
 }

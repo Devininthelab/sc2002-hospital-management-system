@@ -49,7 +49,7 @@ public class PrescriptionRepository {
     /**
      * Overwrite the CSV file with the most up-to-date list of Prescriptions
      */
-    public void savePrescriptionsToCSV(List<Prescription> prescriptions) {
+    public void savePrescriptionsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (Prescription prescription : prescriptions) {
                 bw.write(prescription.getId() + "," + prescription.getName() + "," +
@@ -76,6 +76,16 @@ public class PrescriptionRepository {
         prescriptions.add(prescription);
         savePrescriptionsToCSV(); // Save changes after adding
     }
+
+    /**
+     * Add a list of prescriptions to the repository
+     */
+    public void addPrescriptions(List<Prescription> prescriptions) {
+        this.prescriptions.addAll(prescriptions);
+        savePrescriptionsToCSV();
+    }
+
+
 
     /**
      * Read Prescriptions by name and id
