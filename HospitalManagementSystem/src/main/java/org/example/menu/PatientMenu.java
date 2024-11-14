@@ -242,7 +242,7 @@ public class PatientMenu implements Menu {
         boolean success = appointmentRepository.addAppointment(patient.getId(), doctorId, date, timeslot, "PENDING");
         if (success) {
             System.out.println("Appointment scheduled");
-            doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "unavailable");
+            doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "BOOKED");
         } else {
             System.out.println("Timeslot unavailable. Please choose another timeslot");
         }
@@ -272,7 +272,7 @@ public class PatientMenu implements Menu {
         int timeslot = scanner.nextInt();
         appointmentRepository.rescheduleAppointment(id, doctorId, date, timeslot);
         // occupy slot
-        doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "unavailable");
+        doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "BOOKED");
         System.out.println("Appointment rescheduled");
     }
 
@@ -288,7 +288,7 @@ public class PatientMenu implements Menu {
         String date = appointment.getDate();
         int timeslot = appointment.getTimeslot();
         appointmentRepository.deleteAppointmentById(id);
-        doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "available");
+        doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "AVAILABLE");
         System.out.println("Appointment cancelled");
     }
 
@@ -301,7 +301,7 @@ public class PatientMenu implements Menu {
         List<Appointment> appointments = appointmentRepository.getAppointmentsByPatientId(patient.getId());
         System.out.println("Scheduled Appointment:");
         appointments.stream()
-                .filter(appointment -> appointment.getStatus().equals("PENDING") || appointment.getStatus().equals("ACCEPTED"))
+                .filter(appointment -> appointment.getStatus().equals("ACCEPTED"))
                 .forEach(System.out::println);
     }
 
