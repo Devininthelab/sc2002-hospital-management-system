@@ -71,5 +71,38 @@ public class MedicineRequestRepository {
         saveRequestsToCsv();
     }
 
+    /**
+     * Get all medicine requests
+     * @return List of MedicineRequest
+     */
+    public List<MedicineRequest> getAllMedicineRequests() {
+        return medicineRequests;
+    }
 
+
+    /**
+     * Get medicine request by id
+     * @param id
+     * @return MedicineRequest
+     */
+    public MedicineRequest getMedicineRequestById(int id) {
+        for (MedicineRequest medicineRequest : medicineRequests) {
+            if (medicineRequest.getId() == id) {
+                return medicineRequest;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Approve a medicine request
+     * @param id
+     */
+     public void approveMedicineRequest(int id) {
+         MedicineRequest medicineRequest = getMedicineRequestById(id);
+         if (medicineRequest != null) {
+             medicineRequest.setStatus("APPROVED");
+             saveRequestsToCsv();
+         }
+     }
 }

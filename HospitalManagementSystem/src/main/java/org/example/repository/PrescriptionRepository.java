@@ -12,15 +12,10 @@ import java.util.List;
 
 public class PrescriptionRepository {
     private List<Prescription> prescriptions;
-    private String filePath;
+    private String filePath = "src/main/resources/Prescription.csv";
 
-    /**
-     * Constructor to inject dependencies
-     * @param filePath
-     */
-    public PrescriptionRepository(String filePath) {
+    public PrescriptionRepository() {
         this.prescriptions = new ArrayList<>();
-        this.filePath = filePath;
         loadPrescriptionsFromCSV();
     }
 
@@ -81,6 +76,16 @@ public class PrescriptionRepository {
         prescriptions.add(prescription);
         savePrescriptionsToCSV(); // Save changes after adding
     }
+
+    /**
+     * Add a list of prescriptions to the repository
+     */
+    public void addPrescriptions(List<Prescription> prescriptions) {
+        this.prescriptions.addAll(prescriptions);
+        savePrescriptionsToCSV();
+    }
+
+
 
     /**
      * Read Prescriptions by name and id

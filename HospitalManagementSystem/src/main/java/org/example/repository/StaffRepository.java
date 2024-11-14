@@ -188,11 +188,8 @@ public class StaffRepository {
      * ....
      * TODO: Remove because repo doesn't handle UI
      */
-    public void viewStaffListRepo() {
-        System.out.println("List of staff members:");
-        for (Staff staff : staffList) {
-            System.out.println(staff.toString());
-        }
+    public List<Staff> getAllStaffs() {
+        return staffList;
     }
 
 

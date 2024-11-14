@@ -232,6 +232,7 @@ public class PatientMenu implements Menu {
      * Patient should select a doctor, date, and timeslot to schedule an appointment
      * (Use appointmentRepository to interact with the appointment data)
      */
+    /**TODO: SHOULD UPDATE THE DOCTOR SCHEDULE FOR ALL METHODS BELOW, ERROR IF CHOOSING BUSY OR BOOKED TIMESLOT*/
     private void scheduleAppointment() {
         System.out.print("Date(Monday to Sunday): ");
         String date = scanner.nextLine();

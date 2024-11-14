@@ -13,8 +13,8 @@ public class AppointmentOutcomeRecordRepository {
     private static final String filePath = "src/main/resources/AppointmentOutcomeRecord.csv";
 
     public AppointmentOutcomeRecordRepository() {
-        // Load medications and records from their respective CSV files
-        prescriptionRepository.loadMedicationsFromCSV();
+        // Load prescriptions and records from their respective CSV files
+        prescriptionRepository.loadPrescriptionsFromCSV();  // Updated to load prescriptions
         loadRecordsFromCSV();
     }
 
@@ -44,9 +44,9 @@ public class AppointmentOutcomeRecordRepository {
                     // Create the AppointmentOutcomeRecord
                     AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, timeslot, consultationNotes, typeOfService);
 
-                    // Retrieve medications for this record and assign them
-                    List<Prescription> prescriptions = prescriptionRepository.getMedicationsById(id);
-                    record.setMedications(prescriptions);
+                    // Retrieve prescriptions for this record and assign them
+                    List<Prescription> prescriptions = prescriptionRepository.getPrescriptionsById(id);  // Updated method name
+                    record.setPrescriptions(prescriptions);  // Updated to set prescriptions
 
                     records.add(record); // Add to records list
                 }
@@ -82,10 +82,10 @@ public class AppointmentOutcomeRecordRepository {
         // Convert list of typeOfService to a semicolon-separated string
         csvBuilder.append(String.join(";", record.getTypeOfService())).append(",");
 
-        // Placeholder for medication list to simplify CSV structure (if needed)
+        // Placeholder for prescription list to simplify CSV structure (if needed)
         csvBuilder.append("\"");
-        for (Prescription med : record.getMedications()) {
-            csvBuilder.append(med.getName()).append(";");
+        for (Prescription prescription : record.getPrescriptions()) {  // Updated to use prescriptions
+            csvBuilder.append(prescription.getName()).append(";");
         }
         csvBuilder.deleteCharAt(csvBuilder.length() - 1); // Remove last semicolon
         csvBuilder.append("\"");
@@ -118,4 +118,15 @@ public class AppointmentOutcomeRecordRepository {
         saveRecordsToCSV(record);
     }
 
+    /**
+     * Get appointment outcome record by appointment ID
+     */
+    public AppointmentOutcomeRecord getAppointmentOutcomeRecordById(int appointmentId) {
+        for (AppointmentOutcomeRecord record : records) {
+            if (record.getAppointmentId() == appointmentId) {
+                return record;
+            }
+        }
+        return null;  // Return null if record not found
+    }
 }
