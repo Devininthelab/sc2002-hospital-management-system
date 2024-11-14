@@ -1,20 +1,19 @@
 package org.example.menu;
 
-import org.example.entity.Administrator;
-import org.example.entity.Appointment;
-import org.example.entity.AppointmentOutcomeRecord;
-import org.example.repository.AppointmentRepository;
-import org.example.repository.MedicineRepository;
-import org.example.repository.StaffRepository;
-import org.example.entity.Staff;
+import org.example.entity.*;
+import org.example.repository.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class AdministratorMenu implements Menu {
     private final StaffRepository staffRepository = new StaffRepository();
     private final AppointmentRepository appointmentRepository = new AppointmentRepository();
-    private final MedicineRepository medicineRepository = new MedicineRepository();
+    //private final MedicineRepository medicineRepository = new MedicineRepository();
+    private final AppointmentOutcomeRecordRepository appointmentOutcomeRepository = new AppointmentOutcomeRecordRepository();
+    private final PrescriptionRepository prescriptionRepository = new PrescriptionRepository();
     private Administrator administrator;
     private Scanner scanner = new Scanner(System.in);
 
@@ -233,8 +232,6 @@ public class AdministratorMenu implements Menu {
 
     /**
      * Record the outcome of an appointment
-     * First need to link to the appointment
-     * ON DEVELOPMENT, NEED TO MAKE SURE AppointmentOutcomeRecord works first
      */
     public void recordAppointmentOutcome() {
         System.out.println("Enter the appointment id: ");
@@ -245,14 +242,43 @@ public class AdministratorMenu implements Menu {
             System.out.println("Appointment not found.");
         }
         else {
-            System.out.println("Enter the outcome details: ");
-            String details = scanner.nextLine();
-            System.out.println("Enter the outcome diagnosis: ");
-            String diagnosis = scanner.nextLine();
-            System.out.println("Enter the outcome treatment: ");
-            String treatment = scanner.nextLine();
-            AppointmentOutcomeRecord outcome = new AppointmentOutcomeRecord(details, diagnosis, treatment);
-            appointment.setAppointmentOutcomeRecord(outcome);
+            System.out.println("Enter the date of the appointment outcome(DD-MM-YYYY): ");
+            String date = scanner.nextLine();
+            System.out.println("Enter consultation notes: ");
+            String consultationNotes = scanner.nextLine();
+
+            // Input Services used
+            List<String> typeOfService = new ArrayList<>();
+            while (true) {
+                System.out.println("Enter the type of service (Enter -1 to stop): ");
+                String input = scanner.nextLine();
+                if (input.equals("-1")) {
+                    break;
+                }
+                typeOfService.add(input);
+            }
+
+            // Input prescriptions
+            List<Prescription> prescriptions = new ArrayList<>();
+            while (true) {
+                System.out.println("Enter the medication name (Enter -1 to stop): ");
+                String medicationName = scanner.nextLine();
+                if (medicationName.equals("-1")) {
+                    break;
+                }
+                System.out.println("Enter the dosage: ");
+                int dosage = scanner.nextInt();
+                scanner.nextLine(); // remove input buffer
+                System.out.println("Enter the status: ");
+                String status = scanner.nextLine();
+                Prescription prescription = new Prescription(id, medicationName, dosage, status);
+                prescriptions.add(prescription);
+            }
+
+            AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
+            appointmentOutcomeRepository.saveRecordsToCSV(record);
+            prescriptionRepository.savePrescriptionsToCSV(prescriptions);
+
         }
     }
 

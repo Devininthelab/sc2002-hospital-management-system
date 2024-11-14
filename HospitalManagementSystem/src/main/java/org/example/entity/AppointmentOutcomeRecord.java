@@ -1,6 +1,5 @@
 package org.example.entity;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +9,11 @@ public class AppointmentOutcomeRecord {
     private String date;
     private List<String> typeOfService;
     private String consultationNotes;
-    private List<Prescription> prescriptions;
+    private List<Prescription> prescriptions; //TO DO: consider how to display this one, as we do not store prescriptions
+    // in the same database as AppointmentOutcomeRecord
 
 
-    public AppointmentOutcomeRecord(int appointmentId, LocalDate date, String consultationNotes, List<String> typeOfService, List<Prescription> prescriptions) {
+    public AppointmentOutcomeRecord(int appointmentId, String date, String consultationNotes, List<String> typeOfService, List<Prescription> prescriptions) {
         this.appointmentId = appointmentId;
         this.date = date;
         this.consultationNotes = consultationNotes;
@@ -21,9 +21,14 @@ public class AppointmentOutcomeRecord {
         this.prescriptions = prescriptions;
     }
 
+    /**
+     * Get All Prescirptions regarding the appointmentOutcomeRecord
+     * @return a list of presciptions
+     */
     public List<Prescription> getPrescriptions() {
         return prescriptions;
     }
+
     public void setPrescriptions(List<Prescription> prescriptions) {
         this.prescriptions = prescriptions;
     }
@@ -64,7 +69,7 @@ public class AppointmentOutcomeRecord {
         return DateTimeFormatter.ofPattern("dd-MM-yyyy").format(date);
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -76,10 +81,10 @@ public class AppointmentOutcomeRecord {
         this.consultationNotes = consultationNotes;
     }
 
-    public boolean updateMedicationStatus(String medicationName, Prescription.Status status) {
+    public boolean updateMedicationStatus(String medicationName, String status) {
         for (Prescription prescription : prescriptions) {
             if (prescription.getName().equals(medicationName)) {
-                prescription.setStatus(Prescription.Status.valueOf(status.name()));
+                prescription.setStatus(status);
                 return true;
             }
         }

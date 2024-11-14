@@ -12,15 +12,10 @@ import java.util.List;
 
 public class PrescriptionRepository {
     private List<Prescription> prescriptions;
-    private String filePath;
+    private String filePath = "src/main/resources/Prescription.csv";
 
-    /**
-     * Constructor to inject dependencies
-     * @param filePath
-     */
-    public PrescriptionRepository(String filePath) {
+    public PrescriptionRepository() {
         this.prescriptions = new ArrayList<>();
-        this.filePath = filePath;
         loadPrescriptionsFromCSV();
     }
 
@@ -54,7 +49,7 @@ public class PrescriptionRepository {
     /**
      * Overwrite the CSV file with the most up-to-date list of Prescriptions
      */
-    public void savePrescriptionsToCSV() {
+    public void savePrescriptionsToCSV(List<Prescription> prescriptions) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (Prescription prescription : prescriptions) {
                 bw.write(prescription.getId() + "," + prescription.getName() + "," +
