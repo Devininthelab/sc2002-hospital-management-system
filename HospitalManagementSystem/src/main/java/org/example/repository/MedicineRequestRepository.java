@@ -8,17 +8,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Medicine Request Repository
+ * <p>Handles the CRUD operations of Medicine Requests</p>
+ */
 public class MedicineRequestRepository {
     /**
-     * counter pointing to highest current id
+     * counter pointing to the highest current id
      */
     private static int counter;
     private List<MedicineRequest> medicineRequests;
-    private final String csvPath = "src/main/resources/Medicine_Request.csv";
+    private String csvPath = "src/main/resources/Medicine_Request.csv";
 
     public MedicineRequestRepository() {
         medicineRequests = new ArrayList<>();
         loadRequestsFromCsv();
+        counter = highestId();
+    }
+
+    public int highestId() {
+        int highest = 0;
+        for (MedicineRequest medicineRequest : medicineRequests) {
+            if (medicineRequest.getId() > highest) {
+                highest = medicineRequest.getId();
+            }
+        }
+        return highest;
     }
 
     public void loadRequestsFromCsv() {

@@ -3,12 +3,14 @@ package org.example.entity;
 public class Medicine {
     private String name;
     private int stockLevel;
-    private int lowStockAlert;
+    private int lowThreshold;
+    private int highThreshold;
 
-    public Medicine(String name, int stockLevel, int lowStockAlert) {
+    public Medicine(String name, int stockLevel, int lowThreshold, int highThreshold) {
         this.name = name;
         this.stockLevel = stockLevel;
-        this.lowStockAlert = lowStockAlert;
+        this.lowThreshold = lowThreshold;
+        this.highThreshold = highThreshold;
     }
 
 
@@ -25,17 +27,32 @@ public class Medicine {
     public void setStockLevel(int stockLevel) {
         this.stockLevel = stockLevel;
     }
-    public int getLowStockAlert() {
-        return lowStockAlert;
+    public int getLowThreshold() {
+        return lowThreshold;
     }
-    public void setLowStockAlert(int lowStockAlert) {
-        this.lowStockAlert = lowStockAlert;
+
+    public void setLowThreshold(int lowThreshold) {
+        this.lowThreshold = lowThreshold;
     }
+
+    public int getHighThreshold() {
+        return highThreshold;
+    }
+
+    public void setHighThreshold(int highThreshold) {
+        this.highThreshold = highThreshold;
+    }
+
+    public boolean isLowStock() {
+        return stockLevel < lowThreshold;
+    }
+
     public String toString() {
         return "Medicine{" +
-                "medicineName='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", stockLevel=" + stockLevel +
-                ", lowStockAlert=" + lowStockAlert +
+                ", lowThreshold=" + lowThreshold +
+                ", highThreshold=" + highThreshold +
                 '}';
     }
 }

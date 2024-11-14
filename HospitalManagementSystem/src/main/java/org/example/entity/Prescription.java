@@ -8,26 +8,6 @@ package org.example.entity;
  * and a status for request
  */
 public class Prescription {
-    public enum Status {
-        PENDING, DISPENSED;
-    }
-
-    /**
-     * Convert user input/external service passed parameter
-     * to local enum
-     * @param status
-     * @return corresponding enum
-     */
-    public static Status stringToStatus(String status) {
-        switch (status) {
-            case "PENDING":
-                return Status.PENDING;
-            case "DISPENSED":
-                return Status.DISPENSED;
-            default:
-                return Status.PENDING;
-        }
-    }
 
     /**
      * id is the same as appointment id and appointment outcome record id
@@ -35,10 +15,13 @@ public class Prescription {
     private int id;
     private String name;
     private int quantity;
-    private Status status;
+    /**
+     * status can be PENDING, APPROVED, REJECTED
+     */
+    private String status;
 
     // Database's Perspective
-    public Prescription(int id, String name, int quantity, Status status) {
+    public Prescription(int id, String name, int quantity, String status) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -49,7 +32,7 @@ public class Prescription {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
-        this.status = Status.PENDING;
+        this.status = "PENDING";
     }
     public int getId() {
         return id;
@@ -59,14 +42,14 @@ public class Prescription {
         return name;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
     public int getQuantity() {
         return quantity;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -76,7 +59,7 @@ public class Prescription {
 
     @Override
     public String toString() {
-        return "Medication{" +
+        return "Prescription{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", quantity=" + quantity +

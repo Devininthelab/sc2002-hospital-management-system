@@ -7,7 +7,7 @@ import java.util.List;
 
 public class AppointmentOutcomeRecord {
     private int appointmentId;
-    private LocalDate date;
+    private String date;
     private List<String> typeOfService;
     private String consultationNotes;
     private List<Prescription> prescriptions;
