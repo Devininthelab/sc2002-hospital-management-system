@@ -185,14 +185,21 @@ public class AdministratorMenu implements Menu {
      * View the list of staff members
      */
     public void viewStaffList() {
-        staffRepository.viewStaffListRepo();
+        List<Staff> staffList = staffRepository.getAllStaffs();
+        if (staffList == null || staffList.isEmpty()) {
+            System.out.println("No staff members.");
+        } else {
+            System.out.println("Staff Members:");
+            for (Staff staff : staffList) {
+                System.out.println(staff.toString());
+            }
+        }
     }
 
 
     /**
      * View the list of scheduled appointments of all patients
      * Display the details and status of each appointment
-     * ON DEVELOPMENT
      */
     public void viewScheduledAppointments() {
         List<Appointment> appointments = appointmentRepository.getAllAppointments();
@@ -200,7 +207,9 @@ public class AdministratorMenu implements Menu {
             System.out.println("No scheduled appointments.");
         } else {
             System.out.println("Scheduled Appointments:");
-            appointments.stream().forEach(System.out::println);
+            for(Appointment appointment : appointments) {
+                System.out.println(appointment.toString());
+            }
         }
     }
 
@@ -230,9 +239,21 @@ public class AdministratorMenu implements Menu {
     public void recordAppointmentOutcome() {
         System.out.println("Enter the appointment id: ");
         int id = scanner.nextInt();
-        System.out.println("Enter the outcome record: ");
-        String outcomeRecord = scanner.nextLine();
-        AppointmentOutcomeRecord appointmentOutcomeRecord;
+        Appointment appointment = appointmentRepository.getAppointmentById(id);
+        // validation check for appointment: If that appointment exists
+        if (appointment == null) {
+            System.out.println("Appointment not found.");
+        }
+        else {
+            System.out.println("Enter the outcome details: ");
+            String details = scanner.nextLine();
+            System.out.println("Enter the outcome diagnosis: ");
+            String diagnosis = scanner.nextLine();
+            System.out.println("Enter the outcome treatment: ");
+            String treatment = scanner.nextLine();
+            AppointmentOutcomeRecord outcome = new AppointmentOutcomeRecord(details, diagnosis, treatment);
+            appointment.setAppointmentOutcomeRecord(outcome);
+        }
     }
 
 

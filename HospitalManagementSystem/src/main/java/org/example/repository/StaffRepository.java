@@ -187,11 +187,8 @@ public class StaffRepository {
      * ID: 1,   Name: John Doe,     Role: Doctor, ...
      * ....
      */
-    public void viewStaffListRepo() {
-        System.out.println("List of staff members:");
-        for (Staff staff : staffList) {
-            System.out.println(staff.toString());
-        }
+    public List<Staff> getAllStaffs() {
+        return staffList;
     }
 
 
