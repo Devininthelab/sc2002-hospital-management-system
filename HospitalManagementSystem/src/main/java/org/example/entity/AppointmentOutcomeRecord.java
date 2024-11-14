@@ -10,30 +10,30 @@ public class AppointmentOutcomeRecord {
     private LocalDate date;
     private List<String> typeOfService;
     private String consultationNotes;
-    private List<Medication> medications;
+    private List<Prescription> prescriptions;
 
 
-    public AppointmentOutcomeRecord(int appointmentId, LocalDate date, String consultationNotes, List<String> typeOfService, List<Medication> medications) {
+    public AppointmentOutcomeRecord(int appointmentId, LocalDate date, String consultationNotes, List<String> typeOfService, List<Prescription> prescriptions) {
         this.appointmentId = appointmentId;
         this.date = date;
         this.consultationNotes = consultationNotes;
         this.typeOfService = typeOfService;
-        this.medications = medications;
+        this.prescriptions = prescriptions;
     }
 
-    public List<Medication> getMedications() {
-        return medications;
+    public List<Prescription> getPrescriptions() {
+        return prescriptions;
     }
-    public void setMedications(List<Medication> medications) {
-        this.medications = medications;
+    public void setPrescriptions(List<Prescription> prescriptions) {
+        this.prescriptions = prescriptions;
     }
 
-    public void addMedication(Medication medication) {
-        this.medications.add(medication);
+    public void addPrescription(Prescription prescription) {
+        this.prescriptions.add(prescription);
     }
-    public void addMedication(String name, int quantity) {
-        Medication medication = new Medication(appointmentId, name, quantity);
-        this.medications.add(medication);
+    public void addPrescription(String name, int quantity) {
+        Prescription prescription = new Prescription(appointmentId, name, quantity);
+        this.prescriptions.add(prescription);
     }
 
     public void addTypeOfService(String typeOfService) {
@@ -76,10 +76,10 @@ public class AppointmentOutcomeRecord {
         this.consultationNotes = consultationNotes;
     }
 
-    public boolean updateMedicationStatus(String medicationName, Medication.Status status) {
-        for (Medication medication : medications) {
-            if (medication.getName().equals(medicationName)) {
-                medication.setStatus(Medication.Status.valueOf(status.name()));
+    public boolean updateMedicationStatus(String medicationName, Prescription.Status status) {
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getName().equals(medicationName)) {
+                prescription.setStatus(Prescription.Status.valueOf(status.name()));
                 return true;
             }
         }
@@ -94,7 +94,7 @@ public class AppointmentOutcomeRecord {
                 ", consultationNotes='" + consultationNotes + '\'' +
                 ", typeOfService=" + typeOfService +
                 ", Prescription:" +
-                " medications=" + medications +
+                " prescriptions=" + prescriptions +
                 '}';
     }
 }

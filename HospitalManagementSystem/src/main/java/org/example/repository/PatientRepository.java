@@ -121,7 +121,7 @@ public class PatientRepository {
     /**
      * Save the list of patients back to the CSV file.
      */
-    private void savePatientsToCSV() {
+    public void savePatientsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {
             for (Patient patient : patients) {
                 bw.write(patient.getId() + "," + patient.getName() + "," +

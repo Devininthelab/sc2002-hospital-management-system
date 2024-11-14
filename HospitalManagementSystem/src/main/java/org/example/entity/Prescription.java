@@ -1,50 +1,86 @@
-
 package org.example.entity;
 
-
-import java.util.List;
-
+/**
+ * Medication is the prescription requested in the AppointmentOutcomeRecord
+ * It contains an id pointing to respective outcome record id
+ * a name for the medication
+ * a quantity requested
+ * and a status for request
+ */
 public class Prescription {
-    /*
-    private int prescriptionId;
-    private List<Medication> medications;
-    private final MedicationRepository repo = new MedicationRepository();
-
-    // Constructor
-    public Prescription(int prescriptionId) {
-        this.prescriptionId = prescriptionId;
-        repo.loadMedicationsFromCSV();
-        this.medications = repo.getMedicationsById(prescriptionId);
+    public enum Status {
+        PENDING, DISPENSED;
     }
 
-    public int getPrescriptionId() {
-        return prescriptionId;
-    }
-
-    public List<Medication> getMedications() {
-        return medications;
-    }
-
-    public void addMedication(Medication medication) {
-        medications.add(medication);
-    }
-
-    public void updateMedicationStatus(String medicationName, Medication.Status status) {
-        for (Medication medication : medications) {
-            if (medication.getName().equals(medicationName)) {
-                medication.setStatus(status);
-                return;
-            }
+    /**
+     * Convert user input/external service passed parameter
+     * to local enum
+     * @param status
+     * @return corresponding enum
+     */
+    public static Status stringToStatus(String status) {
+        switch (status) {
+            case "PENDING":
+                return Status.PENDING;
+            case "DISPENSED":
+                return Status.DISPENSED;
+            default:
+                return Status.PENDING;
         }
-        System.out.println("Medication not found.");
+    }
+
+    /**
+     * id is the same as appointment id and appointment outcome record id
+     */
+    private int id;
+    private String name;
+    private int quantity;
+    private Status status;
+
+    // Database's Perspective
+    public Prescription(int id, String name, int quantity, Status status) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.status = status;
+    }
+    // Doctor's Adding
+    public Prescription(int id, String name, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.status = Status.PENDING;
+    }
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     @Override
     public String toString() {
-        return "Prescription{" +
-                "prescriptionId=" + prescriptionId +
-                ", medications=" + medications +
+        return "Medication{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", status=" + status +
                 '}';
     }
-     */
 }

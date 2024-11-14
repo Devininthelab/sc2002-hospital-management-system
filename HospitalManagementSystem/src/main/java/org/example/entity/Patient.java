@@ -91,6 +91,16 @@ public class Patient {
         this.prescriptions = prescriptions;
     }
 
+    public void addDiagnose(String diagnose) {
+        this.diagnoses.add(diagnose);
+    }
+    public void addTreatment(String treatment) {
+        this.treatments.add(treatment);
+    }
+    public void addPrescription(String prescription) {
+        this.prescriptions.add(prescription);
+    }
+
     public String medicalRecord() {
         String diagnoses_treatments = "Diagnoses: treatments\n";
         for (int i = 0; i < treatments.size(); i++) {

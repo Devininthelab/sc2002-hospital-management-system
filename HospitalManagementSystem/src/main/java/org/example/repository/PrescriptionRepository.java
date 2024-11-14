@@ -1,6 +1,6 @@
 package org.example.repository;
 
-import org.example.entity.Medication;
+import org.example.entity.Prescription;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedicationRepository {
-    private List<Medication> medications = new ArrayList<>();
-    private final String filePath = "src/main/resources/Medications.csv";
+public class PrescriptionRepository {
+    private List<Prescription> prescriptions = new ArrayList<>();
+    private final String filePath = "src/main/resources/Prescriptions.csv";
 
     public void loadMedicationsFromCSV() {
         String line;
-        medications.clear(); // Clear list before loading to avoid duplicates
+        prescriptions.clear(); // Clear list before loading to avoid duplicates
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             while ((line = br.readLine()) != null) {
@@ -25,10 +25,10 @@ public class MedicationRepository {
                     int medId = Integer.parseInt(values[0].trim());
                     String name = values[1].trim();
                     int quantity = Integer.parseInt(values[2].trim());
-                    Medication.Status status = Medication.Status.valueOf(values[3].trim().toUpperCase());
+                    Prescription.Status status = Prescription.Status.valueOf(values[3].trim().toUpperCase());
 
-                    Medication medication = new Medication(medId, name, quantity, status);
-                    medications.add(medication);
+                    Prescription prescription = new Prescription(medId, name, quantity, status);
+                    prescriptions.add(prescription);
                 }
             }
         } catch (IOException e) {
@@ -40,9 +40,9 @@ public class MedicationRepository {
 
     public void saveMedicationsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
-            for (Medication medication : medications) {
-                bw.write(medication.getId() + "," + medication.getName() + "," +
-                        medication.getQuantity() + "," + medication.getStatus());
+            for (Prescription prescription : prescriptions) {
+                bw.write(prescription.getId() + "," + prescription.getName() + "," +
+                        prescription.getQuantity() + "," + prescription.getStatus());
                 bw.newLine();
             }
         } catch (IOException e) {
@@ -50,25 +50,25 @@ public class MedicationRepository {
         }
     }
 
-    public List<Medication> getMedicationsById(int prescriptionId) {
-        List<Medication> result = new ArrayList<>();
-        for (Medication medication : medications) {
-            if (medication.getId() == prescriptionId) {
-                result.add(medication);
+    public List<Prescription> getMedicationsById(int prescriptionId) {
+        List<Prescription> result = new ArrayList<>();
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getId() == prescriptionId) {
+                result.add(prescription);
             }
         }
         return result;
     }
 
     // Additional method to add a new medication and save to CSV
-    public void addMedication(Medication medication) {
-        medications.add(medication);
+    public void addMedication(Prescription prescription) {
+        prescriptions.add(prescription);
         saveMedicationsToCSV(); // Save changes after adding
     }
 
     public void addMedication(int id, String name, int quantity) {
-        Medication medication = new Medication(id, name, quantity);
-        medications.add(medication);
+        Prescription prescription = new Prescription(id, name, quantity);
+        prescriptions.add(prescription);
         saveMedicationsToCSV();
     }
 }
