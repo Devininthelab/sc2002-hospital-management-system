@@ -1,4 +1,0 @@
-medication_id,outcome_record_id,status
-0,1,fulfilled
-1,1,pending
-0,2,rejected
