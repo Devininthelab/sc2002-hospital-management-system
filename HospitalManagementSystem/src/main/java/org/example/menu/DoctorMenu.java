@@ -42,7 +42,7 @@ public class DoctorMenu implements Menu {
                 "5. Manage Appointment Requests\n" +
                 "6. View Upcoming Appointments\n" +
                 "7. Complete an appointment\n" +
-                "8. Change password" +
+                "8. Change password\n" +
                 "9. Logout");
     }
 
@@ -54,6 +54,7 @@ public class DoctorMenu implements Menu {
             displayMenu();
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
             handleChoice(choice);
         } while (choice != 8);  // Exit when logout is chosen
     }
@@ -124,7 +125,7 @@ public class DoctorMenu implements Menu {
     }
 
     public void updatePatientMedicalRecords() {
-        System.out.println("Enter patient's id: ");
+        System.out.print("Enter patient's id: ");
         String patientId = scanner.nextLine();
 
         // Retrieve the patient by ID
