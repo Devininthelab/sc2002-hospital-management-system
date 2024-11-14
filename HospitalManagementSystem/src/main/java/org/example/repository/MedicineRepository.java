@@ -14,7 +14,7 @@ public class MedicineRepository {
     private List<Medicine> medicines;
     private final String filePath = "src/main/resources/Medicine_List.csv";
 
-    public MedicineRepository() {
+    public MedicineRepository(String filePath) {
         medicines = new ArrayList<>();
         loadMedicinesFromCSV(filePath);
     }
