@@ -7,6 +7,8 @@ import java.time.LocalDate;
  * Depend on
  * - AppointmentOutcomeRecord
  */
+
+/**4 STATUS: ACCEPTED, REQUESTED, REJECTED, COMPLETED*/
 public class Appointment {
     private int id;
     private String doctorId;
@@ -25,6 +27,7 @@ public class Appointment {
      * @param timeslot
      * @param status
      */
+
     public Appointment(int id, String patientId, String doctorId, String date, int timeslot, String status) {
         this.id = id;
         this.patientId = patientId;

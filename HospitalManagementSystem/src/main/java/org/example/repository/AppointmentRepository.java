@@ -158,4 +158,10 @@ public class AppointmentRepository {
         appointment.setStatus("COMPLETED");
         saveAppointmentsToCSV();
     }
+
+    public void updateAppointmentStatus(int id, String status){
+        Appointment appointment = getAppointmentById(id);
+        appointment.setStatus(status);
+        saveAppointmentsToCSV();
+    }
 }
