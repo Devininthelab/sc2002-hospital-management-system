@@ -9,15 +9,24 @@ import java.util.List;
 import java.util.Scanner;
 
 public class DoctorMenu implements Menu {
-    private final Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
     private Doctor doctor;
-    private final PatientRepository patientRepository = new PatientRepository();
-    private final StaffRepository staffRepository = new StaffRepository();
-    private final DoctorRepository doctorRepository = new DoctorRepository();
-    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
-    private final MedicationRepository medicationRepository = new MedicationRepository();
-    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
+    private PatientRepository patientRepository;
+    private StaffRepository staffRepository;
+    private DoctorRepository doctorRepository;
+    private AppointmentRepository appointmentRepository;
+    private MedicationRepository medicationRepository;
+    private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
 
+    public DoctorMenu(Scanner scanner, PatientRepository patientRepository, StaffRepository staffRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository, MedicationRepository medicationRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository) {
+        this.scanner = scanner;
+        this.patientRepository = patientRepository;
+        this.staffRepository = staffRepository;
+        this.doctorRepository = doctorRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.medicationRepository = medicationRepository;
+        this.appointmentOutcomeRecordRepository = appointmentOutcomeRecordRepository;
+    }
 
     public void displayMenu() {
         System.out.println("=====DOCTOR MENU=====");
@@ -67,7 +76,6 @@ public class DoctorMenu implements Menu {
     }
 
     public void handleChoice(int choice) {
-          // Cast User to Doctor
         switch (choice) {
             case 1:
                 viewPatientMedicalRecords();
