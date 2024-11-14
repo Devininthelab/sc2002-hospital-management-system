@@ -7,18 +7,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This can also can be interpreted as InventoryRepository.
+ * This can also can be interpreted conceptually as the Medicine Inventory.
  * This class is responsible for managing the stock of medicines in the clinic.
  */
 public class MedicineRepository {
     private List<Medicine> medicines;
-    private final String filePath = "src/main/resources/Medicine_List.csv";
+    private String filePath;
 
-    public MedicineRepository() {
+    /**
+     * Constructor to inject dependencies
+     * @param filePath
+     */
+    public MedicineRepository(String filePath) {
+        this.filePath = filePath;
         medicines = new ArrayList<>();
         loadMedicinesFromCSV(filePath);
     }
 
+    /**
+     * Load medicines from CSV file
+     * Parse medicine data from CSV file and store in medicines list
+     * @param filePath
+     */
     public void loadMedicinesFromCSV(String filePath) {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -27,8 +37,9 @@ public class MedicineRepository {
                 if (values.length >= 3) {
                     String name = values[0].trim();
                     int stockLevel = Integer.parseInt(values[1].trim());
-                    int lowStockAlert = Integer.parseInt(values[2].trim());
-                    Medicine medicine = new Medicine(name, stockLevel, lowStockAlert);
+                    int lowThreshold = Integer.parseInt(values[2].trim());
+                    int highThreshold = Integer.parseInt(values[3].trim());
+                    Medicine medicine = new Medicine(name, stockLevel, lowThreshold, highThreshold);
                     medicines.add(medicine);
                 }
             }
@@ -37,12 +48,16 @@ public class MedicineRepository {
         }
     }
 
+    /**
+     * Overwrite the CSV file with the most up-to-date list of medicines
+     */
     private void saveMedicinesToCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Medicine medicine : medicines) {
                 writer.write(medicine.getName() + ","
                         + medicine.getStockLevel() + ","
-                        + medicine.getLowStockAlert());
+                        + medicine.getLowThreshold() + ","
+                        + medicine.getHighThreshold());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -59,6 +74,19 @@ public class MedicineRepository {
         saveMedicinesToCSV();
     }
 
+    /**
+     * Get all medicines in inventory
+     * @return List of medicines
+     */
+    public List<Medicine> getAllMedicines() {
+        return new ArrayList<>(medicines);
+    }
+
+    /**
+     * Get medicine by name
+     * @param name
+     * @return
+     */
     public Medicine getMedicine(String name) {
         for (Medicine medicine : medicines) {
             if (medicine.getName().equalsIgnoreCase(name)) {
@@ -67,49 +95,51 @@ public class MedicineRepository {
         }
         return null;
     }
+
+    /**
+     * Remove medicine from inventory
+     * @param medicine
+     */
     public void removeMedicine(Medicine medicine) {
         medicines.remove(medicine);
         saveMedicinesToCSV();
     }
 
-    public void updateStockLevel(String name, int newStockLevel) {
-        Medicine medicine = getMedicine(name);
-        if (medicine != null) {
-            medicine.setStockLevel(newStockLevel);
-            if (newStockLevel < medicine.getLowStockAlert()) {
-                medicine.setRequested(true);
-            } else {
-                medicine.setRequested(false);
-            }
-        }
-    }
 
-    public void updateLowStockAlert(String name, int newLowStockAlert) {
-        Medicine medicine = getMedicine(name);
-        if (medicine != null) {
-            medicine.setLowStockAlert(newLowStockAlert);
-            if (medicine.getStockLevel() < newLowStockAlert) {
-                medicine.setRequested(true);
-            } else {
-                medicine.setRequested(false);
-            }
-        }
-    }
 
-    public void checkAndRequestReplenishment() {
-        for (Medicine medicine : medicines) {
-            if (medicine.getStockLevel() < medicine.getLowStockAlert() && !medicine.isRequested()) {
-                medicine.setRequested(true);
-                System.out.println("Replenishment requested for: " + medicine.getName());
-            }
-        }
-    }
-
-    public List<Medicine> getMedicines() {
-        return new ArrayList<>(medicines);
-    }
-
+    /**
+     * Check if the medicine exists in the inventory
+     * @param medicineName
+     * @return true if the medicine exists, false otherwise
+     */
     public boolean medicineExists(String medicineName) {
         return getMedicine(medicineName) != null;
+    }
+
+    /**
+     * Decrease the stock level of a medicine
+     * @param presciptionName
+     * @param quantity
+     */
+    public void decreaseStockLevel(String presciptionName, int quantity) {
+        Medicine medicine = getMedicine(presciptionName);
+        if (medicine != null) {
+            medicine.setStockLevel(medicine.getStockLevel() - quantity);
+            saveMedicinesToCSV();
+        }
+    }
+
+    /**
+     * Get all medicines that are low in stock
+     * @return List of low stock medicines
+     */
+    public List<Medicine> getLowStockMedicines() {
+        return medicines.stream()
+                .filter(Medicine::isLowStock)
+                .toList();
+    }
+
+    public boolean hasLowStockMedicines() {
+        return medicines.stream().anyMatch(Medicine::isLowStock);
     }
 }

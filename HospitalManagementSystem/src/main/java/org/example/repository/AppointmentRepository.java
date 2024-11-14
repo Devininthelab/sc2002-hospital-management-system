@@ -3,8 +3,6 @@ package org.example.repository;
 import org.example.entity.Appointment;
 
 import java.io.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,7 +83,11 @@ public class AppointmentRepository {
         }
     }
 
-    public List<Appointment> getAppointments() {
+    /**
+     * Get all appointments
+     * @return a list of all appointments
+     */
+    public List<Appointment> getAllAppointments() {
         return appointments;
     }
 
@@ -159,6 +161,9 @@ public class AppointmentRepository {
         saveAppointmentsToCSV();
     }
 
+    /**
+     * Update the status of an appointment, after udate new status, save to CSV
+     */
     public void updateAppointmentStatus(int id, String status){
         Appointment appointment = getAppointmentById(id);
         appointment.setStatus(status);

@@ -20,6 +20,15 @@ public class DoctorMenu implements Menu {
     private final PrescriptionRepository prescriptionRepository = new PrescriptionRepository();
     private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
 
+    public DoctorMenu(Scanner scanner, PatientRepository patientRepository, StaffRepository staffRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository, MedicationRepository medicationRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository) {
+        this.scanner = scanner;
+        this.patientRepository = patientRepository;
+        this.staffRepository = staffRepository;
+        this.doctorRepository = doctorRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.medicationRepository = medicationRepository;
+        this.appointmentOutcomeRecordRepository = appointmentOutcomeRecordRepository;
+    }
 
     public void displayMenu() {
         System.out.println("=====DOCTOR MENU=====");
@@ -69,7 +78,6 @@ public class DoctorMenu implements Menu {
     }
 
     public void handleChoice(int choice) {
-          // Cast User to Doctor
         switch (choice) {
             case 1:
                 viewPatientMedicalRecords();
