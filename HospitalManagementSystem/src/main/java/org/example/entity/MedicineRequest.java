@@ -26,4 +26,28 @@ public class MedicineRequest {
     public String getStatus() {
         return status;
     }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setMedicines(List<String> medicines) {
+        this.medicines = medicines;
+    }
+
+
+
+
+    @Override
+    public String toString() {
+        return "MedicineRequest{" +
+                "id=" + id +
+                ", medicines=" + medicines +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

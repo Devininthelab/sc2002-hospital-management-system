@@ -117,4 +117,16 @@ public class AppointmentOutcomeRecordRepository {
         records.add(record);
         saveRecordsToCSV(record);
     }
+
+    /**
+     * Get appointment outcome record by appointment ID
+     */
+    public AppointmentOutcomeRecord getAppointmentOutcomeRecordById(int appointmentId) {
+        for (AppointmentOutcomeRecord record : records) {
+            if (record.getAppointmentId() == appointmentId) {
+                return record;
+            }
+        }
+        return null;  // Return null if record not found
+    }
 }
