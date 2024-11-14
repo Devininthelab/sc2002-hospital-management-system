@@ -57,10 +57,13 @@ public class MedicineRequestRepository {
 
     public void saveRequestsToCsv() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {
+            bw.write("id,medicines,status");
+            bw.newLine();
             for (MedicineRequest medicineRequest : medicineRequests) {
                 String medicineRequestString = String.join(";", medicineRequest.getMedicines());
                 bw.write(medicineRequest.getId() + "," + medicineRequestString
-                        + "," + medicineRequest.getStatus() + "\n");
+                        + "," + medicineRequest.getStatus());
+                bw.newLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
