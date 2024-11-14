@@ -1,2 +1,2 @@
-id,name,dob,gender,bloodtype
-0,Patient1,31/10/2024,MALE,A+
+id,password,name,dob,gender,contact,bloodtype,diagnoses,treatment,prescription
+PA001,defaultpassword,Quang,31/10/2024,MALE,03123412412,A+,flu;cancer,chemotherapy,Paracetamol;Ibuprofen
