@@ -54,6 +54,8 @@ public class StaffRepository {
      */
     public void saveStaffsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {
+            bw.write("Staff ID,Name,Role,Gender,Age,Password");
+            bw.newLine();
             for (Staff staff : staffList) {
                 bw.write(staff.getId() + "," + staff.getName() + "," + staff.getRole() + "," + staff.getGender() + "," + staff.getAge() + "," + staff.getPassword());
                 bw.newLine();

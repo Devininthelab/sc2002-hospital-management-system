@@ -53,6 +53,8 @@ public class PrescriptionRepository {
      */
     public void savePrescriptionsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+            bw.write("appointmentId,name,dosage,status");
+            bw.newLine();
             for (Prescription prescription : prescriptions) {
                 bw.write(prescription.getId() + "," + prescription.getName() + "," +
                         prescription.getQuantity() + "," + prescription.getStatus());
