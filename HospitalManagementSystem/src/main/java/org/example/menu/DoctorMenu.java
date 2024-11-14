@@ -290,7 +290,7 @@ public class DoctorMenu implements Menu {
 
         // Prompt for date
         System.out.print("Enter date (dd/MM/yyyy): ");
-        LocalDate date = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String date = scanner.nextLine();
 
         // Collect services provided during the appointment
         List<String> services = new ArrayList<>();

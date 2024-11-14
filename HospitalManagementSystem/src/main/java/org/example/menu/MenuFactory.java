@@ -10,15 +10,23 @@ import java.util.Scanner;
  */
 public class MenuFactory {
     private final Scanner scanner = new Scanner(System.in);
+    private final String appointmentOutcomeRecordPath = "src/main/resources/AppointmentOutcomeRecord.csv";
+    private final String appointmentPath = "src/main/resources/Appointment_List.csv";
+    private final String doctorDir = "src/main/resources/doctor_availability/";
+    private final String medicinePath = "src/main/resources/Medicine_List.csv";
+    private final String medicineRequestPath = "src/main/resources/Medicine_Requests.csv";
+    private final String patientPath = "src/main/resources/Patient_List.csv";
+    private final String prescriptionPath = "src/main/resources/Prescription.csv";
+    private final String staffPath = "src/main/resources/Staff_List.csv";
 
-    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
-    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
-    private final DoctorRepository doctorRepository = new DoctorRepository();
-    private final MedicineRepository medicineRepository = new MedicineRepository();
-    private final MedicineRequestRepository medicineRequestRepository = new MedicineRequestRepository();
-    private final PatientRepository patientRepository = new PatientRepository();
-    private final PrescriptionRepository prescriptionRepository = new PrescriptionRepository();
-    private final StaffRepository staffRepository = new StaffRepository();
+    private final AppointmentRepository appointmentRepository = new AppointmentRepository(appointmentPath);
+    private final MedicineRepository medicineRepository = new MedicineRepository(medicinePath);
+    private final MedicineRequestRepository medicineRequestRepository = new MedicineRequestRepository(medicineRequestPath);
+    private final PrescriptionRepository prescriptionRepository = new PrescriptionRepository(prescriptionPath);
+    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository(appointmentOutcomeRecordPath, prescriptionRepository);
+    private final PatientRepository patientRepository = new PatientRepository(patientPath, appointmentRepository, appointmentOutcomeRecordRepository);
+    private final StaffRepository staffRepository = new StaffRepository(staffPath);
+    private final DoctorRepository doctorRepository = new DoctorRepository(doctorDir, staffRepository);
 
     public Menu createMenu(String role) {
         switch (role) {
@@ -44,8 +52,13 @@ public class MenuFactory {
                         medicineRequestRepository,
                         prescriptionRepository);
             case "administrator":
-
-                break;
+                return new AdministratorMenu(staffRepository,
+                        appointmentRepository,
+                        appointmentOutcomeRecordRepository,
+                        prescriptionRepository,
+                        medicineRepository,
+                        medicineRequestRepository,
+                        scanner);
         }
         return null;
     }

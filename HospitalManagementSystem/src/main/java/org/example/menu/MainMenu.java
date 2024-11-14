@@ -47,25 +47,5 @@ public class MainMenu {
         }
         Menu menu = menuFactory.createMenu(roles[role - 1]); // Redirect to the corresponding menu
         menu.start();
-        //switch (role) {
-        //    case 1:
-        //        PatientMenu patientMenu = new PatientMenu();
-        //        patientMenu.start(); // Redirect to patient menu
-        //        break;
-        //    case 2:
-        //        DoctorMenu doctorMenu = new DoctorMenu();
-        //        doctorMenu.start(); // Redirect to doctor menu
-        //        break;
-        //    case 3:
-        //        PharmacistMenu pharmacistMenu = new PharmacistMenu();
-        //        pharmacistMenu.start(); // Redirect to pharmacist menu
-        //        break;
-        //    case 4:
-        //        AdministratorMenu administratorMenu = new AdministratorMenu();
-        //        administratorMenu.start();  // Redirect to administrator menu
-        //        break;
-        //    default:
-        //        System.out.println("Invalid choice. Please try again.");
-        //}
     }
 }

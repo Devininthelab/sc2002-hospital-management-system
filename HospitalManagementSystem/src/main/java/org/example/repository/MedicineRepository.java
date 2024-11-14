@@ -32,6 +32,7 @@ public class MedicineRepository {
     public void loadMedicinesFromCSV(String filePath) {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String header = br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 if (values.length >= 3) {

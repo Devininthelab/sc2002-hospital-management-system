@@ -10,7 +10,6 @@ import org.example.repository.AppointmentRepository;
 import org.example.repository.DoctorRepository;
 import org.example.repository.PatientRepository;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
