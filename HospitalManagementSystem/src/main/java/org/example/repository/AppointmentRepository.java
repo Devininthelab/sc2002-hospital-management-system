@@ -169,5 +169,4 @@ public class AppointmentRepository {
         appointment.setStatus(status);
         saveAppointmentsToCSV();
     }
-
 }

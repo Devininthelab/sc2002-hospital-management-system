@@ -62,11 +62,19 @@ public class DoctorRepository {
      * @param time the time slot of the appointment
      * @param newStatus the new status of the appointment (e.g. "Available", "Booked", "Unavailable")
      */
-    public void updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
+    public boolean updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
         Doctor doctor = getDoctorById(doctorId);
-        int number = DateToNumber.dateToNumber(date);
-        doctor.getSchedule()[number][time] = newStatus;
+        int dayIndex = DateToNumber.dateToNumber(date);
+        String currentStatus = doctor.getSchedule()[dayIndex][time];
+
+        if ("BOOKED".equalsIgnoreCase(currentStatus)) {
+            System.out.println("Cannot change the status of a BOOKED timeslot.");
+            return false;
+        }
+
+        doctor.getSchedule()[dayIndex][time] = newStatus;
         saveDoctorSchedule(doctorId);
+        return true;
     }
 
     public void freeDoctorSchedule(String doctorId, String date, int time) {

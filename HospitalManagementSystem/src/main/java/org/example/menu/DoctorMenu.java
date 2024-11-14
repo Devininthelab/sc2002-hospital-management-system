@@ -4,9 +4,11 @@ import org.example.entity.*;
 import org.example.repository.*;
 
 import java.time.LocalDate;
+import java.time.format.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class DoctorMenu implements Menu {
     private final Scanner scanner = new Scanner(System.in);
@@ -211,17 +213,54 @@ public class DoctorMenu implements Menu {
         String date = scanner.nextLine();
         System.out.print("Timeslot: ");
         int timeslot = scanner.nextInt();
-        System.out.print("New availability status (Available, Busy, Booked): ");
+        scanner.nextLine(); // Consume newline
+        System.out.print("New availability status (Available, Busy): ");
         String availability = scanner.nextLine();
-        doctorRepository.updateDoctorSchedule(doctor.getId(), date, timeslot, availability);
+
+        boolean success = doctorRepository.updateDoctorSchedule(doctor.getId(), date, timeslot, availability);
+
+        if (success) {
+            System.out.println("Schedule updated successfully.");
+        } else {
+            System.out.println("Failed to update schedule. The timeslot is already BOOKED.");
+        }
     }
 
     public void manageAppointmentRequests() {
-        List<Appointment> appointments = doctor.getAppointments();
-        System.out.printf("You have %d appointment requests%n", appointments.size());
+        System.out.println("===== Manage Appointment Requests =====");
 
-        System.out.printf("| | | | | | ");
-        //TODO: how to differentiate requested from accepted appointed
+        // Filter for only BOOKED schedules with REQUESTED status appointments
+        List<Appointment> requestedAppointments = doctor.getAppointments().stream()
+                .filter(appt -> "BOOKED".equals(appt.getStatus()) && "REQUESTED".equals(appt.getStatus()))
+                .collect(Collectors.toList());
+
+        if (requestedAppointments.isEmpty()) {
+            System.out.println("No appointment requests to manage.");
+            return;
+        }
+
+        requestedAppointments.forEach(appointment -> {
+            System.out.println("Appointment ID: " + appointment.getId());
+            System.out.println("Patient ID: " + appointment.getPatientId());
+            System.out.println("Date: " + appointment.getDate());
+            System.out.println("Timeslot: " + appointment.getTimeslot());
+            System.out.println("Status: " + appointment.getStatus());
+
+            System.out.print("Accept this appointment? (y/n): ");
+            String response = scanner.nextLine().trim().toLowerCase();
+            if ("y".equals(response)) {
+                appointment.setStatus("ACCEPTED");
+                System.out.println("Appointment accepted.");
+            } else {
+                appointment.setStatus("REJECTED");
+                System.out.println("Appointment rejected.");
+            }
+
+            // Update appointment status in the repository
+            appointmentRepository.updateAppointmentStatus(appointment.getId(), appointment.getStatus());
+        });
+
+        System.out.println("Finished managing appointment requests.");
     }
 
     public void viewUpcomingAppointments() {
@@ -241,37 +280,49 @@ public class DoctorMenu implements Menu {
         System.out.println("Mark appointment as completed");
         System.out.print("Enter appointment's id: ");
         int appointmentId = scanner.nextInt();
-        // mark appointment as complete
+        scanner.nextLine(); // Consume newline
+
+        // Mark the appointment as complete
         appointmentRepository.markAsCompleted(appointmentId);
 
-        System.out.print("Enter date(dd/MM/yyyy): ");
-        LocalDate date = LocalDate.parse(scanner.nextLine());
+        // Prompt for date
+        System.out.print("Enter date (dd/MM/yyyy): ");
+        LocalDate date = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        // Collect services provided during the appointment
         List<String> services = new ArrayList<>();
         while (true) {
             System.out.print("Enter type of service (leave empty to finish): ");
             String service = scanner.nextLine();
-            if (service.equals("")) {
+            if (service.isEmpty()) {
                 break;
             }
-
             services.add(service);
         }
+
         //TODO: prompt for list of prescription
         List<Prescription> prescribePrescriptions = new ArrayList<>();
+        Prescription prescriptionToAdd;
         while (true) {
-            System.out.print("Enter medications (leave empty to finish): ");
-            String medicationName = scanner.nextLine();
-            if (medicationName.equals("")) {
+            System.out.print("Enter prescription name (leave empty to finish): ");
+            String prescriptionName = scanner.nextLine();
+            if (prescriptionName.isEmpty()) {
                 break;
             }
 
+            System.out.print("Enter quantity: ");
             int quantity = scanner.nextInt();
-            prescriptionRepository.addMedication(new Prescription(appointmentId, medicationName, quantity));
+            scanner.nextLine(); // Consume newline
+
+            prescriptionToAdd = new Prescription(appointmentId, prescriptionName, quantity);
+            prescribePrescriptions.add(prescriptionToAdd);
+            prescriptionRepository.addPrescription(prescriptionToAdd);
         }
 
         System.out.print("Consultation Notes: ");
         String notes = scanner.nextLine();
-        //TODO: appointment outcome record repository to save new outcome record
+
+        // Create and save the outcome record
         AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(appointmentId, date, notes, services, prescribePrescriptions);
         appointmentOutcomeRecordRepository.addAppointmentOutcomeRecord(record);
     }

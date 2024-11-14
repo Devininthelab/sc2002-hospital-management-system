@@ -13,9 +13,10 @@ import java.util.Scanner;
 
 /**
  * Pharmacist menu
- * Pharmacist can view appointment outcome record, update prescription status, view medication inventory, submit replenishment request
- * Menu keeps a pharmacist session id to keep track of user's state
- * The following dependencies are injected:
+ * <p>Pharmacist can view appointment outcome record, update prescription status, view medication inventory, submit replenishment request</p>
+ * <p>Show persistence warning when stock level is low</p>
+ * <p>Menu keeps a pharmacist session id to keep track of user's state
+ * The following dependencies are injected:</p>
  * - StaffRepository - Pharmacist login
  * - Medicine repository - View medication inventory, submit replenishment request
  * - AppointmentOutcomeRecordRepository - View appointment outcome record, update prescription status
@@ -97,11 +98,15 @@ public class PharmacistMenu implements Menu {
      */
     public void displayMenu() {
         System.out.println("=====PHARMACIST MENU=====");
+        if (medicineRepository.hasLowStockMedicines()) {
+            System.out.println("WARNING: Low stock medicine. Please submit replenishment request.");
+        }
         System.out.println("1. View Appointment Outcome Record\n" +
-                "2. Update Prescription Status\n" +
+                "2. Dispense Prescription\n" +
                 "3. View Medication Inventory\n" +
                 "4. Submit Replenishment Request\n" +
-                "5. Logout");
+                "5. Update password\n" +
+                "6. Logout");
     }
 
     /**
@@ -114,7 +119,7 @@ public class PharmacistMenu implements Menu {
                 viewAppointmentOutcomeRecord();
                 break;
             case 2:
-                updatePrescriptionStatus();
+                dispensePrescription();
                 break;
             case 3:
                 viewMedicationInventory();
@@ -123,6 +128,9 @@ public class PharmacistMenu implements Menu {
                 submitReplenishmentRequest();
                 break;
             case 5:
+                updatePassword();
+                break;
+            case 6:
                 System.out.println("Logging out...");
                 break;
             default:
@@ -141,48 +149,63 @@ public class PharmacistMenu implements Menu {
     }
 
     /**
-     * Update prescription status in appointment outcome record
+     * Dispense prescription status in appointment outcome record
      * Prompt pharmacist for record id, and print out the detail of that id
-     * Then repeated prompt for prescription with new status,
+     * Then repeated prompt for prescription to dispense
      * save through appointment outcome record, until user enter empty line
      */
-    public void updatePrescriptionStatus() {
+    public void dispensePrescription() {
         System.out.print("Enter appointment id: ");
         int appointmentId = scanner.nextInt();
-        System.out.println(appointmentOutcomeRecordRepository.getRecordById(appointmentId));
+        AppointmentOutcomeRecord record = appointmentOutcomeRecordRepository.getRecordById(appointmentId);
+        System.out.println(record);
         while (true) {
-            System.out.print("Enter name of prescription with changed status (empty to finish): ");
+            System.out.print("Enter name of prescription to dispense (empty to finish): ");
             String presciptionName = scanner.nextLine();
             if (presciptionName.isEmpty()) {
                 break;
             }
-
-            //TODO: Input validation
-            //TODO: Check if medicine has enough stock level
-            System.out.print("Enter new prescription status: ");
-            String status = scanner.nextLine();
-            prescriptionRepository.updatePrescriptionStatus(appointmentId, presciptionName, status);
-            if (status.equals("DISPENSED")) {
-                int quantity = prescriptionRepository.getPrescriptionsByNameAndId(appointmentId, presciptionName).getQuantity();
-                medicineRepository.decreaseStockLevel(presciptionName, quantity);
+            // Check if medicine name is valid
+            if (!medicineRepository.medicineExists(presciptionName)
+                || !prescriptionRepository.isValidPrescription(appointmentId, presciptionName)) {
+                System.out.println("Invalid medicine name. Try again");
+                continue;
             }
-
+            // Check if medicine has enough stock level
+            // get quantity
+            int quantity = prescriptionRepository.getPrescriptionsByNameAndId(appointmentId, presciptionName).getQuantity();
+            if (medicineRepository.getMedicine(presciptionName).getStockLevel() < quantity) {
+                System.out.println("Medicine stock level not adequate. Please submit replishment request");
+                continue;
+            }
+            prescriptionRepository.updatePrescriptionStatus(appointmentId, presciptionName, "DISPENSED");
+            medicineRepository.decreaseStockLevel(presciptionName, quantity);
+            System.out.println("Prescription status updated.");
         }
-        System.out.println("Prescription status updated.");
+
     }
 
-
+    /**
+     * Display all medicine in inventory
+     */
     public void viewMedicationInventory() {
-        System.out.println("Medication inventory");
-        List<Medicine> medicines = medicineRepository.getMedicines();
-        medicines.forEach(System.out::println);
+        System.out.println("Medicince inventory");
+        System.out.println("Do you want to see only low stock medicine? (Y/N)");
+        String choice = scanner.nextLine();
+        if (choice.equalsIgnoreCase("Y")) {
+            List<Medicine> lowStockMedicines = medicineRepository.getLowStockMedicines();
+            lowStockMedicines.forEach(System.out::println);
+        } else {
+            List<Medicine> medicines = medicineRepository.getAllMedicines();
+            medicines.forEach(System.out::println);
+        }
     }
 
     /**
      * Prompt pharmacist for list of medicine, submit request to request list for admin to see
      */
     public void submitReplenishmentRequest() {
-        System.out.println("Replenishment request");
+        System.out.println("Submit replenishment request");
         List<String> medicines = new ArrayList<>();
         while (true) {
             System.out.print("Enter medicine name (empty to finish): ");
@@ -198,7 +221,24 @@ public class PharmacistMenu implements Menu {
             
             medicines.add(medicineName);
         }
+        System.out.println("Review replenishment request");
+        medicines.forEach(System.out::println);
+        System.out.println("Submit request? (Y/N)");
+        String choice = scanner.nextLine();
+        if (!choice.equalsIgnoreCase("Y")) {
+            System.out.println("Request cancelled.");
+            return;
+        }
 
         medicineRequestRepository.addMedicineRequest(medicines);
+        System.out.println("Replenishment request submitted.");
+    }
+
+    public void updatePassword() {
+        System.out.print("Enter new password: ");
+        String newPassword = scanner.nextLine();
+        pharmacist.setPassword(newPassword);
+        staffRepository.updatePassword(pharmacist.getId(), newPassword);
+        System.out.println("Password updated.");
     }
 }
