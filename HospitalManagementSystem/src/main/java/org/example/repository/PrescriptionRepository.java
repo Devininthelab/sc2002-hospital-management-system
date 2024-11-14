@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrescriptionRepository {
-    private List<Prescription> prescriptions = new ArrayList<>();
-    private final String filePath = "src/main/resources/Prescriptions.csv";
+    private List<Prescription> prescriptions;
+    private String filePath;
 
     /**
      * Constructor to inject dependencies
@@ -80,6 +80,8 @@ public class PrescriptionRepository {
     public void addPrescription(Prescription prescription) {
         prescriptions.add(prescription);
         savePrescriptionsToCSV(); // Save changes after adding
+    }
+
     /**
      * Read Prescriptions by name and id
      * @return List of Prescriptions
@@ -108,8 +110,8 @@ public class PrescriptionRepository {
 
     /**
      * Update operations on Prescription status
-     * @param id
-     * @param status
+     * @param id is the same as appointment id and appointment outcome record id
+     * @param status can be PENDING, DISPENSED
      */
     public void updatePrescriptionStatus(int id, String PrescriptionName, String status) {
         Prescription Prescription = getPrescriptionsByNameAndId(id, PrescriptionName);

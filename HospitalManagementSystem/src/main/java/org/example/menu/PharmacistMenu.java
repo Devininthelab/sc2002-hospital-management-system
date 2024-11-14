@@ -28,7 +28,7 @@ public class PharmacistMenu implements Menu {
     private MedicineRepository medicineRepository;
     private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
     private MedicineRequestRepository medicineRequestRepository;
-    private MedicationRepository medicationRepository;
+    private PrescriptionRepository prescriptionRepository;
     private Pharmacist pharmacist;
 
     /**
@@ -38,15 +38,15 @@ public class PharmacistMenu implements Menu {
      * @param medicineRepository
      * @param appointmentOutcomeRecordRepository
      * @param medicineRequestRepository
-     * @param medicationRepository
+     * @param prescriptionRepository
      */
-    public PharmacistMenu(Scanner scanner, StaffRepository staffRepository, MedicineRepository medicineRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository, MedicineRequestRepository medicineRequestRepository, MedicationRepository medicationRepository) {
+    public PharmacistMenu(Scanner scanner, StaffRepository staffRepository, MedicineRepository medicineRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository, MedicineRequestRepository medicineRequestRepository, PrescriptionRepository prescriptionRepository) {
         this.scanner = scanner;
         this.staffRepository = staffRepository;
         this.medicineRepository = medicineRepository;
         this.appointmentOutcomeRecordRepository = appointmentOutcomeRecordRepository;
         this.medicineRequestRepository = medicineRequestRepository;
-        this.medicationRepository = medicationRepository;
+        this.prescriptionRepository = prescriptionRepository;
     }
 
     /**
@@ -158,12 +158,12 @@ public class PharmacistMenu implements Menu {
             }
 
             //TODO: Input validation
-
+            //TODO: Check if medicine has enough stock level
             System.out.print("Enter new prescription status: ");
             String status = scanner.nextLine();
-            medicationRepository.updateMedicationStatus(appointmentId, presciptionName, status);
+            prescriptionRepository.updatePrescriptionStatus(appointmentId, presciptionName, status);
             if (status.equals("DISPENSED")) {
-                int quantity = medicationRepository.getMedicationsByNameAndId(appointmentId, presciptionName).getQuantity();
+                int quantity = prescriptionRepository.getPrescriptionsByNameAndId(appointmentId, presciptionName).getQuantity();
                 medicineRepository.decreaseStockLevel(presciptionName, quantity);
             }
 
