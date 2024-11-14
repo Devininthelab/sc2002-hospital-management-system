@@ -54,6 +54,7 @@ public class MedicineRepository {
      */
     private void saveMedicinesToCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write("name,stock,low_threshold,high_threshold\n");
             for (Medicine medicine : medicines) {
                 writer.write(medicine.getName() + ","
                         + medicine.getStockLevel() + ","
