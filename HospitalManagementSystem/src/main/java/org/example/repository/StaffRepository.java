@@ -12,9 +12,10 @@ import java.util.List;
 
 public class StaffRepository {
     private List<Staff> staffList;
-    private static final String csvPath = "src/main/resources/Staff_List.csv";
+    private String csvPath;
 
-    public StaffRepository() {
+    public StaffRepository(String staffPath) {
+        this.csvPath = staffPath;
         staffList = loadStaffsFromCSV();
     }
 
@@ -27,6 +28,7 @@ public class StaffRepository {
         List<Staff> staffList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
             String line;
+            String header = br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 String id = values[0].trim();
@@ -139,7 +141,6 @@ public class StaffRepository {
 
     /**
      * Get Administrator by credentials
-     *
      * @return a specific administrator if credentials are correct, null otherwise
      */
     public Administrator getAdministratorByCredentials(String id, String password) {
@@ -188,11 +189,8 @@ public class StaffRepository {
      * ....
      * TODO: Remove because repo doesn't handle UI
      */
-    public void viewStaffListRepo() {
-        System.out.println("List of staff members:");
-        for (Staff staff : staffList) {
-            System.out.println(staff.toString());
-        }
+    public List<Staff> getAllStaffs() {
+        return staffList;
     }
 
 
@@ -220,4 +218,18 @@ public class StaffRepository {
             }
         }
     }
+
+    /** Get All doctors
+     * @return List of Doctors
+     */
+    public List<Doctor> getAllDoctors() {
+        List<Doctor> doctors = new ArrayList<>();
+        for (Staff staff : staffList) {
+            if (staff.getRole().equals("Doctor")) {
+                doctors.add((Doctor) staff);
+            }
+        }
+        return doctors;
+    }
+
 }

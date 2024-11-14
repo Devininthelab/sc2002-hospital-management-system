@@ -16,16 +16,19 @@ import java.util.List;
  */
 public class PatientRepository {
     private List<Patient> patients;
-    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
-    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
+    private AppointmentRepository appointmentRepository;
+    private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final String csvPath = "src/main/resources/Patient_List.csv";
+    private String csvPath = "src/main/resources/Patient_List.csv";
 
     /**
      * Constructor that initializes the list of patients by loading data from a CSV file.
      * TODO: Implement depedency injection for every dependencies
      */
-    public PatientRepository() {
+    public PatientRepository(String csvPath, AppointmentRepository appointmentRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository) {
+        this.csvPath = csvPath;
+        this.appointmentRepository = appointmentRepository;
+        this.appointmentOutcomeRecordRepository = appointmentOutcomeRecordRepository;
         this.patients = new ArrayList<>();
         loadPatientsFromCSV(csvPath);
     }
@@ -39,6 +42,7 @@ public class PatientRepository {
     private void loadPatientsFromCSV(String csvPath) {
         try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
             String line;
+            String header = br.readLine(); // Skip the header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 String id = values[0].trim();

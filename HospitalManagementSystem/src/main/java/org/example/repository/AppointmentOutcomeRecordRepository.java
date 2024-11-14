@@ -8,13 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentOutcomeRecordRepository {
-    private List<AppointmentOutcomeRecord> records = new ArrayList<>();
-    private PrescriptionRepository prescriptionRepository = new PrescriptionRepository();
-    private static final String filePath = "src/main/resources/AppointmentOutcomeRecord.csv";
+    private List<AppointmentOutcomeRecord> records;
+    private PrescriptionRepository prescriptionRepository;
+    private String filePath = "src/main/resources/AppointmentOutcomeRecord.csv";
 
-    public AppointmentOutcomeRecordRepository() {
+    public AppointmentOutcomeRecordRepository(String filePath, PrescriptionRepository prescriptionRepository) {
         // Load prescriptions and records from their respective CSV files
-        prescriptionRepository.loadPrescriptionsFromCSV();  // Updated to load prescriptions
+        records = new ArrayList<>();
+        this.prescriptionRepository = prescriptionRepository;
         loadRecordsFromCSV();
     }
 
@@ -25,14 +26,14 @@ public class AppointmentOutcomeRecordRepository {
         String line;
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String header = br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 if (values.length >= 6) {
                     int id = Integer.parseInt(values[0].trim());
                     String date = values[1].trim();
-                    int timeslot = Integer.parseInt(values[2].trim());
-                    String typeOfServiceStr = values[3].trim();
-                    String consultationNotes = values[5].trim();
+                    String typeOfServiceStr = values[2].trim();
+                    String consultationNotes = values[3].trim();
 
                     // Deserialize typeOfService string
                     String[] types = typeOfServiceStr.split(";");
@@ -41,12 +42,10 @@ public class AppointmentOutcomeRecordRepository {
                         typeOfService.add(type.trim());
                     }
 
-                    // Create the AppointmentOutcomeRecord
-                    AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, timeslot, consultationNotes, typeOfService);
-
                     // Retrieve prescriptions for this record and assign them
                     List<Prescription> prescriptions = prescriptionRepository.getPrescriptionsById(id);  // Updated method name
-                    record.setPrescriptions(prescriptions);  // Updated to set prescriptions
+                    // Create the AppointmentOutcomeRecord
+                    AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
 
                     records.add(record); // Add to records list
                 }
@@ -59,6 +58,11 @@ public class AppointmentOutcomeRecordRepository {
     // Method to save a record to CSV
     public void saveRecordsToCSV(AppointmentOutcomeRecord record) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            //  If the file is empty, write the header
+            if (new File(filePath).length() == 0) {
+                writer.write("appointmentId,date,typeOfService,consultationNotes");
+                writer.newLine();
+            }
             // Convert record fields into a CSV string
             String csvLine = recordToCSV(record);
 
@@ -77,7 +81,6 @@ public class AppointmentOutcomeRecordRepository {
         // Append fields, separated by commas
         csvBuilder.append(record.getAppointmentId()).append(",");
         csvBuilder.append(record.getDate()).append(",");
-        csvBuilder.append(record.getTimeslot()).append(",");
 
         // Convert list of typeOfService to a semicolon-separated string
         csvBuilder.append(String.join(";", record.getTypeOfService())).append(",");
@@ -116,5 +119,17 @@ public class AppointmentOutcomeRecordRepository {
     public void addAppointmentOutcomeRecord(AppointmentOutcomeRecord record) {
         records.add(record);
         saveRecordsToCSV(record);
+    }
+
+    /**
+     * Get appointment outcome record by appointment ID
+     */
+    public AppointmentOutcomeRecord getAppointmentOutcomeRecordById(int appointmentId) {
+        for (AppointmentOutcomeRecord record : records) {
+            if (record.getAppointmentId() == appointmentId) {
+                return record;
+            }
+        }
+        return null;  // Return null if record not found
     }
 }

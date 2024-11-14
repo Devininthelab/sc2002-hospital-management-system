@@ -18,9 +18,10 @@ public class MedicineRequestRepository {
      */
     private static int counter;
     private List<MedicineRequest> medicineRequests;
-    private String csvPath = "src/main/resources/Medicine_Request.csv";
+    private String csvPath;
 
-    public MedicineRequestRepository() {
+    public MedicineRequestRepository(String filePath) {
+        this.csvPath = filePath;
         medicineRequests = new ArrayList<>();
         loadRequestsFromCsv();
         counter = highestId();
@@ -39,6 +40,7 @@ public class MedicineRequestRepository {
     public void loadRequestsFromCsv() {
         try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
             String line;
+            String header = br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
                 int id = Integer.parseInt(data[0].trim());
@@ -71,5 +73,38 @@ public class MedicineRequestRepository {
         saveRequestsToCsv();
     }
 
+    /**
+     * Get all medicine requests
+     * @return List of MedicineRequest
+     */
+    public List<MedicineRequest> getAllMedicineRequests() {
+        return medicineRequests;
+    }
 
+
+    /**
+     * Get medicine request by id
+     * @param id
+     * @return MedicineRequest
+     */
+    public MedicineRequest getMedicineRequestById(int id) {
+        for (MedicineRequest medicineRequest : medicineRequests) {
+            if (medicineRequest.getId() == id) {
+                return medicineRequest;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Approve a medicine request
+     * @param id
+     */
+     public void approveMedicineRequest(int id) {
+         MedicineRequest medicineRequest = getMedicineRequestById(id);
+         if (medicineRequest != null) {
+             medicineRequest.setStatus("APPROVED");
+             saveRequestsToCsv();
+         }
+     }
 }

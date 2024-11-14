@@ -14,13 +14,9 @@ public class PrescriptionRepository {
     private List<Prescription> prescriptions;
     private String filePath;
 
-    /**
-     * Constructor to inject dependencies
-     * @param filePath
-     */
-    public PrescriptionRepository(String filePath) {
+    public PrescriptionRepository(String prescriptionPath) {
+        this.filePath = prescriptionPath;
         this.prescriptions = new ArrayList<>();
-        this.filePath = filePath;
         loadPrescriptionsFromCSV();
     }
 
@@ -33,6 +29,7 @@ public class PrescriptionRepository {
         prescriptions.clear(); // Clear list before loading to avoid duplicates
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String header = br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 if (values.length >= 4) {
@@ -81,6 +78,16 @@ public class PrescriptionRepository {
         prescriptions.add(prescription);
         savePrescriptionsToCSV(); // Save changes after adding
     }
+
+    /**
+     * Add a list of prescriptions to the repository
+     */
+    public void addPrescriptions(List<Prescription> prescriptions) {
+        this.prescriptions.addAll(prescriptions);
+        savePrescriptionsToCSV();
+    }
+
+
 
     /**
      * Read Prescriptions by name and id

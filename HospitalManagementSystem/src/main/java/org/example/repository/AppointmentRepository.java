@@ -13,11 +13,13 @@ import java.util.stream.Collectors;
  * - DoctorRepo to update their availability
  */
 public class AppointmentRepository {
-    private List<Appointment> appointments = new ArrayList<>();
+    private List<Appointment> appointments;
     private static int counter = 0;
-    private final String filePath = "src/main/resources/Appointment_List.csv";
+    private final String filePath;
 
-    public AppointmentRepository() {
+    public AppointmentRepository(String filePath) {
+        this.filePath = filePath;
+        appointments = new ArrayList<>();
         loadAppointmentsFromCSV();
         setHighestAppointmentId();
     }
@@ -44,6 +46,7 @@ public class AppointmentRepository {
         //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         //TEMPORARILY, TYPE OF DATE IS STRING, SO DON'T NEED FORMATTER HERE
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String header = br.readLine(); // Skip the header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 if (values.length >= 6) {
@@ -70,6 +73,11 @@ public class AppointmentRepository {
      */
     public void saveAppointmentsToCSV() {
         try (FileWriter writer = new FileWriter(filePath, true)) {
+            // If the file is empty, write the header
+            if (new File(filePath).length() == 0) {
+                writer.write("appointmentId,doctorId,patientId,date,timeslot,status\n");
+            }
+
             for (Appointment appointment : appointments) {
                 writer.write(appointment.getId() + "," +
                         appointment.getPatientId() + "," +
