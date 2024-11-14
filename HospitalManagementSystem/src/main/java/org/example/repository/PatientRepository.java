@@ -127,11 +127,14 @@ public class PatientRepository {
      */
     public void savePatientsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {
+            bw.write("id,name,dob,gender,bloodtype");
+            bw.newLine();
             for (Patient patient : patients) {
                 bw.write(patient.getId() + "," + patient.getName() + "," +
                         DATE_FORMATTER.format(patient.getDateOfBirth()) + "," +
                         patient.getGender() + "," +
-                        patient.getBloodType() + "\n");
+                        patient.getBloodType());
+                bw.newLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
