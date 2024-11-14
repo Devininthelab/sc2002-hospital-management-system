@@ -76,7 +76,7 @@ public class PatientMenu implements Menu {
      */
     public void displayMenu() {
         System.out.println("=====PATIENT MENU=====");
-        System.out.println("1. Change password" +
+        System.out.println("1. Change password\n" +
                 "2. View Medical Record\n" +
                 "3. Update Personal Information\n" +
                 "4. View Available Appointment Slots\n" +
@@ -136,9 +136,10 @@ public class PatientMenu implements Menu {
      * Call the patientRepository to update the password
      */
     private void changePassword() {
-        System.out.print("Please enter new password: ");
-        String password = scanner.nextLine();
+        System.out.print("Please enter new password: \n");
+        String password = scanner.next();
         patientRepository.updatePatientField(patient.getId(), "password",password);
+        System.out.println("Password changed successfully.");
     }
 
     /**
@@ -155,15 +156,13 @@ public class PatientMenu implements Menu {
         System.out.println("Gender: " + patient.getGender());
         System.out.println("Contact: " + patient.getContact());
         System.out.println("Blood Type: " + patient.getBloodType());
-        for (String diagnosis : patient.getDiagnoses()) {
-            System.out.println("Diagnosis: " + diagnosis);
-        }
-        for (String treatment : patient.getTreatments()) {
-            System.out.println("Treatment: " + treatment);
-        }
-        for (String prescription : patient.getPrescriptions()) {
-            System.out.println("Prescription: " + prescription);
-        }
+        String diagnoses = String.join(", ", patient.getDiagnoses());
+        String treatments = String.join(", ", patient.getTreatments());
+        String prescriptions = String.join(", ", patient.getPrescriptions());
+
+        System.out.println("Diagnoses: " + diagnoses);
+        System.out.println("Treatments: " + treatments);
+        System.out.println("Prescriptions: " + prescriptions);
     }
 
     /**
@@ -175,36 +174,55 @@ public class PatientMenu implements Menu {
         System.out.println("You can only update: \n" +
                 "1. Name\n" +
                 "2. Date of Birth\n" +
-                "3. Contact\n");
+                "3. Contact\n" +
+                "4. Gender\n" +
+                "5. Finish");
+
         Scanner sc = new Scanner(System.in);
         int choice = sc.nextInt();
+
+        // Loop until the user chooses to finish
         do {
             switch (choice) {
                 case 1:
-                    String name = sc.next();
-                    patient.setName(name);
+                    System.out.println("Please enter your name: ");
+                    sc.nextLine(); // Consume the newline character
+                    String name = sc.nextLine(); // Read full name (including spaces)
+                    patientRepository.updatePatientField(patient.getId(), "name", name);
+                    System.out.println("Name updated successfully.");
                     break;
                 case 2:
-                    int day = sc.nextInt();
-                    int month = sc.nextInt();
-                    int year = sc.nextInt();
-                    LocalDate birthDate = LocalDate.of(year, month, day);
-                    patient.setDateOfBirth(birthDate);
+                    System.out.println("Please enter your date of birth (dd/MM/yyyy): ");
+                    String dateOfBirth = sc.next();
+                    patientRepository.updatePatientField(patient.getId(), "dateOfBirth", dateOfBirth);
+                    System.out.println("Date of birth updated successfully.");
                     break;
                 case 3:
-                    System.out.println("Choose gender:\n1. Male\n2. Female");
-                    int gender = sc.nextInt();
-                    if (gender == 1) {
-                        patient.setGender("Male");
-                    } else if (gender == 2) {
-                        patient.setGender("Female");
-                    }
+                    System.out.println("Please enter your contact: ");
+                    sc.nextLine(); // Consume the newline character
+                    String contact = sc.nextLine(); // Read full contact number (including spaces if needed)
+                    patientRepository.updatePatientField(patient.getId(), "contact", contact);
+                    System.out.println("Contact updated successfully.");
+                    break;
+                case 4:
+                    System.out.println("Please enter your gender: ");
+                    String gender = sc.next();
+                    patientRepository.updatePatientField(patient.getId(), "gender", gender);
+                    System.out.println("Gender updated successfully.");
+                    break;
+                case 5:
+                    System.out.println("All done successfully.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
                     break;
             }
-            System.out.println("Choose information to update: \n1. Name\n2. Date of Birth\n3. Gender\n4. Blood Type");
-            choice = sc.nextInt();
-        }
-        while (choice >= 1 && choice <= 8);
+            // Prompt user for the next action
+            if (choice != 5) {
+                System.out.println("Choose information to update: \n1. Name\n2. Date of Birth\n3. Contact\n4. Gender\n5. Finish");
+                choice = sc.nextInt();
+            }
+        } while (choice != 5);
     }
 
     /**
