@@ -120,4 +120,9 @@ public class PrescriptionRepository {
         }
     }
 
+    public boolean isValidPrescription(int appointmentId, String presciptionName) {
+        return prescriptions.stream()
+                .anyMatch(prescription -> prescription.getId() == appointmentId
+                        && prescription.getName().equalsIgnoreCase(presciptionName));
+    }
 }

@@ -186,6 +186,7 @@ public class StaffRepository {
      * List of staff members:
      * ID: 1,   Name: John Doe,     Role: Doctor, ...
      * ....
+     * TODO: Remove because repo doesn't handle UI
      */
     public void viewStaffListRepo() {
         System.out.println("List of staff members:");
@@ -202,5 +203,21 @@ public class StaffRepository {
             }
         }
         return null;
+    }
+
+    /**
+     * Update the password of a staff member
+     *
+     * @param id         The staff id
+     * @param newPassword The new password
+     */
+    public void updatePassword(String id, String newPassword) {
+        for (Staff staff : staffList) {
+            if (staff.getId().equals(id)) {
+                staff.setPassword(newPassword);
+                saveStaffsToCSV();
+                return;
+            }
+        }
     }
 }
