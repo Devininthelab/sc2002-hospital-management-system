@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class DoctorMenu implements Menu {
-    private Scanner scanner;
+    private final Scanner scanner = new Scanner(System.in);
     private Doctor doctor;
-    private PatientRepository patientRepository;
-    private StaffRepository staffRepository;
-    private DoctorRepository doctorRepository;
-    private AppointmentRepository appointmentRepository;
-    private MedicationRepository medicationRepository;
-    private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
+    private final PatientRepository patientRepository = new PatientRepository();
+    private final StaffRepository staffRepository = new StaffRepository();
+    private final DoctorRepository doctorRepository = new DoctorRepository();
+    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
+    private final PrescriptionRepository prescriptionRepository = new PrescriptionRepository();
+    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
 
     public DoctorMenu(Scanner scanner, PatientRepository patientRepository, StaffRepository staffRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository, MedicationRepository medicationRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository) {
         this.scanner = scanner;
@@ -120,13 +120,84 @@ public class DoctorMenu implements Menu {
 
     public void updatePatientMedicalRecords() {
         System.out.println("Enter patient's id: ");
-
         String patientId = scanner.nextLine();
 
+        // Retrieve the patient by ID
         Patient patient = patientRepository.getPatientById(patientId);
-        System.out.println("Add new ");
-        //TODO: implement update medical record field in PatientRepository
+        if (patient == null) {
+            System.out.println("Patient not found.");
+            return;
+        }
 
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            // Display update menu
+            System.out.println("Enter the section you want to update (type 4 to exit):");
+            System.out.println("1. Diagnoses");
+            System.out.println("2. Prescriptions");
+            System.out.println("3. Treatment plans");
+            System.out.println("4. Exit");
+
+            choice = sc.nextInt();
+            sc.nextLine(); // Consume the leftover newline character
+
+            switch (choice) {
+                case 1:
+                    // Update Diagnoses
+                    System.out.println("Type diagnosis to update (leave blank and press Enter to finish): ");
+                    String diagnosis;
+                    do {
+                        diagnosis = sc.nextLine();
+                        if (!diagnosis.isEmpty()) {
+                            patient.addDiagnose(diagnosis);
+                            System.out.println("Diagnosis added: " + diagnosis);
+                        }
+                    } while (!diagnosis.isEmpty());
+                    break;
+
+                case 2:
+                    // Update Prescriptions
+                    System.out.println("Type prescription to update (leave blank and press Enter to finish): ");
+                    String prescription;
+                    do {
+                        prescription = sc.nextLine();
+                        if (!prescription.isEmpty()) {
+                            patient.addPrescription(prescription);
+                            System.out.println("Prescription added: " + prescription);
+                        }
+                    } while (!prescription.isEmpty());
+                    break;
+
+                case 3:
+                    // Update Treatment Plans
+                    System.out.println("Type treatment plan to update (leave blank and press Enter to finish): ");
+                    String treatmentPlan;
+                    do {
+                        treatmentPlan = sc.nextLine();
+                        if (!treatmentPlan.isEmpty()) {
+                            patient.addTreatment(treatmentPlan);
+                            System.out.println("Treatment plan added: " + treatmentPlan);
+                        }
+                    } while (!treatmentPlan.isEmpty());
+                    break;
+
+                case 4:
+                    // Exit
+                    System.out.println("Exiting update menu.");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+
+        } while (choice != 4);
+
+        // Save the updated patient information to CSV
+        patientRepository.savePatientsToCSV();
+        System.out.println("Patient medical records updated successfully.");
     }
 
     public void viewPersonalSchedule() {
@@ -186,7 +257,7 @@ public class DoctorMenu implements Menu {
             services.add(service);
         }
         //TODO: prompt for list of prescription
-        List<Medication> prescribeMedications = new ArrayList<>();
+        List<Prescription> prescribePrescriptions = new ArrayList<>();
         while (true) {
             System.out.print("Enter medications (leave empty to finish): ");
             String medicationName = scanner.nextLine();
@@ -195,13 +266,13 @@ public class DoctorMenu implements Menu {
             }
 
             int quantity = scanner.nextInt();
-            medicationRepository.addMedication(new Medication(appointmentId, medicationName, quantity));
+            prescriptionRepository.addMedication(new Prescription(appointmentId, medicationName, quantity));
         }
 
         System.out.print("Consultation Notes: ");
         String notes = scanner.nextLine();
         //TODO: appointment outcome record repository to save new outcome record
-        AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(appointmentId, date, notes, services, prescribeMedications);
+        AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(appointmentId, date, notes, services, prescribePrescriptions);
         appointmentOutcomeRecordRepository.addAppointmentOutcomeRecord(record);
     }
 

@@ -1,7 +1,7 @@
 package org.example.repository;
 
 import org.example.entity.AppointmentOutcomeRecord;
-import org.example.entity.Medication;
+import org.example.entity.Prescription;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,12 +9,12 @@ import java.util.List;
 
 public class AppointmentOutcomeRecordRepository {
     private List<AppointmentOutcomeRecord> records = new ArrayList<>();
-    private MedicationRepository medicationRepository = new MedicationRepository();
+    private PrescriptionRepository prescriptionRepository = new PrescriptionRepository();
     private static final String filePath = "src/main/resources/AppointmentOutcomeRecord.csv";
 
     public AppointmentOutcomeRecordRepository() {
         // Load medications and records from their respective CSV files
-        medicationRepository.loadMedicationsFromCSV();
+        prescriptionRepository.loadMedicationsFromCSV();
         loadRecordsFromCSV();
     }
 
@@ -45,8 +45,8 @@ public class AppointmentOutcomeRecordRepository {
                     AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, timeslot, consultationNotes, typeOfService);
 
                     // Retrieve medications for this record and assign them
-                    List<Medication> medications = medicationRepository.getMedicationsById(id);
-                    record.setMedications(medications);
+                    List<Prescription> prescriptions = prescriptionRepository.getMedicationsById(id);
+                    record.setMedications(prescriptions);
 
                     records.add(record); // Add to records list
                 }
@@ -84,7 +84,7 @@ public class AppointmentOutcomeRecordRepository {
 
         // Placeholder for medication list to simplify CSV structure (if needed)
         csvBuilder.append("\"");
-        for (Medication med : record.getMedications()) {
+        for (Prescription med : record.getMedications()) {
             csvBuilder.append(med.getName()).append(";");
         }
         csvBuilder.deleteCharAt(csvBuilder.length() - 1); // Remove last semicolon
