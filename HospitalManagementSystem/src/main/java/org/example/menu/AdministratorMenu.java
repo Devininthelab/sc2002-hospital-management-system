@@ -9,14 +9,27 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AdministratorMenu implements Menu {
-    private StaffRepository staffRepository = new StaffRepository();
-    private AppointmentRepository appointmentRepository = new AppointmentRepository();
-    private AppointmentOutcomeRecordRepository appointmentOutcomeRepository = new AppointmentOutcomeRecordRepository();
-    private PrescriptionRepository prescriptionRepository = new PrescriptionRepository();
-    private MedicineRepository medicineRepository = new MedicineRepository("src/main/resources/Medicine.csv");
-    private MedicineRequestRepository medicineRequestRepository = new MedicineRequestRepository();
+    private StaffRepository staffRepository;
+    private AppointmentRepository appointmentRepository;
+    private AppointmentOutcomeRecordRepository appointmentOutcomeRepository;
+    private PrescriptionRepository prescriptionRepository;
+    private MedicineRepository medicineRepository;
+    private MedicineRequestRepository medicineRequestRepository;
     private Administrator administrator;
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
+
+    public AdministratorMenu(StaffRepository staffRepository, AppointmentRepository appointmentRepository,
+                             AppointmentOutcomeRecordRepository appointmentOutcomeRepository,
+                             PrescriptionRepository prescriptionRepository, MedicineRepository medicineRepository,
+                             MedicineRequestRepository medicineRequestRepository, Scanner scanner) {
+        this.staffRepository = staffRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.appointmentOutcomeRepository = appointmentOutcomeRepository;
+        this.prescriptionRepository = prescriptionRepository;
+        this.medicineRepository = medicineRepository;
+        this.medicineRequestRepository = medicineRequestRepository;
+        this.scanner = scanner;
+    }
 
     /**
      * Start the Administrator menu, which requires the administrator to log in first

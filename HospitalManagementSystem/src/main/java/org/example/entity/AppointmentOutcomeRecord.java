@@ -66,7 +66,7 @@ public class AppointmentOutcomeRecord {
     }
 
     public String getDate() {
-        return DateTimeFormatter.ofPattern("dd-MM-yyyy").format(date);
+        return date;
     }
 
     public void setDate(String date) {
@@ -93,13 +93,17 @@ public class AppointmentOutcomeRecord {
 
     @Override
     public String toString() {
+        String prescriptionString = "";
+        for (Prescription prescription : prescriptions) {
+            prescriptionString += prescription.toString() + "\n";
+        }
         return "AppointmentOutcomeRecord{" +
                 "appointmentId=" + appointmentId +
                 ", date='" + date + '\'' +
                 ", consultationNotes='" + consultationNotes + '\'' +
                 ", typeOfService=" + typeOfService +
                 ", Prescription:" +
-                " prescriptions=" + prescriptions +
+                " prescriptions=" + prescriptionString +
                 '}';
     }
 }

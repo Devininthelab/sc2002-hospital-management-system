@@ -18,9 +18,10 @@ public class MedicineRequestRepository {
      */
     private static int counter;
     private List<MedicineRequest> medicineRequests;
-    private String csvPath = "src/main/resources/Medicine_Request.csv";
+    private String csvPath;
 
-    public MedicineRequestRepository() {
+    public MedicineRequestRepository(String filePath) {
+        this.csvPath = filePath;
         medicineRequests = new ArrayList<>();
         loadRequestsFromCsv();
         counter = highestId();
@@ -39,6 +40,7 @@ public class MedicineRequestRepository {
     public void loadRequestsFromCsv() {
         try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
             String line;
+            String header = br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
                 int id = Integer.parseInt(data[0].trim());

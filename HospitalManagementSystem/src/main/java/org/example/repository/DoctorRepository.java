@@ -12,8 +12,10 @@ import java.util.List;
  */
 public class DoctorRepository {
     private List<Doctor> doctors;
-    private final StaffRepository staffRepository = new StaffRepository();
-    public DoctorRepository() {
+    private String fileDir;
+    
+    public DoctorRepository(String fileDir, StaffRepository staffRepository) {
+        this.fileDir = fileDir;
         doctors = staffRepository.getAllDoctors();
         for (Doctor doctor : doctors) {
             doctor.setSchedule(loadDoctorSchedule(doctor.getId()));
@@ -27,13 +29,15 @@ public class DoctorRepository {
      * @return a 2D array of the doctor's schedule
      */
     public String[][] loadDoctorSchedule(String doctorId) {
-        String[][] schedule = new String[20][7];
-        try (BufferedReader br = new BufferedReader(new FileReader(doctorId + "_availability.csv"))) {
+        String[][] schedule = new String[8][6];
+        try (BufferedReader br = new BufferedReader(new FileReader(fileDir + doctorId + "_availability.csv"))) {
             String line;
             int i = 0;
+            String header = br.readLine(); // Skip the header
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
-                schedule[i] = data;
+                schedule[i] = new String[data.length - 1];
+                System.arraycopy(data, 1, schedule[i], 0, data.length - 1); // Skip the first entry in each row
                 i++;
             }
         } catch (IOException e) {
