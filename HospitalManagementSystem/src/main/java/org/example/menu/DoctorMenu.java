@@ -9,22 +9,25 @@ import java.util.List;
 import java.util.Scanner;
 
 public class DoctorMenu implements Menu {
-    private final Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
     private Doctor doctor;
-    private final PatientRepository patientRepository = new PatientRepository();
-    private final StaffRepository staffRepository = new StaffRepository();
-    private final DoctorRepository doctorRepository = new DoctorRepository();
-    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
-    private final PrescriptionRepository prescriptionRepository = new PrescriptionRepository();
-    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
+    private PatientRepository patientRepository;
+    private StaffRepository staffRepository;
+    private DoctorRepository doctorRepository;
+    private AppointmentRepository appointmentRepository;
+    private PrescriptionRepository prescriptionRepository;
+    private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
 
-    public DoctorMenu(Scanner scanner, PatientRepository patientRepository, StaffRepository staffRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository, MedicationRepository medicationRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository) {
+    public DoctorMenu(Scanner scanner, PatientRepository patientRepository,
+                      StaffRepository staffRepository, DoctorRepository doctorRepository,
+                      AppointmentRepository appointmentRepository, PrescriptionRepository prescriptionRepository,
+                      AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository) {
         this.scanner = scanner;
         this.patientRepository = patientRepository;
         this.staffRepository = staffRepository;
         this.doctorRepository = doctorRepository;
         this.appointmentRepository = appointmentRepository;
-        this.medicationRepository = medicationRepository;
+        this.prescriptionRepository = prescriptionRepository;
         this.appointmentOutcomeRecordRepository = appointmentOutcomeRecordRepository;
     }
 

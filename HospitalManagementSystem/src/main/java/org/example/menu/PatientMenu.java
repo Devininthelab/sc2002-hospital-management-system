@@ -145,7 +145,6 @@ public class PatientMenu implements Menu {
     /**
      * View the medical record of the patient
      * Call the medicalRecord method in the patient class
-     * TODO: Something doesn't seem right here,
      * Printing format: id, name, date of birth, gender, contact, blood type
      * Past diagnosis, treatment and prescription
      */
