@@ -303,6 +303,7 @@ public class PatientMenu implements Menu {
             records.add(appointmentOutcomeRecordRepository.getRecordById(appointment.getId()));
         }
     }
+
 }
 
 
