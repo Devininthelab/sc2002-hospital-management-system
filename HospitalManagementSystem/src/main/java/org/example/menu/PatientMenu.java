@@ -16,25 +16,33 @@ import java.util.*;
 
 public class PatientMenu implements Menu {
 
-    private final PatientRepository patientRepository = new PatientRepository();
-    private final DoctorRepository doctorRepository = new DoctorRepository();
-    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
-    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository();
+    private PatientRepository patientRepository;
+    private DoctorRepository doctorRepository;
+    private AppointmentRepository appointmentRepository;
+    private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
+    //TODO: change to id to maintain encapsulation
     private Patient patient;
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
+
+    public PatientMenu(PatientRepository patientRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository, Scanner scanner) {
+        this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.appointmentOutcomeRecordRepository = appointmentOutcomeRecordRepository;
+        this.scanner = scanner;
+    }
 
     /**
      * Start the user menu, should run first when the program starts
      * Patient should log in first before accessing the menu
      */
     public void start() {
-        Scanner sc = new Scanner(System.in);
         login();
         int choice;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = sc.nextInt();
+            choice = scanner.nextInt();
             handleChoice(choice);
         } while (choice != 9);  // Exit when logout is chosen
     }
@@ -235,8 +243,9 @@ public class PatientMenu implements Menu {
         boolean success = appointmentRepository.addAppointment(patient.getId(), doctorId, date, timeslot, "PENDING");
         if (success) {
             System.out.println("Appointment scheduled");
+            doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "unavailable");
         } else {
-            System.out.println("Something went wrong. Try again");
+            System.out.println("Timeslot unavailable. Please choose another timeslot");
         }
     }
 
@@ -275,7 +284,12 @@ public class PatientMenu implements Menu {
         System.out.println("Cancelling appointment");
         System.out.println("Enter appointment ID: ");
         int id = scanner.nextInt();
+        Appointment appointment = appointmentRepository.getAppointmentById(id);
+        String doctorId = appointment.getDoctorId();
+        String date = appointment.getDate();
+        int timeslot = appointment.getTimeslot();
         appointmentRepository.deleteAppointmentById(id);
+        doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "available");
         System.out.println("Appointment cancelled");
     }
 
@@ -288,7 +302,7 @@ public class PatientMenu implements Menu {
         List<Appointment> appointments = appointmentRepository.getAppointmentsByPatientId(patient.getId());
         System.out.println("Scheduled Appointment:");
         appointments.stream()
-                .filter(appointment -> appointment.getStatus().equals("PENDING"))
+                .filter(appointment -> appointment.getStatus().equals("PENDING") || appointment.getStatus().equals("ACCEPTED"))
                 .forEach(System.out::println);
     }
 

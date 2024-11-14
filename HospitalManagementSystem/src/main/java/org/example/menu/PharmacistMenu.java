@@ -158,7 +158,7 @@ public class PharmacistMenu implements Menu {
             }
 
             //TODO: Input validation
-
+            //TODO: Check if medicine has enough stock level
             System.out.print("Enter new prescription status: ");
             String status = scanner.nextLine();
             medicationRepository.updateMedicationStatus(appointmentId, presciptionName, status);
