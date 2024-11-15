@@ -121,7 +121,24 @@ public class DoctorMenu implements Menu {
 
         Patient patient = patientRepository.getPatientById(patientId);
         System.out.println("Patient Medical Records");
-        System.out.println(patient.medicalRecord());
+        System.out.println("Patient ID: " + patient.getId());
+        System.out.println("Name: " + patient.getName());
+        System.out.println("Date of Birth: " + patient.getDateOfBirth());
+        System.out.println("Gender: " + patient.getGender());
+        System.out.println("Contact: " + patient.getContact());
+        System.out.println("Blood Type: " + patient.getBloodType());
+        System.out.println("Diagnoses: ");
+        for (String diagnosis : patient.getDiagnoses()) {
+            System.out.println(" - " + diagnosis);
+        }
+        System.out.println("Prescriptions: ");
+        for (String prescription : patient.getPrescriptions()) {
+            System.out.println(" - " + prescription);
+        }
+        System.out.println("Treatment Plans: ");
+        for (String treatment : patient.getTreatments()) {
+            System.out.println(" - " + treatment);
+        }
     }
 
     public void updatePatientMedicalRecords() {
