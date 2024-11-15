@@ -33,11 +33,11 @@ public class Doctor extends Staff {
     }
 
     public void printSchedule() {
-        System.out.printf("| %-9s | %-9s | %-9s | %-9s | %-9s | %-9s | %-9s |%n", "", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY");
+        System.out.printf("| %-11s | %-11s | %-11s | %-11s | %-11s | %-11s | %-11s |%n", "", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY");
         for (int i = 0; i < 8; i++) {
-            System.out.printf("| %-9s ", (9 + i) + ":00");
+            System.out.printf("| %-5s ", (9 + i) + ":00");
             for (int j = 0; j < 6; j++) {
-                System.out.printf("| %-9s ", schedule[i][j]);
+                System.out.printf("| %-11s ", schedule[i][j]);
             }
             System.out.println("|");
         }
