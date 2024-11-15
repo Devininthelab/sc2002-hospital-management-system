@@ -1,10 +1,7 @@
 package org.example.menu;
 
 
-import org.example.entity.Appointment;
-import org.example.entity.AppointmentOutcomeRecord;
-import org.example.entity.Doctor;
-import org.example.entity.Patient;
+import org.example.entity.*;
 import org.example.repository.AppointmentOutcomeRecordRepository;
 import org.example.repository.AppointmentRepository;
 import org.example.repository.DoctorRepository;
@@ -44,8 +41,6 @@ public class PatientMenu implements Menu {
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume the newline character
             handleChoice(choice);
-            System.out.print("Press enter to continue...");
-            scanner.nextLine(); // Consume the newline character
         } while (choice != 10);  // Exit when logout is chosen
     }
 
@@ -154,19 +149,19 @@ public class PatientMenu implements Menu {
      */
     private void viewMedicalRecord() {
         System.out.println("Patient Medical Record:");
-        System.out.println("ID: " + patient.getId());
-        System.out.println("Name: " + patient.getName());
-        System.out.println("Date of Birth: " + patient.getDateOfBirth());
-        System.out.println("Gender: " + patient.getGender());
-        System.out.println("Contact: " + patient.getContact());
-        System.out.println("Blood Type: " + patient.getBloodType());
+        System.out.println(" - ID: " + patient.getId());
+        System.out.println(" - Name: " + patient.getName());
+        System.out.println(" - Date of Birth: " + patient.getDateOfBirth());
+        System.out.println(" - Gender: " + patient.getGender());
+        System.out.println(" - Contact: " + patient.getContact());
+        System.out.println(" - Blood Type: " + patient.getBloodType());
         String diagnoses = String.join(", ", patient.getDiagnoses());
         String treatments = String.join(", ", patient.getTreatments());
         String prescriptions = String.join(", ", patient.getPrescriptions());
 
-        System.out.println("Diagnoses: " + diagnoses);
-        System.out.println("Treatments: " + treatments);
-        System.out.println("Prescriptions: " + prescriptions);
+        System.out.println(" - Diagnoses: " + diagnoses);
+        System.out.println(" - Treatments: " + treatments);
+        System.out.println(" - Prescriptions: " + prescriptions);
     }
 
     /**
@@ -182,35 +177,32 @@ public class PatientMenu implements Menu {
                 "4. Gender\n" +
                 "5. Finish");
 
-        Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
+        int choice = Integer.valueOf(scanner.nextLine());
 
         // Loop until the user chooses to finish
         do {
             switch (choice) {
                 case 1:
-                    System.out.println("Please enter your name: ");
-                    sc.nextLine(); // Consume the newline character
-                    String name = sc.nextLine(); // Read full name (including spaces)
+                    System.out.print("Please enter your name: ");
+                    String name = scanner.nextLine(); // Read full name (including spaces)
                     patientRepository.updatePatientField(patient.getId(), "name", name);
                     System.out.println("Name updated successfully.");
                     break;
                 case 2:
-                    System.out.println("Please enter your date of birth (dd/MM/yyyy): ");
-                    String dateOfBirth = sc.next();
+                    System.out.print("Please enter your date of birth (dd/MM/yyyy): ");
+                    String dateOfBirth = scanner.nextLine();
                     patientRepository.updatePatientField(patient.getId(), "dateOfBirth", dateOfBirth);
                     System.out.println("Date of birth updated successfully.");
                     break;
                 case 3:
                     System.out.println("Please enter your contact: ");
-                    sc.nextLine(); // Consume the newline character
-                    String contact = sc.nextLine(); // Read full contact number (including spaces if needed)
+                    String contact = scanner.nextLine(); // Read full contact number (including spaces if needed)
                     patientRepository.updatePatientField(patient.getId(), "contact", contact);
                     System.out.println("Contact updated successfully.");
                     break;
                 case 4:
                     System.out.println("Please enter your gender: ");
-                    String gender = sc.next();
+                    String gender = scanner.nextLine();
                     patientRepository.updatePatientField(patient.getId(), "gender", gender);
                     System.out.println("Gender updated successfully.");
                     break;
@@ -224,7 +216,7 @@ public class PatientMenu implements Menu {
             // Prompt user for the next action
             if (choice != 5) {
                 System.out.println("Choose information to update: \n1. Name\n2. Date of Birth\n3. Contact\n4. Gender\n5. Finish");
-                choice = sc.nextInt();
+                choice = Integer.valueOf(scanner.nextLine());
             }
         } while (choice != 5);
     }
@@ -234,15 +226,14 @@ public class PatientMenu implements Menu {
      * Patient should select a doctor to view their available appointment slots
      * (Use doctorRepository to interact with the doctor data)
      * Then print it the doctor's schedule
-     * TODO: Consider moving the display of doctor's schedule to the Doctor class
      */
     private void viewAvailableAppointmentSlots() {
         List<Doctor> doctors = doctorRepository.getAllDoctors();
-        System.out.println("------------------------------------");
-        System.out.println("|           Doctor List            |");
-        System.out.println("------------------------------------");
+        System.out.println("---------------------------------------------");
+        System.out.println("|                Doctor List                |");
+        System.out.println("---------------------------------------------");
         System.out.printf("| %-8s | %-30s |%n", "ID", "NAME");
-
+        System.out.println("|----------|--------------------------------|");
         for (Doctor doctor : doctors) {
             System.out.printf("| %-8s | %-30s |%n", doctor.getId(), doctor.getName());
         }
@@ -258,7 +249,6 @@ public class PatientMenu implements Menu {
             }
         }
 
-        String[][] schedule = doctor.getSchedule();
         doctor.printSchedule();
     }
 
@@ -279,7 +269,7 @@ public class PatientMenu implements Menu {
             // check if doctor is available
             if (doctorRepository.doctorIsAvailable(doctorId, date, timeslot)) {
                 appointmentRepository.addAppointment(patient.getId(), doctorId, date, timeslot, "REQUESTED");
-                doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "BOOKED");
+                doctorRepository.updateDoctorSchedule(doctorId, date, timeslot - 1, "BOOKED");
                 System.out.println("Doctor is available, Appointment requested");
                 break;
             } else {
@@ -300,6 +290,10 @@ public class PatientMenu implements Menu {
         System.out.print("Select appointment ID:");
         int id = scanner.nextInt();
         Appointment appointment = appointmentRepository.getAppointmentById(id);
+        if (appointment.getStatus().equals("ACCEPTED") || appointment.getStatus().equals("REJECTED")) {
+            System.out.println("Appointment has been accepted, cannot reschedule");
+            return;
+        }
         System.out.println("Current appointment detail:");
         System.out.println(appointment);
 
@@ -307,21 +301,28 @@ public class PatientMenu implements Menu {
         doctorRepository.freeDoctorSchedule(appointment.getDoctorId(), appointment.getDate(), appointment.getTimeslot());
 
         // reschedule input
-        System.out.println("Change doctor? empty to keep same");
-        String doctorId = scanner.nextLine();
-        if (doctorId.isEmpty()) {
-            doctorId = appointment.getDoctorId();
-        }
-        System.out.print("Date (Monday to Saturday): ");
-        String date = scanner.nextLine();
-        System.out.print("Timeslot (1 to 8): ");
-        int timeslot = scanner.nextInt();
+        while (true) {
+            System.out.println("Reschedule appointment");
+            System.out.println("Change doctor? empty to keep same");
+            String doctorId = scanner.nextLine();
+            if (doctorId.isEmpty()) {
+                doctorId = appointment.getDoctorId();
+            }
+            System.out.print("Date (Monday to Saturday): ");
+            String date = scanner.nextLine();
+            System.out.print("Timeslot (1 to 8): ");
+            int timeslot = scanner.nextInt();
 
-        // update database
-        appointmentRepository.rescheduleAppointment(id, doctorId, date, timeslot);
-        // occupy slot
-        doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "BOOKED");
-        System.out.println("Appointment rescheduled");
+            // check if doctor is available
+            if (doctorRepository.doctorIsAvailable(doctorId, date, timeslot)) {
+                appointmentRepository.rescheduleAppointment(id, doctorId, date, timeslot);
+                doctorRepository.updateDoctorSchedule(doctorId, date, timeslot - 1, "BOOKED");
+                System.out.println("Appointment rescheduled");
+                break;
+            } else {
+                System.out.println("Doctor is not available. Please choose another doctor or timeslot");
+            }
+        }
     }
 
     /**
@@ -343,6 +344,7 @@ public class PatientMenu implements Menu {
     public void printAppointmentTable(List<Appointment> appointments) {
         System.out.printf("| %-4s | %-10s | %-10s | %-10s | %-10s | %-10s |%n",
                 "ID", "Patient ID", "Doctor ID", "Date", "Timeslot", "Status");
+        System.out.println("|------|------------|------------|------------|------------|------------|");
         for (Appointment appointment : appointments) {
             System.out.printf("| %-4d | %-10s | %-10s | %-10s | %-10d | %-10s |%n",
                     appointment.getId(), appointment.getPatientId(), appointment.getDoctorId(),
@@ -376,8 +378,28 @@ public class PatientMenu implements Menu {
     private void viewPastAppointmentOutcomeRecord() {
         System.out.println("Past Appointment Outcome Record:");
         List<AppointmentOutcomeRecord> records = new ArrayList<>();
-        for (Appointment appointment : appointmentRepository.getAppointmentsByPatientId(patient.getId())) {
+        List<Appointment> appointments = appointmentRepository.getAppointmentsByPatientId(patient.getId());
+        for (Appointment appointment : appointments) {
             records.add(appointmentOutcomeRecordRepository.getRecordById(appointment.getId()));
+        }
+        // filter null records
+        records = records.stream().filter(Objects::nonNull).toList();
+
+        for (AppointmentOutcomeRecord record : records) {
+            // custom print
+            System.out.println("Appointment ID: " + record.getAppointmentId());
+            System.out.println(" - Date: " + record.getDate());
+            System.out.println(" - Consultation Notes: " + record.getConsultationNotes());
+            System.out.println(" - Services: " + String.join(", ", record.getTypeOfService()));
+            System.out.println(" - Prescription: ");
+            // table format
+            System.out.printf("| %-10s | %-10s | %-10s |%n",
+                    "Name", "Dosage", "Status");
+            System.out.println("|------------|------------|------------|");
+            for (Prescription prescription : record.getPrescriptions()) {
+                System.out.printf("| %-10s | %-10s | %-10s |%n",
+                        prescription.getName(), prescription.getQuantity(), prescription.getStatus());
+            }
         }
     }
 

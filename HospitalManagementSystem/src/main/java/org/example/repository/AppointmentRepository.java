@@ -109,7 +109,7 @@ public class AppointmentRepository {
      */
     public void addAppointment(String patientId, String doctorId, String date, int timeslot, String status) {
         // Use counter to assign a unique ID
-        Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot, "REQUESTED");
+        Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot - 1, "REQUESTED");
         appointments.add(appointment);
         saveAppointmentsToCSV();
         System.out.println("Appointment added: " + appointment);
@@ -132,7 +132,7 @@ public class AppointmentRepository {
      */
     public void rescheduleAppointment(int id, String doctorId, String date, int timeslot) {
         Appointment appointment = getAppointmentById(id);
-        appointment.reschedule(doctorId, date, timeslot);
+        appointment.reschedule(doctorId, date, timeslot - 1);
         saveAppointmentsToCSV();
     }
 

@@ -54,11 +54,7 @@ public class AppointmentOutcomeRecord {
     }
 
     public String getTypeOfServiceString() {
-        String typeOfServiceString = "";
-        for (String service : typeOfService) {
-            typeOfServiceString += service + ";";
-        }
-        return typeOfServiceString;
+        return String.join(";", typeOfService);
     }
 
     public void setTypeOfService(ArrayList<String> typeOfService) {
@@ -101,17 +97,18 @@ public class AppointmentOutcomeRecord {
 
     @Override
     public String toString() {
+        String typeOfServiceString = "";
+        for (String service : typeOfService) {
+            typeOfServiceString += "   - " + service + "\n";
+        }
         String prescriptionString = "";
         for (Prescription prescription : prescriptions) {
-            prescriptionString += prescription.toString() + "\n";
+            prescriptionString += "   - " + prescription.toString() + "\n";
         }
-        return "AppointmentOutcomeRecord{" +
-                "appointmentId=" + appointmentId +
-                ", date='" + date + '\'' +
-                ", consultationNotes='" + consultationNotes + '\'' +
-                ", typeOfService=" + typeOfService +
-                ", Prescription:" +
-                " prescriptions=" + prescriptionString +
-                '}';
+        return "Appointment Outcome Record - Appointment ID: " + appointmentId +
+                "\n - Date: " + date +
+                "\n - ConsultationNotes: " + consultationNotes +
+                "\n - TypeOfService: \n" + typeOfServiceString +
+                " - Prescription: \n" + prescriptionString;
     }
 }
