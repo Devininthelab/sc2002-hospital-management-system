@@ -59,6 +59,19 @@ public class DoctorRepository {
     }
 
     /**
+     * Check if the doctor is available at the specified date and time
+     * Use function dateToNumber to convert date to number (read the function's documentation)
+     * @param doctorId the doctor's ID
+     * @param date the date of the appointment
+     * @param time the time slot of the appointment
+     * @return true if the doctor is available, false otherwise
+     */
+    public boolean doctorIsAvailable(String doctorId, String date, int time) {
+        Doctor doctor = getDoctorById(doctorId);
+        int dayIndex = DateToNumber.dateToNumber(date);
+        return "AVAILABLE".equalsIgnoreCase(doctor.getSchedule()[time - 1][dayIndex]);
+    }
+    /**
      * Update the doctor's schedule in the database.
      * Use function dateToNumber to convert date to number (read the function's documentation)
      * @param doctorId the doctor's ID
@@ -76,13 +89,13 @@ public class DoctorRepository {
             return false;
         }
 
-        doctor.getSchedule()[time - 1][dayIndex] = newStatus;
+        doctor.getSchedule()[time - 1][dayIndex] = newStatus.toUpperCase();
         saveDoctorSchedule(doctorId);
         return true;
     }
 
     public void freeDoctorSchedule(String doctorId, String date, int time) {
-        updateDoctorSchedule(doctorId, date, time, "available");
+        updateDoctorSchedule(doctorId, date, time, "AVAILABLE");
     }
 
     public void saveDoctorSchedule(String doctorId) {

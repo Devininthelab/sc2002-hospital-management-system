@@ -44,6 +44,8 @@ public class AdministratorMenu implements Menu {
             choice = sc.nextInt();
             sc.nextLine(); // remove input buffer
             handleChoice(choice);
+            System.out.println("Press Enter to continue...");
+            scanner.nextLine();
         } while (choice != 9);  // Exit when logout is chosen
     }
 

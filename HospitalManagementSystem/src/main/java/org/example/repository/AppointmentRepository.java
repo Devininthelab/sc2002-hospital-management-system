@@ -52,8 +52,8 @@ public class AppointmentRepository {
                 String[] values = line.split(",");
                 if (values.length >= 6) {
                     int id = Integer.parseInt(values[0]);
-                    String patientId = values[1].trim();
-                    String doctorId = values[2].trim();
+                    String doctorId = values[1].trim();
+                    String patientId = values[2].trim();
                     String date = values[3].trim();
                     int timeslot = Integer.parseInt(values[4].trim());
                     String status = values[5].trim().toUpperCase();
@@ -78,8 +78,8 @@ public class AppointmentRepository {
             bw.newLine();
             for (Appointment appointment : appointments) {
                 bw.write(appointment.getId() + "," +
-                        appointment.getPatientId() + "," +
                         appointment.getDoctorId() + "," +
+                        appointment.getPatientId() + "," +
                         appointment.getDate() + "," +
                         appointment.getTimeslot() + "," +
                         appointment.getStatus());
@@ -107,13 +107,12 @@ public class AppointmentRepository {
      * @param status
      * @return
      */
-    public boolean addAppointment(String patientId, String doctorId, String date, int timeslot, String status) {
+    public void addAppointment(String patientId, String doctorId, String date, int timeslot, String status) {
         // Use counter to assign a unique ID
-        Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot, "PENDING");
+        Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot, "REQUESTED");
         appointments.add(appointment);
         saveAppointmentsToCSV();
         System.out.println("Appointment added: " + appointment);
-        return true;
     }
 
     public Appointment getAppointmentById(int id) {
@@ -155,6 +154,17 @@ public class AppointmentRepository {
     public List<Appointment> getAppointmentsByPatientId(String patientId) {
         return appointments.stream()
                 .filter(appointment -> appointment.getPatientId().equals(patientId))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get all appointments for a specific doctor
+     * @param doctorId
+     * @return
+     */
+    public List<Appointment> getAppointmentsByDoctorId(String doctorId) {
+        return appointments.stream()
+                .filter(appointment -> appointment.getDoctorId().equals(doctorId))
                 .collect(Collectors.toList());
     }
 
