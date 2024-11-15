@@ -1,4 +1,5 @@
 name,stock,low_threshold,high_threshold
-paracetamol,17,20,100
-ibuprofen,8,10,50
-aspirin,7,5,30
+paracetamol,100,20,100
+ibuprofen,50,10,50
+aspirin,4,5,30
+
