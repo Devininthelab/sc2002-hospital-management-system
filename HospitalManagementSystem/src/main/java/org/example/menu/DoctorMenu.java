@@ -230,9 +230,9 @@ public class DoctorMenu implements Menu {
 
     public void setAvailabilityForAppointments() {
         System.out.println("Choose a date and timeslot:");
-        System.out.print("Date (Monday to Sunday): ");
+        System.out.print("Date (Monday to Saturday): ");
         String date = scanner.nextLine();
-        System.out.print("Timeslot: ");
+        System.out.print("Timeslot (1/9am to 8/4pm): ");
         int timeslot = scanner.nextInt();
         scanner.nextLine(); // Consume newline
         System.out.print("New availability status (Available, Busy): ");
