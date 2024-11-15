@@ -2,4 +2,5 @@ appointmentId,doctorId,patientId,date,timeslot,status
 1,DO01,PA101,Monday,0,ACCEPTED
 2,D002,PA102,Monday,1,REJECTED
 3,DO03,PA103,Monday,2,COMPLETED
-4,D001,PA001,Saturday,8,ACCEPTED
+4,D001,PA001,Saturday,8,COMPLETED
+5,D001,PA001,Thursday,2,ACCEPTED

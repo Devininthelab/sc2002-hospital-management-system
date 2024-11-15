@@ -29,26 +29,26 @@ public class AppointmentOutcomeRecordRepository {
             String header = br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length >= 6) {
-                    int id = Integer.parseInt(values[0].trim());
-                    String date = values[1].trim();
-                    String typeOfServiceStr = values[2].trim();
-                    String consultationNotes = values[3].trim();
 
-                    // Deserialize typeOfService string
-                    String[] types = typeOfServiceStr.split(";");
-                    ArrayList<String> typeOfService = new ArrayList<>();
-                    for (String type : types) {
-                        typeOfService.add(type.trim());
-                    }
+                int id = Integer.parseInt(values[0].trim());
+                String date = values[1].trim();
+                String typeOfServiceStr = values[2].trim();
+                String consultationNotes = values[3].trim();
 
-                    // Retrieve prescriptions for this record and assign them
-                    List<Prescription> prescriptions = prescriptionRepository.getPrescriptionsById(id);  // Updated method name
-                    // Create the AppointmentOutcomeRecord
-                    AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
-
-                    records.add(record); // Add to records list
+                // Deserialize typeOfService string
+                String[] types = typeOfServiceStr.split(";");
+                ArrayList<String> typeOfService = new ArrayList<>();
+                for (String type : types) {
+                    typeOfService.add(type.trim());
                 }
+
+                // Retrieve prescriptions for this record and assign them
+                List<Prescription> prescriptions = prescriptionRepository.getPrescriptionsById(id);  // Updated method name
+                // Create the AppointmentOutcomeRecord
+                AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
+
+                records.add(record); // Add to records list
+
             }
         } catch (IOException e) {
             System.out.println("Error reading CSV file: " + e.getMessage());

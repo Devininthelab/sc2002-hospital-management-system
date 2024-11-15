@@ -34,7 +34,7 @@ public class DoctorMenu implements Menu {
     }
 
     public void displayMenu() {
-        System.out.println("=====DOCTOR MENU=====");
+        System.out.println("=============DOCTOR MENU=============");
         System.out.println("1. View Patient Medical Records\n" +
                 "2. Update Patient Medical Records\n" +
                 "3. View Personal Schedule\n" +
@@ -241,7 +241,7 @@ public class DoctorMenu implements Menu {
         System.out.print("New availability status (Available, Busy): ");
         String availability = scanner.nextLine();
 
-        boolean success = doctorRepository.updateDoctorSchedule(doctor.getId(), date, timeslot, availability);
+        boolean success = doctorRepository.updateDoctorSchedule(doctor.getId(), date, timeslot - 1, availability);
 
         if (success) {
             System.out.println("Schedule updated successfully.");
@@ -351,6 +351,7 @@ public class DoctorMenu implements Menu {
         List<Prescription> prescribePrescriptions = new ArrayList<>();
         Prescription prescriptionToAdd;
         while (true) {
+            //TODO: validate prescription name
             System.out.print("Enter prescription name (leave empty to finish): ");
             String prescriptionName = scanner.nextLine();
             if (prescriptionName.isEmpty()) {

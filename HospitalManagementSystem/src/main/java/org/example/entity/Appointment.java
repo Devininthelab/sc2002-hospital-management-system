@@ -90,7 +90,7 @@ public class Appointment {
 
     @Override
     public String toString() {
-        return "Appointment" + id +
+        return "ID: " + id +
                 "\n - Patient ID: " + patientId +
                 "\n - Doctor ID: " + doctorId +
                 "\n - Date: " + //date +
