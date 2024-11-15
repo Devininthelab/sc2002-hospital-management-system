@@ -69,14 +69,14 @@ public class DoctorRepository {
     public boolean updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
         Doctor doctor = getDoctorById(doctorId);
         int dayIndex = DateToNumber.dateToNumber(date);
-        String currentStatus = doctor.getSchedule()[dayIndex][time];
+        String currentStatus = doctor.getSchedule()[time - 1][dayIndex];
 
         if ("BOOKED".equalsIgnoreCase(currentStatus)) {
             System.out.println("Cannot change the status of a BOOKED timeslot.");
             return false;
         }
 
-        doctor.getSchedule()[dayIndex][time] = newStatus;
+        doctor.getSchedule()[time - 1][dayIndex] = newStatus;
         saveDoctorSchedule(doctorId);
         return true;
     }
@@ -88,7 +88,7 @@ public class DoctorRepository {
     public void saveDoctorSchedule(String doctorId) {
         Doctor doctor = getDoctorById(doctorId);
         String[][] schedule = doctor.getSchedule();
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(doctor.getId() + "_availability.csv"))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileDir + doctor.getId() + "_availability.csv"))) {
             for (int i = 0; i < schedule.length; i++) {
                 bw.write(String.join(",", schedule[i]) + "\n");
             }
