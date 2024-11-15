@@ -127,11 +127,22 @@ public class PrescriptionRepository {
         if (Prescription != null) {
             Prescription.setStatus(status.toUpperCase());
         }
+        savePrescriptionsToCSV();
     }
 
     public boolean isValidPrescription(int appointmentId, String presciptionName) {
         return prescriptions.stream()
                 .anyMatch(prescription -> prescription.getId() == appointmentId
                         && prescription.getName().equalsIgnoreCase(presciptionName));
+    }
+
+    public List<Prescription> getPendingPrescriptions(int id) {
+        List<Prescription> notDispensed = new ArrayList<>();
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getId() == id && prescription.getStatus().equals("PENDING")) {
+                notDispensed.add(prescription);
+            }
+        }
+        return notDispensed;
     }
 }

@@ -45,7 +45,7 @@ public class MedicineRequestRepository {
                 String[] data = line.split(",");
                 int id = Integer.parseInt(data[0].trim());
                 String[] medicineNames = data[1].trim().split(";");
-                String status = data[2].trim();
+                String status = data[2].trim().toUpperCase();
                 medicineRequests.add(new MedicineRequest(id, status, Arrays.asList(medicineNames)));
             }
         } catch (IOException e) {

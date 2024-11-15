@@ -1,5 +1,5 @@
 appointmentId,name,dosage,status
 1,paracetamol,2,DISPENSED
 1,ibuprofen,1,DISPENSED
-2,aspirin,5,PENDING
-2,paracetamol,2,PENDING
+2,aspirin,5,DISPENSED
+2,paracetamol,2,DISPENSED
