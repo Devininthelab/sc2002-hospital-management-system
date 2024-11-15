@@ -42,8 +42,11 @@ public class PatientMenu implements Menu {
             displayMenu();
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
             handleChoice(choice);
-        } while (choice != 9);  // Exit when logout is chosen
+            System.out.print("Press enter to continue...");
+            scanner.nextLine(); // Consume the newline character
+        } while (choice != 10);  // Exit when logout is chosen
     }
 
     /**
@@ -54,13 +57,14 @@ public class PatientMenu implements Menu {
         while (true) {
             System.out.print("Please enter your user id: ");
             String id = scanner.nextLine();
-            System.out.print("Please enter your password: ");
-            String password = scanner.nextLine();
             patient = patientRepository.getPatientById(id);
             if (patient == null) {
                 System.out.println("Patient not found. Try again");
                 continue;
             }
+
+            System.out.print("Please enter your password: ");
+            String password = scanner.nextLine();
 
             if (patient.getPassword().equals(password)) {
                 System.out.println("You are logged in.");
@@ -75,7 +79,7 @@ public class PatientMenu implements Menu {
      * Display the menu options for the patient
      */
     public void displayMenu() {
-        System.out.println("=====PATIENT MENU=====");
+        System.out.println("==============PATIENT MENU==============");
         System.out.println("1. Change password\n" +
                 "2. View Medical Record\n" +
                 "3. Update Personal Information\n" +
@@ -137,7 +141,7 @@ public class PatientMenu implements Menu {
      */
     private void changePassword() {
         System.out.print("Please enter new password: \n");
-        String password = scanner.next();
+        String password = scanner.nextLine();
         patientRepository.updatePatientField(patient.getId(), "password",password);
         System.out.println("Password changed successfully.");
     }
@@ -246,7 +250,7 @@ public class PatientMenu implements Menu {
         Doctor doctor = null;
         while (doctor == null) {
             System.out.print("Select a doctor, provide doctor's id: ");
-            String doctorId = scanner.next();
+            String doctorId = scanner.nextLine();
             doctor = doctorRepository.getDoctorById(doctorId);
 
             if (doctor == null) {
@@ -269,6 +273,7 @@ public class PatientMenu implements Menu {
         String date = scanner.nextLine();
         System.out.print("Timeslot:");
         int timeslot = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
         System.out.print("Select doctor ID:");
         String doctorId = scanner.nextLine();
         boolean success = appointmentRepository.addAppointment(patient.getId(), doctorId, date, timeslot, "PENDING");
