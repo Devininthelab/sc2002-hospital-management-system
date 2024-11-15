@@ -236,7 +236,7 @@ public class PharmacistMenu implements Menu {
 
     public void updatePassword() {
         System.out.print("Enter new password: ");
-        String newPassword = scanner.nextLine();
+        String newPassword = scanner.next();
         pharmacist.setPassword(newPassword);
         staffRepository.updatePassword(pharmacist.getId(), newPassword);
         System.out.println("Password updated.");

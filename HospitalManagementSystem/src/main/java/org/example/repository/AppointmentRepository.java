@@ -72,11 +72,9 @@ public class AppointmentRepository {
      * Save appointments to CSV file
      */
     public void saveAppointmentsToCSV() {
-        try (FileWriter writer = new FileWriter(filePath, true)) {
+        try (FileWriter writer = new FileWriter(filePath)) {
             // If the file is empty, write the header
-            if (new File(filePath).length() == 0) {
-                writer.write("appointmentId,doctorId,patientId,date,timeslot,status\n");
-            }
+            writer.write("appointmentId,doctorId,patientId,date,timeslot,status\n");
 
             for (Appointment appointment : appointments) {
                 writer.write(appointment.getId() + "," +

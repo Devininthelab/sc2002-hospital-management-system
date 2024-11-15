@@ -57,12 +57,11 @@ public class AppointmentOutcomeRecordRepository {
 
     // Method to save a record to CSV
     public void saveRecordsToCSV(AppointmentOutcomeRecord record) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             //  If the file is empty, write the header
-            if (new File(filePath).length() == 0) {
-                writer.write("appointmentId,date,typeOfService,consultationNotes");
-                writer.newLine();
-            }
+            writer.write("appointmentId,date,typeOfService,consultationNotes");
+            writer.newLine();
             // Convert record fields into a CSV string
             String csvLine = recordToCSV(record);
 
