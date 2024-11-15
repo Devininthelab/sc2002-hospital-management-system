@@ -56,6 +56,8 @@ public class DoctorMenu implements Menu {
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
             handleChoice(choice);
+            System.out.println("Press Enter to continue...");
+            scanner.nextLine(); // Consume newline
         } while (choice != 9);  // Exit when logout is chosen
     }
 
@@ -114,8 +116,6 @@ public class DoctorMenu implements Menu {
                 System.out.println("Invalid choice. Please try again.");
         }
     }
-
-
 
     public void viewPatientMedicalRecords() {
         System.out.print("Enter patient's id: ");
@@ -250,13 +250,23 @@ public class DoctorMenu implements Menu {
         }
     }
 
+    /**
+     * Manage appointment requests for the doctor
+     * Doctor can accept or reject appointment requests
+     * TODO: Agree on format of appointment, prefer table format
+     */
     public void manageAppointmentRequests() {
         System.out.println("===== Manage Appointment Requests =====");
 
         // Filter for only BOOKED schedules with REQUESTED status appointments
-        List<Appointment> requestedAppointments = doctor.getAppointments().stream()
-                .filter(appt -> "BOOKED".equals(appt.getStatus()) && "REQUESTED".equals(appt.getStatus()))
+        System.out.println("Requested appointments:");
+        List<Appointment> requestedAppointments = appointmentRepository.getAppointmentsByDoctorId(doctor.getId()).stream()
+                .filter(appointment -> "REQUESTED".equals(appointment.getStatus()))
                 .collect(Collectors.toList());
+
+        //List<Appointment> requestedAppointments = doctor.getAppointments().stream()
+        //        .filter(appointment -> "REQUESTED".equals(appointment.getStatus()))
+        //        .collect(Collectors.toList());
 
         if (requestedAppointments.isEmpty()) {
             System.out.println("No appointment requests to manage.");
@@ -265,14 +275,17 @@ public class DoctorMenu implements Menu {
 
         requestedAppointments.forEach(appointment -> {
             System.out.println("Appointment ID: " + appointment.getId());
-            System.out.println("Patient ID: " + appointment.getPatientId());
-            System.out.println("Date: " + appointment.getDate());
-            System.out.println("Timeslot: " + appointment.getTimeslot());
-            System.out.println("Status: " + appointment.getStatus());
+            System.out.println(" - Patient ID: " + appointment.getPatientId());
+            System.out.println(" - Date: " + appointment.getDate());
+            System.out.println(" - Timeslot: " + appointment.getTimeslot());
+            System.out.println(" - Status: " + appointment.getStatus());
 
-            System.out.print("Accept this appointment? (y/n): ");
+            System.out.print("Accept this appointment? (y/n/empty to ignore): ");
             String response = scanner.nextLine().trim().toLowerCase();
-            if ("y".equals(response)) {
+            if (response.isEmpty()) {
+                return;
+            }
+            if ("y".equalsIgnoreCase(response)) {
                 appointment.setStatus("ACCEPTED");
                 System.out.println("Appointment accepted.");
             } else {
@@ -287,12 +300,22 @@ public class DoctorMenu implements Menu {
         System.out.println("Finished managing appointment requests.");
     }
 
-    public void viewUpcomingAppointments() {
-        for (Appointment appointment : doctor.getAppointments()) {
-            if (appointment.getStatus().equals("Accepted")) {
-                System.out.println(appointment);
-            }
+    public void printAppointmentTable(List<Appointment> appointments) {
+        System.out.printf("| %-4s | %-10s | %-10s | %-10s | %-10s | %-10s |%n",
+                "ID", "Patient ID", "Doctor ID", "Date", "Timeslot", "Status");
+        for (Appointment appointment : appointments) {
+            System.out.printf("| %-4d | %-10s | %-10s | %-10s | %-10d | %-10s |%n",
+                    appointment.getId(), appointment.getPatientId(), appointment.getDoctorId(),
+                    appointment.getDate(), appointment.getTimeslot(), appointment.getStatus());
         }
+    }
+
+    public void viewUpcomingAppointments() {
+        System.out.println("Upcoming appointments:");
+        List<Appointment> upcomingAppointments = appointmentRepository.getAppointmentsByDoctorId(doctor.getId()).stream()
+                .filter(appointment -> "ACCEPTED".equals(appointment.getStatus()))
+                .collect(Collectors.toList());
+        printAppointmentTable(upcomingAppointments);
     }
 
     /**
@@ -352,11 +375,18 @@ public class DoctorMenu implements Menu {
     }
 
     public void changePassword() {
-        System.out.print("Enter new password: ");
-        String newPassword = scanner.nextLine();
-        doctor.setPassword(newPassword);
-        staffRepository.updatePassword(doctor.getId(), newPassword);
-        System.out.println("Password updated successfully.");
+        while (true) {
+            System.out.print("Enter new password: ");
+            String newPassword = scanner.nextLine();
+            if (newPassword.length() < 6) {
+                System.out.println("Password must be at least 6 characters long.");
+                continue;
+            }
+            doctor.setPassword(newPassword);
+            staffRepository.updatePassword(doctor.getId(), newPassword);
+            System.out.println("Password updated successfully.");
+        }
+
     }
 
     public void logout() {

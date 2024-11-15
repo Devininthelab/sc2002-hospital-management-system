@@ -1,9 +1,9 @@
 TimeSlot,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday
-09:00,Available,Available,Available,Available,Available,Available
-10:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
-11:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
-12:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
-13:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
-14:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
-15:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
-16:00,Available,Unavailable,Unavailable,Available,Unavailable,Busy
+09:00,AVAILABLE,AVAILABLE,AVAILABLE,AVAILABLE,AVAILABLE,AVAILABLE
+10:00,AVAILABLE,BUSY,BUSY,AVAILABLE,BUSY,AVAILABLE
+11:00,AVAILABLE,BUSY,BUSY,AVAILABLE,BUSY,AVAILABLE
+12:00,AVAILABLE,BUSY,BUSY,AVAILABLE,BUSY,AVAILABLE
+13:00,AVAILABLE,BUSY,BUSY,AVAILABLE,BUSY,AVAILABLE
+14:00,AVAILABLE,BUSY,BUSY,AVAILABLE,BUSY,AVAILABLE
+15:00,AVAILABLE,BUSY,BUSY,AVAILABLE,BUSY,AVAILABLE
+16:00,AVAILABLE,BUSY,BUSY,AVAILABLE,BUSY,BOOKED
