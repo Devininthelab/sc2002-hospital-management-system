@@ -56,6 +56,7 @@ public class Patient {
         return bloodType;
     }
 
+
     // set to send update query to database
     private void setId(String id) { this.id = id; }
 
@@ -134,5 +135,9 @@ public class Patient {
 
     public List<String> getPrescriptions() {
         return prescriptions;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 }

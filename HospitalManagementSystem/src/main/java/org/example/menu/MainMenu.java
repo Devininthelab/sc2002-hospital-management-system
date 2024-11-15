@@ -40,7 +40,7 @@ public class MainMenu {
                 "3. Pharmacist\n" +
                 "4. Administrator");
         int role = scanner.nextInt();
-        String[] roles = {"Patient", "Doctor", "Pharmacist", "Administrator"};
+        String[] roles = {"PATIENT", "DOCTOR", "PHARMACIST", "ADMINISTRATOR"};
         if (role < 1 || role > 4) {
             System.out.println("Invalid choice. Please try again.");
             return;

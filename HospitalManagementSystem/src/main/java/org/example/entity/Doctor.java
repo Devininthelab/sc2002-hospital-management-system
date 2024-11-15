@@ -8,7 +8,7 @@ public class Doctor extends Staff {
     private String[][] schedule;
     private List<Appointment> appointments;
 
-    public Doctor(String id, String name, String role, String password, String gender, int age) {
+    public Doctor(String id, String name, String role, String gender, int age, String password) {
         super(id, name, role, gender, age, password);
         schedule = new String[8][6];
         appointments = new ArrayList<>();

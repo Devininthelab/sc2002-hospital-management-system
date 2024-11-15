@@ -9,7 +9,7 @@ import java.util.Map;
  * TODO: Consider removing this class and use Staff class directly
  */
 public class Pharmacist extends Staff {
-    public Pharmacist(String id, String password, String gender, String name, int age) {
-        super(id, name, "Pharmacist", gender, age, password);  // Role is set as "Pharmacist"
+    public Pharmacist(String id, String name, String role, String gender, int age, String password) {
+        super(id, name, role, gender, age, password);  // Role is set as "Pharmacist"
     }
 }
