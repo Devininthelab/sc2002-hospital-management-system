@@ -233,20 +233,27 @@ public class PatientMenu implements Menu {
      * TODO: Consider moving the display of doctor's schedule to the Doctor class
      */
     private void viewAvailableAppointmentSlots() {
-        //implement method in Patient class
         List<Doctor> doctors = doctorRepository.getAllDoctors();
         System.out.println("------------------------------------");
         System.out.println("|           Doctor List            |");
         System.out.println("------------------------------------");
         System.out.printf("| %-8s | %-30s |%n", "ID", "NAME");
+
         for (Doctor doctor : doctors) {
             System.out.printf("| %-8s | %-30s |%n", doctor.getId(), doctor.getName());
         }
-        // print doctor's name, and id
-        System.out.print("Select a doctor, provide doctor's id: ");
 
-        String doctorId = scanner.nextLine();
-        Doctor doctor = doctorRepository.getDoctorById(doctorId);
+        Doctor doctor = null;
+        while (doctor == null) {
+            System.out.print("Select a doctor, provide doctor's id: ");
+            String doctorId = scanner.next();
+            doctor = doctorRepository.getDoctorById(doctorId);
+
+            if (doctor == null) {
+                System.out.println("Doctor not found. Please try again.");
+            }
+        }
+
         String[][] schedule = doctor.getSchedule();
         doctor.printSchedule();
     }
