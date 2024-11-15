@@ -28,7 +28,7 @@ public class MedicineRequest {
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = status.toUpperCase();
     }
 
     public void setId(int id) {
