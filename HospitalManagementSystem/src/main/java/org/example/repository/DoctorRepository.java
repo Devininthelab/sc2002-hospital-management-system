@@ -69,14 +69,14 @@ public class DoctorRepository {
     public boolean updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
         Doctor doctor = getDoctorById(doctorId);
         int dayIndex = DateToNumber.dateToNumber(date);
-        String currentStatus = doctor.getSchedule()[dayIndex][time];
+        String currentStatus = doctor.getSchedule()[time - 1][dayIndex];
 
         if ("BOOKED".equalsIgnoreCase(currentStatus)) {
             System.out.println("Cannot change the status of a BOOKED timeslot.");
             return false;
         }
 
-        doctor.getSchedule()[dayIndex][time] = newStatus;
+        doctor.getSchedule()[time - 1][dayIndex] = newStatus;
         saveDoctorSchedule(doctorId);
         return true;
     }
