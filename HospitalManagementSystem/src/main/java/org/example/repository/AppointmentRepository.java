@@ -1,6 +1,7 @@
 package org.example.repository;
 
 import org.example.entity.Appointment;
+import org.example.entity.Staff;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -72,20 +73,20 @@ public class AppointmentRepository {
      * Save appointments to CSV file
      */
     public void saveAppointmentsToCSV() {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            // If the file is empty, write the header
-            writer.write("appointmentId,doctorId,patientId,date,timeslot,status\n");
-
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+            bw.write("appointmentId,doctorId,patientId,date,timeslot,status");
+            bw.newLine();
             for (Appointment appointment : appointments) {
-                writer.write(appointment.getId() + "," +
+                bw.write(appointment.getId() + "," +
                         appointment.getPatientId() + "," +
                         appointment.getDoctorId() + "," +
                         appointment.getDate() + "," +
                         appointment.getTimeslot() + "," +
-                        appointment.getStatus() + "\n");
+                        appointment.getStatus());
+                bw.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error writing to CSV file: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

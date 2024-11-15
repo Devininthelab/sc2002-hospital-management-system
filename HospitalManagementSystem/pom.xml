@@ -41,7 +41,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <mainClass>org.example.SeperateMain</mainClass> <!-- Thay bằng class có phương thức main bạn muốn chạy -->
+                    <mainClass>org.example.SeperateMain</mainClass>
                 </configuration>
             </plugin>
         </plugins>

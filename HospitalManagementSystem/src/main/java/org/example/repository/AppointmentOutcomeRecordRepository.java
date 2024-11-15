@@ -57,45 +57,21 @@ public class AppointmentOutcomeRecordRepository {
 
     // Method to save a record to CSV
     public void saveRecordsToCSV(AppointmentOutcomeRecord record) {
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            //  If the file is empty, write the header
+            // Write header
             writer.write("appointmentId,date,typeOfService,consultationNotes");
             writer.newLine();
-            // Convert record fields into a CSV string
-            String csvLine = recordToCSV(record);
 
-            // Write the new record to the CSV file
-            writer.write(csvLine);
-            writer.newLine(); // Ensure the next record goes on a new line
+            // Write all records
+            for (AppointmentOutcomeRecord rec : records) {
+                writer.write(rec.getAppointmentId() + "," + rec.getDate() + "," + rec.getTypeOfServiceString() + "," + rec.getConsultationNotes());
+                writer.newLine();
+            }
         } catch (IOException e) {
-            System.out.println("Error saving record to CSV: " + e.getMessage());
+            System.out.println("Error writing to CSV file: " + e.getMessage());
         }
     }
 
-    // Helper method to convert AppointmentOutcomeRecord to CSV format
-    private String recordToCSV(AppointmentOutcomeRecord record) {
-        StringBuilder csvBuilder = new StringBuilder();
-
-        // Append fields, separated by commas
-        csvBuilder.append(record.getAppointmentId()).append(",");
-        csvBuilder.append(record.getDate()).append(",");
-
-        // Convert list of typeOfService to a semicolon-separated string
-        csvBuilder.append(String.join(";", record.getTypeOfService())).append(",");
-
-        // Placeholder for prescription list to simplify CSV structure (if needed)
-        csvBuilder.append("\"");
-        for (Prescription prescription : record.getPrescriptions()) {  // Updated to use prescriptions
-            csvBuilder.append(prescription.getName()).append(";");
-        }
-        csvBuilder.deleteCharAt(csvBuilder.length() - 1); // Remove last semicolon
-        csvBuilder.append("\"");
-
-        csvBuilder.append(",").append(record.getConsultationNotes());
-
-        return csvBuilder.toString();
-    }
 
     public List<AppointmentOutcomeRecord> getAllPendingRecords() {
         return records;
