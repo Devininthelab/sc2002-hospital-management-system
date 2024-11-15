@@ -1,8 +1,9 @@
-Available,Available,Available,Available,Available,Available
-Available,Unavailable,Unavailable,Available,Unavailable,Available
-Available,Unavailable,Unavailable,Available,Unavailable,Available
-Available,Unavailable,Unavailable,Available,Unavailable,Available
-Available,Unavailable,Unavailable,Available,Unavailable,Available
-Available,Unavailable,Unavailable,Available,Unavailable,Available
-Available,Unavailable,Unavailable,Available,Unavailable,Available
-Available,Unavailable,Unavailable,Available,Unavailable,Available
+TimeSlot,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday
+09:00,Available,Available,Available,Available,Available,Available
+10:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
+11:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
+12:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
+13:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
+14:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
+15:00,Available,Unavailable,Unavailable,Available,Unavailable,Available
+16:00,Available,Unavailable,Unavailable,Available,Unavailable,Busy

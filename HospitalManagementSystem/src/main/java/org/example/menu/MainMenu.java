@@ -10,10 +10,10 @@ public class MainMenu {
      * Start the user menu, should run first when the program starts
      */
     public void start() {
-        System.out.println("Welcome" +
-                "\n1. Log in" +
-                "\n2. Quit");
         while (true) {
+            System.out.println("Welcome" +
+                    "\n1. Log in" +
+                    "\n2. Quit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             if (choice == 2) {
