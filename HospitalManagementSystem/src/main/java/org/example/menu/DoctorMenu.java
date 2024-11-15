@@ -56,7 +56,7 @@ public class DoctorMenu implements Menu {
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
             handleChoice(choice);
-        } while (choice != 8);  // Exit when logout is chosen
+        } while (choice != 9);  // Exit when logout is chosen
     }
 
     public void login() {
@@ -105,6 +105,9 @@ public class DoctorMenu implements Menu {
                 completeAppointment();
                 break;
             case 8:
+                changePassword();
+                break;
+            case 9:
                 logout();
                 break;
             default:
@@ -230,9 +233,9 @@ public class DoctorMenu implements Menu {
 
     public void setAvailabilityForAppointments() {
         System.out.println("Choose a date and timeslot:");
-        System.out.print("Date (Monday to Sunday): ");
+        System.out.print("Date (Monday to Saturday): ");
         String date = scanner.nextLine();
-        System.out.print("Timeslot: ");
+        System.out.print("Timeslot (1/9am to 8/4pm): ");
         int timeslot = scanner.nextInt();
         scanner.nextLine(); // Consume newline
         System.out.print("New availability status (Available, Busy): ");
@@ -346,6 +349,14 @@ public class DoctorMenu implements Menu {
         // Create and save the outcome record
         AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(appointmentId, date, notes, services, prescribePrescriptions);
         appointmentOutcomeRecordRepository.addAppointmentOutcomeRecord(record);
+    }
+
+    public void changePassword() {
+        System.out.print("Enter new password: ");
+        String newPassword = scanner.nextLine();
+        doctor.setPassword(newPassword);
+        staffRepository.updatePassword(doctor.getId(), newPassword);
+        System.out.println("Password updated successfully.");
     }
 
     public void logout() {

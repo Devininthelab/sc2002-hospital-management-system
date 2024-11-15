@@ -69,14 +69,14 @@ public class DoctorRepository {
     public boolean updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
         Doctor doctor = getDoctorById(doctorId);
         int dayIndex = DateToNumber.dateToNumber(date);
-        String currentStatus = doctor.getSchedule()[dayIndex][time];
+        String currentStatus = doctor.getSchedule()[time - 1][dayIndex];
 
         if ("BOOKED".equalsIgnoreCase(currentStatus)) {
             System.out.println("Cannot change the status of a BOOKED timeslot.");
             return false;
         }
 
-        doctor.getSchedule()[dayIndex][time] = newStatus;
+        doctor.getSchedule()[time - 1][dayIndex] = newStatus;
         saveDoctorSchedule(doctorId);
         return true;
     }
@@ -88,9 +88,15 @@ public class DoctorRepository {
     public void saveDoctorSchedule(String doctorId) {
         Doctor doctor = getDoctorById(doctorId);
         String[][] schedule = doctor.getSchedule();
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(doctor.getId() + "_availability.csv"))) {
-            for (int i = 0; i < schedule.length; i++) {
-                bw.write(String.join(",", schedule[i]) + "\n");
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileDir + doctorId + "_availability.csv"))) {
+            // Write header row
+            bw.write("TimeSlot,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday\n");
+
+            // Write each time slot with day-wise availability
+            String[] timeSlots = {"09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"};
+            for (int i = 0; i < 8; i++) {
+                bw.write(timeSlots[i] + "," + String.join(",", schedule[i]) + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
