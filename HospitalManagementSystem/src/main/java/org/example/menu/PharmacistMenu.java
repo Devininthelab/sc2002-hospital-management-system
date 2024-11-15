@@ -1,15 +1,16 @@
 package org.example.menu;
 
-
+import org.example.entity.*;
 import org.example.entity.Medicine;
 import org.example.entity.Pharmacist;
 import org.example.entity.AppointmentOutcomeRecord;
 import org.example.repository.*;
 
-
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.*;
 
 /**
  * Pharmacist menu
@@ -56,14 +57,14 @@ public class PharmacistMenu implements Menu {
      * Display choice for user to choose and redirect to respective handler function
      */
     public void start() {
-        int choice;
+        int choice = 0;
         login();
-        do {
+        while (choice != 6){
             displayMenu();
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             handleChoice(choice);
-        } while (choice != 5);  // Exit when logout is chosen
+        }  // Exit when logout is chosen
     }
 
     /**
@@ -114,6 +115,7 @@ public class PharmacistMenu implements Menu {
      * @param choice
      */
     public void handleChoice(int choice) {
+        scanner.nextLine();
         switch (choice) {
             case 1:
                 viewAppointmentOutcomeRecord();
@@ -135,6 +137,7 @@ public class PharmacistMenu implements Menu {
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
+                break;
         }
     }
 
@@ -154,48 +157,106 @@ public class PharmacistMenu implements Menu {
      * Then repeated prompt for prescription to dispense
      * save through appointment outcome record, until user enter empty line
      */
+    /**TODO: May print all appointment id existing first, then enter appointment id*/
     public void dispensePrescription() {
         System.out.print("Enter appointment id: ");
         int appointmentId = scanner.nextInt();
+        scanner.nextLine();
         AppointmentOutcomeRecord record = appointmentOutcomeRecordRepository.getRecordById(appointmentId);
-        System.out.println(record);
-        while (true) {
-            System.out.print("Enter name of prescription to dispense (empty to finish): ");
-            String presciptionName = scanner.nextLine();
-            if (presciptionName.isEmpty()) {
-                break;
-            }
-            // Check if medicine name is valid
-            if (!medicineRepository.medicineExists(presciptionName)
-                || !prescriptionRepository.isValidPrescription(appointmentId, presciptionName)) {
-                System.out.println("Invalid medicine name. Try again");
-                continue;
-            }
-            // Check if medicine has enough stock level
-            // get quantity
-            int quantity = prescriptionRepository.getPrescriptionsByNameAndId(appointmentId, presciptionName).getQuantity();
-            if (medicineRepository.getMedicine(presciptionName).getStockLevel() < quantity) {
-                System.out.println("Medicine stock level not adequate. Please submit replishment request");
-                continue;
-            }
-            prescriptionRepository.updatePrescriptionStatus(appointmentId, presciptionName, "DISPENSED");
-            medicineRepository.decreaseStockLevel(presciptionName, quantity);
-            System.out.println("Prescription status updated.");
+        List<Prescription> pendingPrescriptions = prescriptionRepository.getPendingPrescriptions(appointmentId);
+        if (pendingPrescriptions.isEmpty()) {
+            System.out.println("No pending prescriptions for this appointment.");
+            return;
         }
 
+        Set<String> pendingPrescriptionNames = new HashSet<>();
+        for (Prescription prescription : pendingPrescriptions) {
+            pendingPrescriptionNames.add(prescription.getName());
+        }
+
+        System.out.println("Pending prescriptions for appointment ID " + appointmentId + ":");
+        for (Prescription prescription : pendingPrescriptions) {
+            System.out.println("- " + prescription.getName() + " (Quantity: " + prescription.getQuantity() + ")");
+        }
+
+        while (true) {
+            System.out.print("Enter name of prescription to dispense (empty to finish): ");
+            String prescriptionName = scanner.nextLine();
+
+            // Exit if input is empty
+            if (prescriptionName.isEmpty()) {
+                break;
+            }
+
+            // Check if the prescription is in the pending list
+            if (!pendingPrescriptionNames.contains(prescriptionName)) {
+                System.out.println("Prescription not found in pending list. Please try again.");
+                continue;
+            }
+
+            Prescription prescriptionToDispense = null;
+            for (Prescription prescription : pendingPrescriptions) {
+                if (prescription.getName().equalsIgnoreCase(prescriptionName)) {
+                    prescriptionToDispense = prescription;
+                    break;
+                }
+            }
+
+            if (prescriptionToDispense == null) {
+                System.out.println("Prescription not found in pending list. Please try again.");
+                continue;
+            }
+
+            // Check if the prescription has already been dispensed
+            if (prescriptionToDispense.getStatus().equalsIgnoreCase("DISPENSED")) {
+                System.out.println("This prescription has already been dispensed. Please select another.");
+                continue;
+            }
+
+            // Check if the medicine exists in the repository
+            if (!medicineRepository.medicineExists(prescriptionName)) {
+                System.out.println("Invalid medicine name. Try again.");
+                continue;
+            }
+
+            // Check stock level
+            int quantity = prescriptionToDispense.getQuantity();
+            if (medicineRepository.getMedicine(prescriptionName).getStockLevel() < quantity) {
+                System.out.println("Medicine stock level not adequate. Please submit replenishment request.");
+                continue;
+            }
+
+            // Dispense the medicine
+            prescriptionRepository.updatePrescriptionStatus(appointmentId, prescriptionName, "DISPENSED");
+            medicineRepository.decreaseStockLevel(prescriptionName, quantity);
+
+            System.out.println("Prescription " + prescriptionName + " dispensed successfully.");
+        }
     }
 
     /**
      * Display all medicine in inventory
      */
     public void viewMedicationInventory() {
-        System.out.println("Medicince inventory");
-        System.out.println("Do you want to see only low stock medicine? (Y/N)");
-        String choice = scanner.nextLine();
+        System.out.println("Medicine inventory");
+        String choice;
+
+        // Loop until valid input (Y/N) is provided
+        while (true) {
+            System.out.print("Do you want to see only low stock medicine? (Y/N): ");
+            choice = scanner.nextLine().trim();
+            if (choice.equalsIgnoreCase("Y") || choice.equalsIgnoreCase("N")) {
+                break;
+            }
+            System.out.println("Invalid input. Please enter 'Y' or 'N'.");
+        }
+
         if (choice.equalsIgnoreCase("Y")) {
+            System.out.println("Low stock medicine: ");
             List<Medicine> lowStockMedicines = medicineRepository.getLowStockMedicines();
             lowStockMedicines.forEach(System.out::println);
         } else {
+            System.out.println("All medicines: ");
             List<Medicine> medicines = medicineRepository.getAllMedicines();
             medicines.forEach(System.out::println);
         }
@@ -206,31 +267,76 @@ public class PharmacistMenu implements Menu {
      */
     public void submitReplenishmentRequest() {
         System.out.println("Submit replenishment request");
-        List<String> medicines = new ArrayList<>();
+
+        // Fetch low stock medicines
+        List<Medicine> lowStockMedicines = medicineRepository.getLowStockMedicines();
+
+        // Check if there are any low stock medicines
+        if (lowStockMedicines.isEmpty()) {
+            System.out.println("No medicines are in low stock.");
+            return;
+        }
+
+        // Display low stock medicines
+        System.out.println("Low stock medicines:");
+        lowStockMedicines.forEach(medicine ->
+                System.out.println("- " + medicine.getName())
+        );
+
+        // Collect medicines for replenishment request
+        Set<String> medicines = new LinkedHashSet<>();
         while (true) {
-            System.out.print("Enter medicine name (empty to finish): ");
-            String medicineName = scanner.nextLine();
-            if (medicineName.trim().isEmpty()) {
+            System.out.print("Enter medicine name to request replenishment (empty to finish): ");
+            String medicineName = scanner.nextLine().trim();
+
+            // Exit loop if input is empty
+            if (medicineName.isEmpty()) {
                 break;
             }
 
-            if (!medicineRepository.medicineExists(medicineName)) {
-                System.out.println("Medicine not found. Try again");
+            // Check if the entered medicine is in the low stock list
+            boolean isLowStock = lowStockMedicines.stream()
+                    .anyMatch(medicine -> medicine.getName().equalsIgnoreCase(medicineName));
+
+            if (!isLowStock) {
+                System.out.println("This medicine is not low on stock or does not exist. Try again.");
                 continue;
             }
-            
-            medicines.add(medicineName);
+
+            // Check if the medicine is already in the set
+            if (medicines.contains(medicineName.toLowerCase())) {
+                System.out.println("This medicine has already been added to the request. Try another.");
+                continue;
+            }
+
+            // Add to the request set if valid
+            medicines.add(medicineName.toLowerCase()); // Normalize to avoid case sensitivity issues
         }
-        System.out.println("Review replenishment request");
+
+        // Review and confirm the replenishment request
+        if (medicines.isEmpty()) {
+            System.out.println("No medicines were selected for replenishment.");
+            return;
+        }
+
+        System.out.println("Review replenishment request:");
         medicines.forEach(System.out::println);
-        System.out.println("Submit request? (Y/N)");
-        String choice = scanner.nextLine();
-        if (!choice.equalsIgnoreCase("Y")) {
+
+        System.out.print("Submit request? (Y/N): ");
+        String choice = scanner.nextLine().trim();
+
+        while (!choice.equalsIgnoreCase("Y") && !choice.equalsIgnoreCase("N")) {
+            System.out.println("Invalid choice. Please enter 'Y' for yes or 'N' for no.");
+            System.out.print("Submit request? (Y/N): ");
+            choice = scanner.nextLine().trim();
+        }
+
+        if (choice.equalsIgnoreCase("N")) {
             System.out.println("Request cancelled.");
             return;
         }
 
-        medicineRequestRepository.addMedicineRequest(medicines);
+        medicineRequestRepository.addMedicineRequest(new ArrayList<>(medicines));
         System.out.println("Replenishment request submitted.");
     }
 
