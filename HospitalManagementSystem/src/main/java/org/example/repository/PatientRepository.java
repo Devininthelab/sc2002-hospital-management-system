@@ -55,9 +55,9 @@ public class PatientRepository {
                 String bloodType = values[6].trim().toUpperCase();
                 Patient patient = new Patient(id, password, name, dateOfBirth, gender, contact, bloodType);
                 // load diagnoses and treatment
-                List<String> diagnoses = Arrays.asList(values[7].trim().split(";"));
-                List<String> treatment = Arrays.asList(values[8].trim().split(";"));
-                List<String> prescription = Arrays.asList(values[9].trim().split(";"));
+                List<String> diagnoses = new ArrayList<>(Arrays.asList(values[7].trim().split(";")));
+                List<String> treatment = new ArrayList<>(Arrays.asList(values[8].trim().split(";")));
+                List<String> prescription = new ArrayList<>(Arrays.asList(values[9].trim().split(";")));
                 //IMPORTANT: no need to load appointment and outcome record here
                 patient.setDiagnoses(diagnoses);
                 patient.setTreatments(treatment);
