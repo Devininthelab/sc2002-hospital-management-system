@@ -53,6 +53,14 @@ public class AppointmentOutcomeRecord {
         return typeOfService;
     }
 
+    public String getTypeOfServiceString() {
+        String typeOfServiceString = "";
+        for (String service : typeOfService) {
+            typeOfServiceString += service + ";";
+        }
+        return typeOfServiceString;
+    }
+
     public void setTypeOfService(ArrayList<String> typeOfService) {
         this.typeOfService = typeOfService;
     }

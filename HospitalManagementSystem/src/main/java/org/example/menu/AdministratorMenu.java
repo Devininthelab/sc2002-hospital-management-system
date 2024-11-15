@@ -42,6 +42,7 @@ public class AdministratorMenu implements Menu {
             displayMenu();
             System.out.print("Enter your choice: ");
             choice = sc.nextInt();
+            sc.nextLine(); // remove input buffer
             handleChoice(choice);
         } while (choice != 9);  // Exit when logout is chosen
     }
@@ -237,6 +238,7 @@ public class AdministratorMenu implements Menu {
     public void updateAppointmentStatus() {
         System.out.println("Enter the appointment id: ");
         int id = scanner.nextInt();
+        scanner.nextLine(); // remove input buffer
         System.out.println("Enter the new status: ");
         String status = scanner.nextLine();
         Appointment appointment = appointmentRepository.getAppointmentById(id);
@@ -255,6 +257,7 @@ public class AdministratorMenu implements Menu {
     public void recordAppointmentOutcome() {
         System.out.println("Enter the appointment id: ");
         int id = scanner.nextInt();
+        scanner.nextLine(); // remove input buffer
         Appointment appointment = appointmentRepository.getAppointmentById(id);
         // validation check for appointment: If that appointment exists
         if (appointment == null) {
