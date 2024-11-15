@@ -3,8 +3,6 @@ package org.example.menu;
 import org.example.entity.*;
 import org.example.repository.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -35,18 +33,17 @@ public class AdministratorMenu implements Menu {
      * Start the Administrator menu, which requires the administrator to log in first
      */
     public void start() {
-        Scanner sc = new Scanner(System.in);
         login();
         int choice;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = sc.nextInt();
-            sc.nextLine(); // remove input buffer
+            choice = scanner.nextInt();
+            scanner.nextLine(); // remove input buffer
             handleChoice(choice);
             System.out.println("Press Enter to continue...");
             scanner.nextLine();
-        } while (choice != 9);  // Exit when logout is chosen
+        } while (choice != 16);  // Exit when logout is chosen
     }
 
     /**
@@ -79,7 +76,7 @@ public class AdministratorMenu implements Menu {
                 "4. View Staff List\n" +
                 "5. View Scheduled Appointments\n" +
                 "6. Update Appointment Status\n" +
-                "7. Record Appointment Outcome\n" +
+                "7. View Medicine Inventory Stock Levels\n" +
                 "8. View Appointment Outcome Record\n" +
                 "9. Add Medication to Inventory\n" +
                 "10. Update Inventory Stock Levels\n" +
@@ -118,7 +115,7 @@ public class AdministratorMenu implements Menu {
                 updateAppointmentStatus();
                 break;
             case 7:
-                recordAppointmentOutcome();
+                viewMedicines();
                 break;
             case 8:
                 viewAppointmentOutcomeRecord();
@@ -151,6 +148,12 @@ public class AdministratorMenu implements Menu {
                 System.out.println("Invalid choice. Please try again.");
         }
     }
+    // update appointment status is redundant (6)
+    // merge 8 and 5
+    // leave out 6 and 7
+    // 10 give upper bound for quantity
+    // Done logic: 1, 2, 3, 4, 5, 7, 8, 9, 10
+
 
 
     /**
@@ -169,6 +172,7 @@ public class AdministratorMenu implements Menu {
         String gender = scanner.nextLine();
         System.out.println("Enter the staff member's age: ");
         int age = scanner.nextInt();
+        scanner.nextLine(); // remove input buffer
 
         Staff staff = new Staff(id, name, role, gender, age, password);
         staffRepository.addStaffRepo(staff);
@@ -252,58 +256,58 @@ public class AdministratorMenu implements Menu {
         }
     }
 
-    /**
-     * Record the outcome of an appointment
-     * NEED TO CONFIRM THE LOGIC
-     */
-    public void recordAppointmentOutcome() {
-        System.out.println("Enter the appointment id: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // remove input buffer
-        Appointment appointment = appointmentRepository.getAppointmentById(id);
-        // validation check for appointment: If that appointment exists
-        if (appointment == null) {
-            System.out.println("Appointment not found.");
-        }
-        else {
-            System.out.println("Enter the date of the appointment outcome(DD-MM-YYYY): ");
-            String date = scanner.nextLine();
-            System.out.println("Enter consultation notes: ");
-            String consultationNotes = scanner.nextLine();
-
-            // Input Services used
-            List<String> typeOfService = new ArrayList<>();
-            while (true) {
-                System.out.println("Enter the type of service (Enter -1 to stop): ");
-                String input = scanner.nextLine();
-                if (input.equals("-1")) {
-                    break;
-                }
-                typeOfService.add(input);
-            }
-
-            // Input prescriptions
-            List<Prescription> prescriptions = new ArrayList<>();
-            while (true) {
-                System.out.println("Enter the medication name (Enter -1 to stop): ");
-                String medicationName = scanner.nextLine();
-                if (medicationName.equals("-1")) {
-                    break;
-                }
-                System.out.println("Enter the dosage: ");
-                int dosage = scanner.nextInt();
-                scanner.nextLine(); // remove input buffer
-                System.out.println("Enter the status: ");
-                String status = scanner.nextLine();
-                Prescription prescription = new Prescription(id, medicationName, dosage, status);
-                prescriptions.add(prescription);
-            }
-
-            AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
-            appointmentOutcomeRepository.addAppointmentOutcomeRecord(record);
-            prescriptionRepository.addPrescriptions(prescriptions);
-        }
-    }
+//    /**
+//     * Record the outcome of an appointment
+//     * NEED TO CONFIRM THE LOGIC
+//     */
+//    public void recordAppointmentOutcome() {
+//        System.out.println("Enter the appointment id: ");
+//        int id = scanner.nextInt();
+//        scanner.nextLine(); // remove input buffer
+//        Appointment appointment = appointmentRepository.getAppointmentById(id);
+//        // validation check for appointment: If that appointment exists
+//        if (appointment == null) {
+//            System.out.println("Appointment not found.");
+//        }
+//        else {
+//            System.out.println("Enter the date of the appointment outcome(DD-MM-YYYY): ");
+//            String date = scanner.nextLine();
+//            System.out.println("Enter consultation notes: ");
+//            String consultationNotes = scanner.nextLine();
+//
+//            // Input Services used
+//            List<String> typeOfService = new ArrayList<>();
+//            while (true) {
+//                System.out.println("Enter the type of service (Enter -1 to stop): ");
+//                String input = scanner.nextLine();
+//                if (input.equals("-1")) {
+//                    break;
+//                }
+//                typeOfService.add(input);
+//            }
+//
+//            // Input prescriptions
+//            List<Prescription> prescriptions = new ArrayList<>();
+//            while (true) {
+//                System.out.println("Enter the medication name (Enter -1 to stop): ");
+//                String medicationName = scanner.nextLine();
+//                if (medicationName.equals("-1")) {
+//                    break;
+//                }
+//                System.out.println("Enter the dosage: ");
+//                int dosage = scanner.nextInt();
+//                scanner.nextLine(); // remove input buffer
+//                System.out.println("Enter the status: ");
+//                String status = scanner.nextLine();
+//                Prescription prescription = new Prescription(id, medicationName, dosage, status);
+//                prescriptions.add(prescription);
+//            }
+//
+//            AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
+//            appointmentOutcomeRepository.addAppointmentOutcomeRecord(record);
+//            prescriptionRepository.addPrescriptions(prescriptions);
+//        }
+//    }
 
 
     /**
@@ -312,6 +316,7 @@ public class AdministratorMenu implements Menu {
     public void viewAppointmentOutcomeRecord() {
         System.out.println("Enter the appointment id: ");
         int id = scanner.nextInt();
+        scanner.nextLine(); // remove input buffer
         AppointmentOutcomeRecord record = appointmentOutcomeRepository.getAppointmentOutcomeRecordById(id);
         if (record == null) {
             System.out.println("Appointment outcome record not found.");
@@ -338,6 +343,21 @@ public class AdministratorMenu implements Menu {
         scanner.nextLine(); // remove input buffer
         Medicine medicine = new Medicine(medicineName, stockLevel, lowThreshold, highThreshold);
         medicineRepository.addMedicine(medicine);
+    }
+
+    /**
+     * View All Medicines in Inventory
+     */
+    public void viewMedicines() {
+        List<Medicine> medicines = medicineRepository.getAllMedicines();
+        if (medicines == null || medicines.isEmpty()) {
+            System.out.println("No medicines in inventory.");
+        } else {
+            System.out.println("Inventory Stock Levels:");
+            for (Medicine medicine : medicines) {
+                System.out.println(medicine.toString());
+            }
+        }
     }
 
     /**
@@ -428,6 +448,7 @@ public class AdministratorMenu implements Menu {
     public void approveReplenishmentRequest() {
         System.out.println("Enter the request id: ");
         int id = scanner.nextInt();
+        scanner.nextLine(); // remove input buffer
         MedicineRequest request = medicineRequestRepository.getMedicineRequestById(id);
         if (request == null) {
             System.out.println("Request not found.");
@@ -435,7 +456,6 @@ public class AdministratorMenu implements Menu {
         else {
             List<String> medicineNames = request.getMedicines();
             medicineRequestRepository.approveMedicineRequest(id);
-
             // update in Medicine List
             for (String medicineName : medicineNames) {
                 Medicine medicine = medicineRepository.getMedicine(medicineName);
