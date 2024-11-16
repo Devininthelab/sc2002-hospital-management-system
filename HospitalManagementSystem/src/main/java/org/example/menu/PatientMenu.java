@@ -6,6 +6,7 @@ import org.example.repository.AppointmentOutcomeRecordRepository;
 import org.example.repository.AppointmentRepository;
 import org.example.repository.DoctorRepository;
 import org.example.repository.PatientRepository;
+import org.example.utils.DateToNumber;
 import org.example.utils.TimeslotToInt;
 
 import java.time.LocalDate;
@@ -17,7 +18,6 @@ public class PatientMenu implements Menu {
     private DoctorRepository doctorRepository;
     private AppointmentRepository appointmentRepository;
     private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
-    //TODO: change to id to maintain encapsulation
     private Patient patient;
     private Scanner scanner;
 
@@ -312,12 +312,10 @@ public class PatientMenu implements Menu {
         System.out.println(appointment);
 
         // free up slot, no need to decrement timeslot because it is already decremented in the appointmentRepository
-        // TODO: is this necessary? when rejected it should be freed, but then again if it's requested it hasn't been freed
         doctorRepository.freeDoctorSchedule(appointment.getDoctorId(), appointment.getDate(), appointment.getTimeslot());
 
         System.out.println("Reschedule appointment");
         System.out.println("Change doctor? empty to keep same");
-        // TODO: validate doctorId
         String doctorId;
         while (true) {
             doctorId = scanner.nextLine();

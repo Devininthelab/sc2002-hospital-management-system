@@ -131,6 +131,10 @@ public class DoctorMenu implements Menu {
         String patientId = scanner.nextLine();
 
         Patient patient = patientRepository.getPatientById(patientId);
+        if (patient == null) {
+            System.out.println("Patient not found.");
+            return;
+        }
         System.out.println("Patient Medical Records");
         System.out.println("Patient ID: " + patient.getId());
         System.out.println("Name: " + patient.getName());
@@ -163,52 +167,39 @@ public class DoctorMenu implements Menu {
             return;
         }
 
-        Scanner sc = new Scanner(System.in);
         int choice;
 
         do {
             // Display update menu
             System.out.println("Enter the section you want to update (type 4 to exit):");
             System.out.println("1. Diagnoses");
-            System.out.println("2. Prescriptions");
-            System.out.println("3. Treatment plans");
-            System.out.println("4. Exit");
+            System.out.println("2. Treatment plans");
+            System.out.println("3. Exit");
 
-            choice = Integer.valueOf(sc.nextLine());
+            choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
                 case 1:
                     // Update Diagnoses
                     System.out.println("Type diagnosis to update (leave blank and press Enter to finish): ");
                     String diagnosis;
-                    do {
-                        diagnosis = sc.nextLine();
-                        if (!diagnosis.isEmpty()) {
-                            patient.addDiagnose(diagnosis);
-                            System.out.println("Diagnosis added: " + diagnosis);
+                    while (true) {
+                        diagnosis = scanner.nextLine();
+                        if (diagnosis.isEmpty()) {
+                            break;
                         }
-                    } while (!diagnosis.isEmpty());
+                        patient.addDiagnose(diagnosis);
+                        System.out.println("Diagnosis added: " + diagnosis);
+                    }
+
                     break;
 
                 case 2:
-                    // Update Prescriptions
-                    System.out.println("Type prescription to update (leave blank and press Enter to finish): ");
-                    String prescription;
-                    do {
-                        prescription = sc.nextLine();
-                        if (!prescription.isEmpty()) {
-                            patient.addPrescription(prescription);
-                            System.out.println("Prescription added: " + prescription);
-                        }
-                    } while (!prescription.isEmpty());
-                    break;
-
-                case 3:
                     // Update Treatment Plans
                     System.out.println("Type treatment plan to update (leave blank and press Enter to finish): ");
                     String treatmentPlan;
                     do {
-                        treatmentPlan = sc.nextLine();
+                        treatmentPlan = scanner.nextLine();
                         if (!treatmentPlan.isEmpty()) {
                             patient.addTreatment(treatmentPlan);
                             System.out.println("Treatment plan added: " + treatmentPlan);
@@ -216,7 +207,7 @@ public class DoctorMenu implements Menu {
                     } while (!treatmentPlan.isEmpty());
                     break;
 
-                case 4:
+                case 3:
                     // Exit
                     System.out.println("Exiting update menu.");
                     break;
