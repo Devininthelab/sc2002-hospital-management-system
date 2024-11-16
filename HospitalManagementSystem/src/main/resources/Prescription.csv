@@ -4,3 +4,5 @@ appointmentId,name,dosage,status
 2,aspirin,5,DISPENSED
 2,paracetamol,2,DISPENSED
 4,ibuprofen,10,PENDING
+8,morphin,10,PENDING
+9,electrolytes,8,PENDING
