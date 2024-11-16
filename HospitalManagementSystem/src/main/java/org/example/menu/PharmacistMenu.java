@@ -56,23 +56,32 @@ public class PharmacistMenu implements Menu {
      * Pharmacist login
      * Display choice for user to choose and redirect to respective handler function
      */
-    public void start() {
+      public void start() {
         int choice = 0;
         login();
-        while (choice != 6){
+        while (choice != 6) {
             displayMenu();
             System.out.print("Enter your choice: ");
+
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
                 scanner.nextLine(); // Consume the newline character
-                handleChoice(choice);
-                System.out.println("Press Enter to continue...");
+
+                if (choice >= 1 && choice <= 6) {
+                    handleChoice(choice);
+                    if (choice != 6) {
+                        System.out.println("Press Enter to continue...");
+                        scanner.nextLine();  // Wait for Enter key
+                    }
+                } else {
+                    System.out.println("Invalid input. Please enter a number between 1 and 6.");
+                }
             } else {
-                System.out.println("Invalid input. Please enter a number.");
+                System.out.println("Invalid input. Please enter a valid number.");
                 scanner.nextLine(); // Consume the invalid input
             }
-        }  // Exit when logout is chosen
-    }
+        }  // Exit when choice is 6 (logout)
+     }
 
     /**
      * Prompt pharmacist for id and password
@@ -165,8 +174,7 @@ public class PharmacistMenu implements Menu {
     /**TODO: May print all appointment id existing first, then enter appointment id*/
     public void dispensePrescription() {
         System.out.print("Enter appointment id: ");
-        int appointmentId = scanner.nextInt();
-        scanner.nextLine();
+        int appointmentId = Integer.valueOf(scanner.nextLine());
         AppointmentOutcomeRecord record = appointmentOutcomeRecordRepository.getRecordById(appointmentId);
         List<Prescription> pendingPrescriptions = prescriptionRepository.getPendingPrescriptions(appointmentId);
         if (pendingPrescriptions.isEmpty()) {

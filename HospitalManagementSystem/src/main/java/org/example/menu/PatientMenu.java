@@ -32,20 +32,26 @@ public class PatientMenu implements Menu {
      * Start the user menu, should run first when the program starts
      * Patient should log in first before accessing the menu
      */
-    public void start() {
+      public void start() {
         login();
         int choice = 0;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
+
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
                 scanner.nextLine(); // Consume the newline character
-                handleChoice(choice);
-                System.out.println("Press Enter to continue...");
-                scanner.nextLine();
+
+                if (choice >= 1 && choice <= 10) {
+                    handleChoice(choice);
+                    System.out.println("Press Enter to continue...");
+                    scanner.nextLine();  // Wait for Enter key
+                } else {
+                    System.out.println("Invalid input. Please enter a number between 1 and 10.");
+                }
             } else {
-                System.out.println("Invalid input. Please enter a number.");
+                System.out.println("Invalid input. Please enter a valid number.");
                 scanner.nextLine(); // Consume the invalid input
             }
         } while (choice != 10);  // Exit when logout is chosen
@@ -270,8 +276,7 @@ public class PatientMenu implements Menu {
             System.out.print("Date (Monday to Saturday): ");
             String date = scanner.nextLine();
             System.out.print("Timeslot (1 to 8): ");
-            int timeslot = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            int timeslot = Integer.valueOf(scanner.nextLine());
             System.out.print("Select doctor ID: ");
             String doctorId = scanner.nextLine();
             // check if doctor is available
@@ -296,7 +301,7 @@ public class PatientMenu implements Menu {
      */
     private void rescheduleAppointment() {
         System.out.print("Select appointment ID:");
-        int id = scanner.nextInt();
+        int id = Integer.valueOf(scanner.nextLine());
         Appointment appointment = appointmentRepository.getAppointmentById(id);
         if (appointment.getStatus().equals("ACCEPTED") || appointment.getStatus().equals("REJECTED")) {
             System.out.println("Appointment has been accepted, cannot reschedule");
@@ -319,7 +324,7 @@ public class PatientMenu implements Menu {
             System.out.print("Date (Monday to Saturday): ");
             String date = scanner.nextLine();
             System.out.print("Timeslot (1 to 8): ");
-            int timeslot = scanner.nextInt();
+            int timeslot = Integer.valueOf(scanner.nextLine());
 
             // check if doctor is available
             if (doctorRepository.doctorIsAvailable(doctorId, date, timeslot)) {
@@ -339,7 +344,7 @@ public class PatientMenu implements Menu {
     private void cancelAppointment() {
         System.out.println("Cancelling appointment");
         System.out.println("Enter appointment ID: ");
-        int id = scanner.nextInt();
+        int id = Integer.valueOf(scanner.nextLine());
         Appointment appointment = appointmentRepository.getAppointmentById(id);
         String doctorId = appointment.getDoctorId();
         String date = appointment.getDate();
