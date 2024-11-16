@@ -73,6 +73,13 @@ public class DoctorRepository {
         int dayIndex = DateToNumber.dateToNumber(date);
         return "AVAILABLE".equalsIgnoreCase(doctor.getSchedule()[time][dayIndex]);
     }
+
+    public boolean doctorBooked(String doctorId, String date, int time) {
+        Doctor doctor = getDoctorById(doctorId);
+        int dayIndex = DateToNumber.dateToNumber(date);
+        return "BOOKED".equalsIgnoreCase(doctor.getSchedule()[time][dayIndex]);
+    }
+
     /**
      * Update the doctor's schedule in the database.
      * Use function dateToNumber to convert date to number (read the function's documentation)
@@ -81,17 +88,11 @@ public class DoctorRepository {
      * @param time the time slot of the appointment
      * @param newStatus the new status of the appointment (e.g. "Available", "Booked", "Unavailable")
      */
-    public boolean updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
+    public void updateDoctorSchedule(String doctorId, String date, int time, String newStatus) {
         Doctor doctor = getDoctorById(doctorId);
         int dayIndex = DateToNumber.dateToNumber(date);
-        String currentStatus = doctor.getSchedule()[time][dayIndex];
-        if (currentStatus.equals("BOOKED")) {
-            return false;
-        }
-
         doctor.getSchedule()[time][dayIndex] = newStatus.toUpperCase();
         saveDoctorSchedule(doctorId);
-        return true;
     }
 
     /**

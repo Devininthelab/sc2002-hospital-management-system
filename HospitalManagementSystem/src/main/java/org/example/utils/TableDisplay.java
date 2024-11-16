@@ -6,18 +6,14 @@ import java.util.List;
 
 public class TableDisplay {
     public static void printTimeslotOption() {
-        // Print the transposed timeslot table
-
-        System.out.println("|------------|----------------------|\n");
-
         // Print header for timeslot options
-        System.out.println("\n+------------+----------------------+\n");
+        System.out.println("+------------+----------------------+");
         System.out.printf("| %-10s | %-20s |%n", "Timeslot", "Time");
         System.out.println("+------------+----------------------+");
 
         // Print the transposed timeslot table
-        for (int i = 1; i <= 8; i++) {
-            System.out.printf("| %-10d | %-20s |%n", i, TimeslotToInt.timeslotToString(i));
+        for (int i = 0; i < 8; i++) {
+            System.out.printf("| %-10d | %-20s |%n", (i + 1), TimeslotToInt.timeslotToString(i));
         }
 
         System.out.println("+------------+----------------------+");

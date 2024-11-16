@@ -15,7 +15,12 @@ import java.util.*;
 
 import static org.example.utils.TableDisplay.*;
 
-
+/**
+ * PatientMenu is responsible for managing the patient's interaction with the system
+ * It allows the patient to view their medical record, update personal information,
+ * view available appointment slots, schedule an appointment, reschedule an appointment,
+ * cancel an appointment, view scheduled appointments, and view past appointment outcome records
+ */
 public class PatientMenu implements Menu {
 
     private PatientRepository patientRepository;
@@ -108,7 +113,7 @@ public class PatientMenu implements Menu {
     public void handleChoice(int choice) {// Cast User to Patient
         switch (choice) {
             case 1:
-                changePassword();
+                updatePassword();
                 break;
             case 2:
                 viewMedicalRecord();
@@ -148,17 +153,17 @@ public class PatientMenu implements Menu {
      * Patient should enter the new password
      * Call the patientRepository to update the password
      */
-    private void changePassword() {
-        String newPassword = "";
-        while (newPassword.length() < 6 || newPassword.equals(patient.getPassword())) {
+    private void updatePassword() {
+        while (true) {
             System.out.print("Enter new password: ");
-            newPassword = scanner.nextLine();
-            if (newPassword.length() < 6) {
-                System.out.println("Password must be at least 6 characters.");
+            String newPassword = scanner.nextLine();
+            if (newPassword.length() >= 6) {
+                patient.setPassword(newPassword);
+                patientRepository.updatePatientField(patient.getId(), "password", newPassword);
+                System.out.println("Password changed successfully.");
+                break;
             }
-            if (newPassword.equals(patient.getPassword())) {
-                System.out.println("Same password. Please change to the new password.");
-            }
+            System.out.println("Password must be at least 6 characters long. Please try again.");
         }
         patientRepository.updatePatientField(patient.getId(),"password",patient.getPassword());
         System.out.println("Password changed successfully.");
@@ -416,7 +421,7 @@ public class PatientMenu implements Menu {
      * Display the outcome record of the past appointment
      */
     private void viewPastAppointmentOutcomeRecord() {
-        System.out.println("Past Appointment Outcome Record:");
+        System.out.println("Past Appointment's Outcome:");
         List<AppointmentOutcomeRecord> records = new ArrayList<>();
         List<Appointment> appointments = appointmentRepository.getAppointmentsByPatientId(patient.getId());
         for (Appointment appointment : appointments) {

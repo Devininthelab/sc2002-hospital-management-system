@@ -116,7 +116,7 @@ public class DoctorMenu implements Menu {
                 completeAppointment();
                 break;
             case 8:
-                changePassword();
+                updatePassword();
                 break;
             case 9:
                 logout();
@@ -183,10 +183,10 @@ public class DoctorMenu implements Menu {
             switch (choice) {
                 case 1:
                     // Update Diagnoses
-                    System.out.println("Type diagnosis to update (leave blank and press Enter to finish): ");
-                    String diagnosis;
+
                     while (true) {
-                        diagnosis = scanner.nextLine();
+                        System.out.print("Add diagnosis (leave blank and press Enter to finish): ");
+                        String diagnosis = scanner.nextLine();
                         if (diagnosis.isEmpty()) {
                             break;
                         }
@@ -198,9 +198,9 @@ public class DoctorMenu implements Menu {
 
                 case 2:
                     // Update Treatment Plans
-                    System.out.println("Type treatment plan to update (leave blank and press Enter to finish): ");
                     String treatmentPlan;
                     do {
+                        System.out.print("Add treatment plan (leave blank and press Enter to finish): ");
                         treatmentPlan = scanner.nextLine();
                         if (!treatmentPlan.isEmpty()) {
                             patient.addTreatment(treatmentPlan);
@@ -210,9 +210,9 @@ public class DoctorMenu implements Menu {
                     break;
                 case 3:
                     // Update Prescriptions
-                    System.out.println("Type prescription to update (leave blank and press Enter to finish): ");
                     String prescription;
                     do {
+                        System.out.print("Add prescription (leave blank and press Enter to finish): ");
                         prescription = scanner.nextLine();
                         if (!prescription.isEmpty()) {
                             patient.addPrescription(prescription);
@@ -223,7 +223,7 @@ public class DoctorMenu implements Menu {
 
                 case 4:
                     // Exit
-                    System.out.println("Exiting update menu.");
+                    System.out.println("Finishing update");
                     break;
 
                 default:
@@ -253,9 +253,8 @@ public class DoctorMenu implements Menu {
         System.out.print("New availability status (Available, Busy): ");
         String availability = scanner.nextLine();
 
-        boolean success = doctorRepository.updateDoctorSchedule(doctor.getId(), date, timeslot - 1, availability);
-
-        if (success) {
+        if (!doctorRepository.doctorBooked(doctor.getId(), date, timeslot - 1)) {
+            doctorRepository.updateDoctorSchedule(doctor.getId(), date, timeslot - 1, availability);
             System.out.println("Schedule updated successfully.");
         } else {
             System.out.println("Failed to update schedule. The timeslot is already BOOKED.");
@@ -389,17 +388,17 @@ public class DoctorMenu implements Menu {
         appointmentOutcomeRecordRepository.addAppointmentOutcomeRecord(record);
     }
 
-    public void changePassword() {
+    public void updatePassword() {
         while (true) {
             System.out.print("Enter new password: ");
             String newPassword = scanner.nextLine();
-            if (newPassword.length() < 6) {
-                System.out.println("Password must be at least 6 characters long.");
-                continue;
+            if (newPassword.length() >= 6) {
+                doctor.setPassword(newPassword);
+                staffRepository.updatePassword(doctor.getId(), newPassword);
+                System.out.println("Password changed successfully.");
+                break;
             }
-            doctor.setPassword(newPassword);
-            staffRepository.updatePassword(doctor.getId(), newPassword);
-            System.out.println("Password updated successfully.");
+            System.out.println("Password must be at least 6 characters long. Please try again.");
         }
 
     }

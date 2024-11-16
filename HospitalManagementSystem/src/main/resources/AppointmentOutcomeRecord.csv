@@ -4,3 +4,5 @@ appointmentId,date,typeOfService,consultationNotes
 3,14/11/2024,chemotherapy,come back in 6 months
 4,15/11/2024,ultrasound,drink water
 5,16/11/2024,chemotherapy,come back in 6 months
+8,17/11/2024,surgery,Avoid sports
+9,17/11/2024,bandaid,Nil.
