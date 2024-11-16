@@ -165,7 +165,8 @@ public class PatientMenu implements Menu {
             }
             System.out.println("Password must be at least 6 characters long. Please try again.");
         }
-
+        patientRepository.updatePatientField(patient.getId(),"password",patient.getPassword());
+        System.out.println("Password changed successfully.");
     }
 
     /**
