@@ -53,8 +53,7 @@ public class DoctorMenu implements Menu {
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            choice = Integer.valueOf(scanner.nextLine());
             handleChoice(choice);
             System.out.println("Press Enter to continue...");
             scanner.nextLine(); // Consume newline
@@ -166,8 +165,7 @@ public class DoctorMenu implements Menu {
             System.out.println("3. Treatment plans");
             System.out.println("4. Exit");
 
-            choice = sc.nextInt();
-            sc.nextLine(); // Consume the leftover newline character
+            choice = Integer.valueOf(sc.nextLine());
 
             switch (choice) {
                 case 1:
@@ -236,8 +234,7 @@ public class DoctorMenu implements Menu {
         System.out.print("Date (Monday to Saturday): ");
         String date = scanner.nextLine();
         System.out.print("Timeslot (1/9am to 8/4pm): ");
-        int timeslot = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int timeslot = Integer.valueOf(scanner.nextLine());
         System.out.print("New availability status (Available, Busy): ");
         String availability = scanner.nextLine();
 
@@ -326,8 +323,7 @@ public class DoctorMenu implements Menu {
     public void completeAppointment() {
         System.out.println("Mark appointment as completed");
         System.out.print("Enter appointment's id: ");
-        int appointmentId = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int appointmentId = Integer.valueOf(scanner.nextLine());
 
         // Mark the appointment as complete
         appointmentRepository.markAsCompleted(appointmentId);
@@ -359,8 +355,7 @@ public class DoctorMenu implements Menu {
             }
 
             System.out.print("Enter quantity: ");
-            int quantity = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            int quantity = Integer.valueOf(scanner.nextLine());
 
             prescriptionToAdd = new Prescription(appointmentId, prescriptionName, quantity);
             prescribePrescriptions.add(prescriptionToAdd);

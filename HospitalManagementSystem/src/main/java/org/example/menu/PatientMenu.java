@@ -38,7 +38,7 @@ public class PatientMenu implements Menu {
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
+            choice = Integer.valueOf(scanner.nextLine());
             scanner.nextLine(); // Consume the newline character
             handleChoice(choice);
         } while (choice != 10);  // Exit when logout is chosen
@@ -262,8 +262,7 @@ public class PatientMenu implements Menu {
             System.out.print("Date (Monday to Saturday): ");
             String date = scanner.nextLine();
             System.out.print("Timeslot (1 to 8): ");
-            int timeslot = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            int timeslot = Integer.valueOf(scanner.nextLine());
             System.out.print("Select doctor ID: ");
             String doctorId = scanner.nextLine();
             // check if doctor is available
@@ -288,7 +287,7 @@ public class PatientMenu implements Menu {
      */
     private void rescheduleAppointment() {
         System.out.print("Select appointment ID:");
-        int id = scanner.nextInt();
+        int id = Integer.valueOf(scanner.nextLine());
         Appointment appointment = appointmentRepository.getAppointmentById(id);
         if (appointment.getStatus().equals("ACCEPTED") || appointment.getStatus().equals("REJECTED")) {
             System.out.println("Appointment has been accepted, cannot reschedule");
@@ -311,7 +310,7 @@ public class PatientMenu implements Menu {
             System.out.print("Date (Monday to Saturday): ");
             String date = scanner.nextLine();
             System.out.print("Timeslot (1 to 8): ");
-            int timeslot = scanner.nextInt();
+            int timeslot = Integer.valueOf(scanner.nextLine());
 
             // check if doctor is available
             if (doctorRepository.doctorIsAvailable(doctorId, date, timeslot)) {
@@ -331,7 +330,7 @@ public class PatientMenu implements Menu {
     private void cancelAppointment() {
         System.out.println("Cancelling appointment");
         System.out.println("Enter appointment ID: ");
-        int id = scanner.nextInt();
+        int id = Integer.valueOf(scanner.nextLine());
         Appointment appointment = appointmentRepository.getAppointmentById(id);
         String doctorId = appointment.getDoctorId();
         String date = appointment.getDate();

@@ -62,7 +62,7 @@ public class PharmacistMenu implements Menu {
         while (choice != 6){
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
+            choice = Integer.valueOf(scanner.nextLine());
             handleChoice(choice);
         }  // Exit when logout is chosen
     }
@@ -160,8 +160,7 @@ public class PharmacistMenu implements Menu {
     /**TODO: May print all appointment id existing first, then enter appointment id*/
     public void dispensePrescription() {
         System.out.print("Enter appointment id: ");
-        int appointmentId = scanner.nextInt();
-        scanner.nextLine();
+        int appointmentId = Integer.valueOf(scanner.nextLine());
         AppointmentOutcomeRecord record = appointmentOutcomeRecordRepository.getRecordById(appointmentId);
         List<Prescription> pendingPrescriptions = prescriptionRepository.getPendingPrescriptions(appointmentId);
         if (pendingPrescriptions.isEmpty()) {
