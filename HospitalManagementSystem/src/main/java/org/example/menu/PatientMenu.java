@@ -6,6 +6,7 @@ import org.example.repository.AppointmentOutcomeRecordRepository;
 import org.example.repository.AppointmentRepository;
 import org.example.repository.DoctorRepository;
 import org.example.repository.PatientRepository;
+import org.example.utils.TimeslotToInt;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -280,8 +281,8 @@ public class PatientMenu implements Menu {
             System.out.print("Select doctor ID: ");
             String doctorId = scanner.nextLine();
             // check if doctor is available
-            if (doctorRepository.doctorIsAvailable(doctorId, date, timeslot)) {
-                appointmentRepository.addAppointment(patient.getId(), doctorId, date, timeslot, "REQUESTED");
+            if (doctorRepository.doctorIsAvailable(doctorId, date, timeslot - 1)) {
+                appointmentRepository.addAppointment(patient.getId(), doctorId, date,  timeslot - 1, "REQUESTED");
                 doctorRepository.updateDoctorSchedule(doctorId, date, timeslot - 1, "BOOKED");
                 System.out.println("Doctor is available, Appointment requested");
                 break;
@@ -303,32 +304,46 @@ public class PatientMenu implements Menu {
         System.out.print("Select appointment ID:");
         int id = Integer.valueOf(scanner.nextLine());
         Appointment appointment = appointmentRepository.getAppointmentById(id);
-        if (appointment.getStatus().equals("ACCEPTED") || appointment.getStatus().equals("REJECTED")) {
-            System.out.println("Appointment has been accepted, cannot reschedule");
+        if (appointment.getStatus().equals("ACCEPTED") || appointment.getStatus().equals("COMPLETED")) {
+            System.out.println("Appointment has been accepted or completed, cannot reschedule");
             return;
         }
         System.out.println("Current appointment detail:");
         System.out.println(appointment);
 
-        // free up slot
+        // free up slot, no need to decrement timeslot because it is already decremented in the appointmentRepository
+        // TODO: is this necessary? when rejected it should be freed, but then again if it's requested it hasn't been freed
         doctorRepository.freeDoctorSchedule(appointment.getDoctorId(), appointment.getDate(), appointment.getTimeslot());
+
+        System.out.println("Reschedule appointment");
+        System.out.println("Change doctor? empty to keep same");
+        // TODO: validate doctorId
+        String doctorId;
+        while (true) {
+            doctorId = scanner.nextLine();
+            if (doctorId.isEmpty()) {
+                doctorId = appointment.getDoctorId();
+                break;
+            }
+
+            if (doctorRepository.getDoctorById(doctorId) == null) {
+                System.out.println("Doctor not found. Please try again.");
+            } else {
+                break;
+            }
+        }
 
         // reschedule input
         while (true) {
-            System.out.println("Reschedule appointment");
-            System.out.println("Change doctor? empty to keep same");
-            String doctorId = scanner.nextLine();
-            if (doctorId.isEmpty()) {
-                doctorId = appointment.getDoctorId();
-            }
+            // TODO: validate date and timeslot
             System.out.print("Date (Monday to Saturday): ");
             String date = scanner.nextLine();
             System.out.print("Timeslot (1 to 8): ");
             int timeslot = Integer.valueOf(scanner.nextLine());
 
             // check if doctor is available
-            if (doctorRepository.doctorIsAvailable(doctorId, date, timeslot)) {
-                appointmentRepository.rescheduleAppointment(id, doctorId, date, timeslot);
+            if (doctorRepository.doctorIsAvailable(doctorId, date, timeslot - 1)) {
+                appointmentRepository.rescheduleAppointment(id, doctorId, date, timeslot - 1);
                 doctorRepository.updateDoctorSchedule(doctorId, date, timeslot - 1, "BOOKED");
                 System.out.println("Appointment rescheduled");
                 break;
@@ -340,28 +355,39 @@ public class PatientMenu implements Menu {
 
     /**
      * Simply remove appointment using appointmentRepository
+     * Patient are allowed to cancel appointment even if it is accepted
      */
     private void cancelAppointment() {
         System.out.println("Cancelling appointment");
         System.out.println("Enter appointment ID: ");
         int id = Integer.valueOf(scanner.nextLine());
         Appointment appointment = appointmentRepository.getAppointmentById(id);
+        if (appointment == null) {
+            System.out.println("Appointment not found");
+            return;
+        }
+
+        if (appointment.getStatus().equals("COMPLETED")) {
+            System.out.println("Appointment has been completed, cannot cancel");
+            return;
+        }
         String doctorId = appointment.getDoctorId();
         String date = appointment.getDate();
         int timeslot = appointment.getTimeslot();
         appointmentRepository.deleteAppointmentById(id);
-        doctorRepository.updateDoctorSchedule(doctorId, date, timeslot, "AVAILABLE");
+        // no need to decrement timeslot because it is already decremented in the appointmentRepository
+        doctorRepository.freeDoctorSchedule(doctorId, date, timeslot);
         System.out.println("Appointment cancelled");
     }
 
     public void printAppointmentTable(List<Appointment> appointments) {
-        System.out.printf("| %-4s | %-10s | %-10s | %-10s | %-10s | %-10s |%n",
+        System.out.printf("| %-4s | %-10s | %-10s | %-10s | %-13s | %-10s |%n",
                 "ID", "Patient ID", "Doctor ID", "Date", "Timeslot", "Status");
-        System.out.println("|------|------------|------------|------------|------------|------------|");
+        System.out.println("|------|------------|------------|------------|---------------|------------|");
         for (Appointment appointment : appointments) {
-            System.out.printf("| %-4d | %-10s | %-10s | %-10s | %-10d | %-10s |%n",
+            System.out.printf("| %-4d | %-10s | %-10s | %-10s | %-13s | %-10s |%n",
                     appointment.getId(), appointment.getPatientId(), appointment.getDoctorId(),
-                    appointment.getDate(), appointment.getTimeslot(), appointment.getStatus());
+                    appointment.getDate(), TimeslotToInt.timeslotToString(appointment.getTimeslot()), appointment.getStatus());
         }
     }
 

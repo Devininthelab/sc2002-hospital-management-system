@@ -3,6 +3,8 @@ package org.example.repository;
 
 import org.example.entity.Doctor;
 import org.example.utils.DateToNumber;
+import org.example.utils.TimeslotToInt;
+
 import java.io.*;
 import java.util.List;
 
@@ -69,7 +71,7 @@ public class DoctorRepository {
     public boolean doctorIsAvailable(String doctorId, String date, int time) {
         Doctor doctor = getDoctorById(doctorId);
         int dayIndex = DateToNumber.dateToNumber(date);
-        return "AVAILABLE".equalsIgnoreCase(doctor.getSchedule()[time - 1][dayIndex]);
+        return "AVAILABLE".equalsIgnoreCase(doctor.getSchedule()[time][dayIndex]);
     }
     /**
      * Update the doctor's schedule in the database.
@@ -83,17 +85,21 @@ public class DoctorRepository {
         Doctor doctor = getDoctorById(doctorId);
         int dayIndex = DateToNumber.dateToNumber(date);
         String currentStatus = doctor.getSchedule()[time][dayIndex];
-
-        if ("BOOKED".equalsIgnoreCase(currentStatus)) {
-            System.out.println("Cannot change the status of a BOOKED timeslot.");
+        if (currentStatus.equals("BOOKED")) {
             return false;
         }
 
-        doctor.getSchedule()[time - 1][dayIndex] = newStatus.toUpperCase();
+        doctor.getSchedule()[time][dayIndex] = newStatus.toUpperCase();
         saveDoctorSchedule(doctorId);
         return true;
     }
 
+    /**
+     * Book a doctor's schedule
+     * @param doctorId the doctor's ID
+     * @param date the date of the appointment
+     * @param time the time slot of the appointment from 0 to 7
+     */
     public void freeDoctorSchedule(String doctorId, String date, int time) {
         updateDoctorSchedule(doctorId, date, time, "AVAILABLE");
     }
@@ -107,9 +113,8 @@ public class DoctorRepository {
             bw.write("TimeSlot,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday\n");
 
             // Write each time slot with day-wise availability
-            String[] timeSlots = {"09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"};
             for (int i = 0; i < 8; i++) {
-                bw.write(timeSlots[i] + "," + String.join(",", schedule[i]) + "\n");
+                bw.write(TimeslotToInt.timeslotToString(i) + "," + String.join(",", schedule[i]) + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();

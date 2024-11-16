@@ -103,13 +103,13 @@ public class AppointmentRepository {
      * @param patientId
      * @param doctorId
      * @param date
-     * @param timeslot
+     * @param timeslot - from 0 to 7
      * @param status
      * @return
      */
     public void addAppointment(String patientId, String doctorId, String date, int timeslot, String status) {
         // Use counter to assign a unique ID
-        Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot - 1, "REQUESTED");
+        Appointment appointment = new Appointment(counter++, patientId, doctorId, date, timeslot, "REQUESTED");
         appointments.add(appointment);
         saveAppointmentsToCSV();
         System.out.println("Appointment added: " + appointment);
@@ -127,12 +127,12 @@ public class AppointmentRepository {
     /**
      * Once accepted, an appointment cannot be rescheduled
      * @param id
-     * @param date
-     * @param timeslot
+     * @param date - from Monday to Saturday
+     * @param timeslot - from 0 to 7
      */
     public void rescheduleAppointment(int id, String doctorId, String date, int timeslot) {
         Appointment appointment = getAppointmentById(id);
-        appointment.reschedule(doctorId, date, timeslot - 1);
+        appointment.reschedule(doctorId, date, timeslot);
         saveAppointmentsToCSV();
     }
 

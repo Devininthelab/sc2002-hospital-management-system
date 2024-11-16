@@ -1,5 +1,7 @@
 package org.example.entity;
 
+import org.example.utils.TimeslotToInt;
+
 import java.time.LocalDate;
 
 /**
@@ -93,8 +95,8 @@ public class Appointment {
         return "ID: " + id +
                 "\n - Patient ID: " + patientId +
                 "\n - Doctor ID: " + doctorId +
-                "\n - Date: " + //date +
-                "\n - Timeslot: " + timeslot +
+                "\n - Date: " + date +
+                "\n - Timeslot: " + TimeslotToInt.timeslotToString(timeslot) +
                 "\n - Status: '" + status + '\'';
     }
 
@@ -108,5 +110,6 @@ public class Appointment {
         this.doctorId = doctorId;
         this.date = date;
         this.timeslot = timeslot;
+        this.status = "REQUESTED";
     }
 }
