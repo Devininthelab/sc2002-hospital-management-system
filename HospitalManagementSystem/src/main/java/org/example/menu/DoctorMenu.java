@@ -2,6 +2,7 @@ package org.example.menu;
 
 import org.example.entity.*;
 import org.example.repository.*;
+import org.example.utils.ChangePage;
 import org.example.utils.TimeslotToInt;
 
 import java.time.LocalDate;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import static org.example.utils.TableDisplay.*;
 
 public class DoctorMenu implements Menu {
     private Scanner scanner;
@@ -59,11 +62,12 @@ public class DoctorMenu implements Menu {
             if (input.matches("[1-9]")) {  // Check if input is a single digit between 1 and 9
                 choice = Integer.valueOf(input);
                 handleChoice(choice);
-                System.out.println("Press Enter to continue...");
-                scanner.nextLine();  // Wait for Enter key
             } else {
                 System.out.println("Invalid input. Please enter a number between 1 and 9.");
             }
+            System.out.println("Press Enter to continue...");
+            scanner.nextLine();  // Wait for Enter key
+            ChangePage.changePage();
         } while (choice != 9);  // Exit when logout is chosen
     }
 
@@ -128,6 +132,10 @@ public class DoctorMenu implements Menu {
         String patientId = scanner.nextLine();
 
         Patient patient = patientRepository.getPatientById(patientId);
+        if (patient == null) {
+            System.out.println("Patient not found.");
+            return;
+        }
         System.out.println("Patient Medical Records");
         System.out.println("Patient ID: " + patient.getId());
         System.out.println("Name: " + patient.getName());
@@ -160,57 +168,57 @@ public class DoctorMenu implements Menu {
             return;
         }
 
-        Scanner sc = new Scanner(System.in);
         int choice;
 
         do {
             // Display update menu
             System.out.println("Enter the section you want to update (type 4 to exit):");
             System.out.println("1. Diagnoses");
-            System.out.println("2. Prescriptions");
-            System.out.println("3. Treatment plans");
+            System.out.println("2. Treatment plans");
+            System.out.println("3. Prescriptions");
             System.out.println("4. Exit");
 
-            choice = Integer.valueOf(sc.nextLine());
+            choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
                 case 1:
                     // Update Diagnoses
                     System.out.println("Type diagnosis to update (leave blank and press Enter to finish): ");
                     String diagnosis;
-                    do {
-                        diagnosis = sc.nextLine();
-                        if (!diagnosis.isEmpty()) {
-                            patient.addDiagnose(diagnosis);
-                            System.out.println("Diagnosis added: " + diagnosis);
+                    while (true) {
+                        diagnosis = scanner.nextLine();
+                        if (diagnosis.isEmpty()) {
+                            break;
                         }
-                    } while (!diagnosis.isEmpty());
+                        patient.addDiagnose(diagnosis);
+                        System.out.println("Diagnosis added: " + diagnosis);
+                    }
+
                     break;
 
                 case 2:
-                    // Update Prescriptions
-                    System.out.println("Type prescription to update (leave blank and press Enter to finish): ");
-                    String prescription;
-                    do {
-                        prescription = sc.nextLine();
-                        if (!prescription.isEmpty()) {
-                            patient.addPrescription(prescription);
-                            System.out.println("Prescription added: " + prescription);
-                        }
-                    } while (!prescription.isEmpty());
-                    break;
-
-                case 3:
                     // Update Treatment Plans
                     System.out.println("Type treatment plan to update (leave blank and press Enter to finish): ");
                     String treatmentPlan;
                     do {
-                        treatmentPlan = sc.nextLine();
+                        treatmentPlan = scanner.nextLine();
                         if (!treatmentPlan.isEmpty()) {
                             patient.addTreatment(treatmentPlan);
                             System.out.println("Treatment plan added: " + treatmentPlan);
                         }
                     } while (!treatmentPlan.isEmpty());
+                    break;
+                case 3:
+                    // Update Prescriptions
+                    System.out.println("Type prescription to update (leave blank and press Enter to finish): ");
+                    String prescription;
+                    do {
+                        prescription = scanner.nextLine();
+                        if (!prescription.isEmpty()) {
+                            patient.addPrescription(prescription);
+                            System.out.println("Prescription added: " + prescription);
+                        }
+                    } while (!prescription.isEmpty());
                     break;
 
                 case 4:
@@ -232,14 +240,14 @@ public class DoctorMenu implements Menu {
 
     public void viewPersonalSchedule() {
         System.out.println("Your personal schedule:");
-        doctor.printSchedule();
+        printSchedule(doctor.getSchedule());
     }
 
     public void setAvailabilityForAppointments() {
         System.out.println("Choose a date and timeslot:");
         System.out.print("Date (Monday to Saturday): ");
         String date = scanner.nextLine();
-        // TODO: print list of available timeslots and their corresponding numbers
+        printTimeslotOption();
         System.out.print("Timeslot (1/9am to 8/4pm): ");
         int timeslot = Integer.valueOf(scanner.nextLine());
         System.out.print("New availability status (Available, Busy): ");
@@ -257,7 +265,6 @@ public class DoctorMenu implements Menu {
     /**
      * Manage appointment requests for the doctor
      * Doctor can accept or reject appointment requests
-     * TODO: Agree on format of appointment, prefer table format
      */
     public void manageAppointmentRequests() {
         System.out.println("===== Manage Appointment Requests =====");
@@ -306,22 +313,11 @@ public class DoctorMenu implements Menu {
         System.out.println("Finished managing appointment requests.");
     }
 
-    public void printAppointmentTable(List<Appointment> appointments) {
-        System.out.printf("| %-4s | %-10s | %-10s | %-10s | %-10s | %-10s |%n",
-                "ID", "Patient ID", "Doctor ID", "Date", "Timeslot", "Status");
-        for (Appointment appointment : appointments) {
-            System.out.printf("| %-4d | %-10s | %-10s | %-10s | %-10d | %-10s |%n",
-                    appointment.getId(), appointment.getPatientId(), appointment.getDoctorId(),
-                    appointment.getDate(), appointment.getTimeslot(), appointment.getStatus());
-        }
-    }
-
     public void viewUpcomingAppointments() {
-        System.out.println("Upcoming appointments:");
         List<Appointment> upcomingAppointments = appointmentRepository.getAppointmentsByDoctorId(doctor.getId()).stream()
                 .filter(appointment -> "ACCEPTED".equals(appointment.getStatus()))
                 .collect(Collectors.toList());
-        printAppointmentTable(upcomingAppointments);
+        printAppointmentTable("Upcoming appointments", upcomingAppointments);
     }
 
     /**
@@ -368,11 +364,9 @@ public class DoctorMenu implements Menu {
             services.add(service);
         }
 
-        //TODO: prompt for list of prescription
         List<Prescription> prescribePrescriptions = new ArrayList<>();
         Prescription prescriptionToAdd;
         while (true) {
-            //TODO: validate prescription name
             System.out.print("Enter prescription name (leave empty to finish): ");
             String prescriptionName = scanner.nextLine();
             if (prescriptionName.isEmpty()) {

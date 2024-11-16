@@ -50,9 +50,10 @@ public class MedicineRequestRepository {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println("Error parsing medicine request: " + e.getMessage());
         }
+        //} catch (Exception e) {
+        //    System.out.println("Error parsing medicine request: " + e.getMessage());
+        //}
     }
 
     public void saveRequestsToCsv() {
@@ -71,7 +72,7 @@ public class MedicineRequestRepository {
     }
 
     public void addMedicineRequest(List<String> medicineNames) {
-        MedicineRequest medicineRequest = new MedicineRequest(counter++, "submitted", medicineNames);
+        MedicineRequest medicineRequest = new MedicineRequest(counter++, "SUBMITTED", medicineNames);
         medicineRequests.add(medicineRequest);
         saveRequestsToCsv();
     }
