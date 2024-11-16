@@ -20,11 +20,13 @@ public class DoctorMenu implements Menu {
     private AppointmentRepository appointmentRepository;
     private PrescriptionRepository prescriptionRepository;
     private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
+    private MedicineRepository medicineRepository;
 
     public DoctorMenu(Scanner scanner, PatientRepository patientRepository,
                       StaffRepository staffRepository, DoctorRepository doctorRepository,
                       AppointmentRepository appointmentRepository, PrescriptionRepository prescriptionRepository,
-                      AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository) {
+                      AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository,
+                      MedicineRepository medicineRepository) {
         this.scanner = scanner;
         this.patientRepository = patientRepository;
         this.staffRepository = staffRepository;
@@ -32,6 +34,7 @@ public class DoctorMenu implements Menu {
         this.appointmentRepository = appointmentRepository;
         this.prescriptionRepository = prescriptionRepository;
         this.appointmentOutcomeRecordRepository = appointmentOutcomeRecordRepository;
+        this.medicineRepository = medicineRepository;
     }
 
     public void displayMenu() {
@@ -368,15 +371,18 @@ public class DoctorMenu implements Menu {
             services.add(service);
         }
 
-        //TODO: prompt for list of prescription
         List<Prescription> prescribePrescriptions = new ArrayList<>();
         Prescription prescriptionToAdd;
         while (true) {
-            //TODO: validate prescription name
             System.out.print("Enter prescription name (leave empty to finish): ");
             String prescriptionName = scanner.nextLine();
             if (prescriptionName.isEmpty()) {
                 break;
+            }
+
+            if (!medicineRepository.medicineExists(prescriptionName)) {
+                System.out.println("Medicine not available.");
+                continue;
             }
 
             System.out.print("Enter quantity: ");
