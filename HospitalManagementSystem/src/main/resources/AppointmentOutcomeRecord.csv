@@ -1,3 +1,6 @@
 appointmentId,date,typeOfService,consultationNotes
+1,12/11/2024,chemotherapy,come back in 6 months
+2,13/11/2024,ultrasound,drink water
+3,14/11/2024,chemotherapy,come back in 6 months
 4,15/11/2024,ultrasound,drink water
 5,16/11/2024,chemotherapy,come back in 6 months

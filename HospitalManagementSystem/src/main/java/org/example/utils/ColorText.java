@@ -30,7 +30,13 @@ public class ColorText {
         return color + text + RESET;
     }
 
-    public static String getIntText(String text, String color) {
+    /**
+     * Get text with color
+     * @param text
+     * @param color
+     * @return text with color
+     */
+    public static String getColoredText(String text, String color) {
         return color + text + RESET;
     }
 }
