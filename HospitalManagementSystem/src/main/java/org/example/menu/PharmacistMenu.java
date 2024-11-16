@@ -391,10 +391,19 @@ public class PharmacistMenu implements Menu {
     }
 
     public void updatePassword() {
-        System.out.print("Enter new password: ");
-        String newPassword = scanner.nextLine();
+        String newPassword = "";
+        while (newPassword.length() < 6 || newPassword.equals(pharmacist.getPassword())) {
+            System.out.print("Enter new password: ");
+            newPassword = scanner.nextLine();
+            if (newPassword.length() < 6) {
+                System.out.println("Password must be at least 6 characters.");
+            }
+            if (newPassword.equals(pharmacist.getPassword())) {
+                System.out.println("Same password. Please change to the new password.");
+            }
+        }
         pharmacist.setPassword(newPassword);
         staffRepository.updatePassword(pharmacist.getId(), newPassword);
-        System.out.println("Password updated.");
+        System.out.println("Password updated successfully.");
     }
 }
