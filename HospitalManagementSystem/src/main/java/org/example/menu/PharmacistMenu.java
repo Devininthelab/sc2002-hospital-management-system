@@ -160,6 +160,9 @@ public class PharmacistMenu implements Menu {
      */
     public void viewAppointmentOutcomeRecord() {
         List<AppointmentOutcomeRecord> records = appointmentOutcomeRecordRepository.getAllPendingRecords();
+        if (records.isEmpty()) {
+            System.out.println("No pending appointments found.");
+        }
         for (AppointmentOutcomeRecord record : records) {
             System.out.println(record);
         }
@@ -173,19 +176,30 @@ public class PharmacistMenu implements Menu {
      */
     /**TODO: May print all appointment id existing first, then enter appointment id*/
     public void dispensePrescription() {
-        System.out.print("Enter appointment id: ");
-        int appointmentId = Integer.valueOf(scanner.nextLine());
+        int appointmentId = -1;
+
+        // Loop to ensure a valid appointment ID is entered
+        while (true) {
+            try {
+                System.out.print("Enter appointment id: ");
+                appointmentId = Integer.valueOf(scanner.nextLine());
+                break; // Exit loop if input is valid
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a numeric appointment ID.");
+            }
+        }
+
         AppointmentOutcomeRecord record = appointmentOutcomeRecordRepository.getRecordById(appointmentId);
+        if (record == null) {
+            System.out.println("Appointment Outcome Record not found or Appointment does not exist.");
+            return;
+        }
         List<Prescription> pendingPrescriptions = prescriptionRepository.getPendingPrescriptions(appointmentId);
         if (pendingPrescriptions.isEmpty()) {
             System.out.println("No pending prescriptions for this appointment.");
             return;
         }
 
-        Set<String> pendingPrescriptionNames = new HashSet<>();
-        for (Prescription prescription : pendingPrescriptions) {
-            pendingPrescriptionNames.add(prescription.getName());
-        }
 
         System.out.println("Pending prescriptions for appointment ID " + appointmentId + ":");
         for (Prescription prescription : pendingPrescriptions) {
@@ -198,13 +212,8 @@ public class PharmacistMenu implements Menu {
 
             // Exit if input is empty
             if (prescriptionName.isEmpty()) {
+                System.out.println("Finish dispensing.");
                 break;
-            }
-
-            // Check if the prescription is in the pending list
-            if (!pendingPrescriptionNames.contains(prescriptionName)) {
-                System.out.println("Prescription not found in pending list. Please try again.");
-                continue;
             }
 
             Prescription prescriptionToDispense = null;
@@ -323,7 +332,8 @@ public class PharmacistMenu implements Menu {
             }
 
             // Add to the request set if valid
-            medicines.add(medicineName.toLowerCase()); // Normalize to avoid case sensitivity issues
+            medicines.add(medicineName.toLowerCase());
+            System.out.println("Medicine has been added to the request successfully.");// Normalize to avoid case sensitivity issues
         }
 
         // Review and confirm the replenishment request
@@ -355,7 +365,7 @@ public class PharmacistMenu implements Menu {
 
     public void updatePassword() {
         System.out.print("Enter new password: ");
-        String newPassword = scanner.next();
+        String newPassword = scanner.nextLine();
         pharmacist.setPassword(newPassword);
         staffRepository.updatePassword(pharmacist.getId(), newPassword);
         System.out.println("Password updated.");

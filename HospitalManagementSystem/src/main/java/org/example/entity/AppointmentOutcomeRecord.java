@@ -105,7 +105,7 @@ public class AppointmentOutcomeRecord {
         for (Prescription prescription : prescriptions) {
             prescriptionString += "   - " + prescription.toString() + "\n";
         }
-        return "Appointment Outcome Record - Appointment ID: " + appointmentId +
+        return "Appointment Outcome Record\n - Appointment ID: " + appointmentId +
                 "\n - Date: " + date +
                 "\n - ConsultationNotes: " + consultationNotes +
                 "\n - TypeOfService: \n" + typeOfServiceString +
