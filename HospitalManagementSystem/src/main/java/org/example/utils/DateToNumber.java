@@ -1,5 +1,8 @@
 package org.example.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class DateToNumber {
     /**
      * Convert a date string to a number, this function is used for the doctor's schedule
