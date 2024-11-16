@@ -45,7 +45,7 @@ public class PatientMenu implements Menu {
             System.out.print("Enter your choice: ");
             String input = scanner.nextLine();
 
-            if (input.matches("[1-9]|10]")) {  // Check if input is a single digit between 1 and 10
+            if (input.matches("[1-9]|10")) {  // Check if input is a single digit between 1 and 10
                 choice = Integer.parseInt(input);
                 handleChoice(choice);
             } else {
@@ -403,14 +403,11 @@ public class PatientMenu implements Menu {
     private void viewScheduledAppointment() {
         // detail and status of scheduled appointment
         List<Appointment> appointments = appointmentRepository.getAppointmentsByPatientId(patient.getId());
-        System.out.println("Pending Appointment:");
-        printAppointmentTable(appointments.stream()
+        printAppointmentTable("Pending Appointment", appointments.stream()
                 .filter(appointment -> appointment.getStatus().equals("REQUESTED")).toList());
-        System.out.println("Accepted Appointment:");
-        printAppointmentTable(appointments.stream()
+        printAppointmentTable("Accepted Appointment", appointments.stream()
                 .filter(appointment -> appointment.getStatus().equals("ACCEPTED")).toList());
-        System.out.println("Rejected Appointment (please reschedule or cancel):");
-        printAppointmentTable(appointments.stream()
+        printAppointmentTable("Rejected Appointment (please reschedule or cancel)", appointments.stream()
                 .filter(appointment -> appointment.getStatus().equals("REJECTED")).toList());
     }
 
@@ -436,13 +433,22 @@ public class PatientMenu implements Menu {
             System.out.println(" - Services: " + String.join(", ", record.getTypeOfService()));
             System.out.println(" - Prescription: ");
             // table format
-            System.out.printf("| %-10s | %-10s | %-10s |%n",
-                    "Name", "Dosage", "Status");
-            System.out.println("|------------|------------|------------|");
+            System.out.println("+------------+------------+------------+");
+            System.out.println("|   Name     |   Dosage   |   Status   |");
+            System.out.println("+------------+------------+------------+");
+            if (record.getPrescriptions().isEmpty()) {
+                System.out.println("|        No prescriptions found!       |");
+                System.out.println("+------------+------------+------------+");
+                continue;
+            }
             for (Prescription prescription : record.getPrescriptions()) {
                 System.out.printf("| %-10s | %-10s | %-10s |%n",
-                        prescription.getName(), prescription.getQuantity(), prescription.getStatus());
+                        prescription.getName(),
+                        prescription.getQuantity(),
+                        prescription.getStatus());
             }
+            System.out.println("+------------+------------+------------+\n");
+
         }
     }
 

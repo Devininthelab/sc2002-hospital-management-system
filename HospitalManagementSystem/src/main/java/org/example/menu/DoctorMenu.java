@@ -314,11 +314,10 @@ public class DoctorMenu implements Menu {
     }
 
     public void viewUpcomingAppointments() {
-        System.out.println("Upcoming appointments:");
         List<Appointment> upcomingAppointments = appointmentRepository.getAppointmentsByDoctorId(doctor.getId()).stream()
                 .filter(appointment -> "ACCEPTED".equals(appointment.getStatus()))
                 .collect(Collectors.toList());
-        printAppointmentTable(upcomingAppointments);
+        printAppointmentTable("Upcoming appointments", upcomingAppointments);
     }
 
     /**
