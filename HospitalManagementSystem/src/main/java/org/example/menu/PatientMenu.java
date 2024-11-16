@@ -34,13 +34,20 @@ public class PatientMenu implements Menu {
      */
     public void start() {
         login();
-        int choice;
+        int choice = 0;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
-            handleChoice(choice);
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+                handleChoice(choice);
+                System.out.println("Press Enter to continue...");
+                scanner.nextLine();
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Consume the invalid input
+            }
         } while (choice != 10);  // Exit when logout is chosen
     }
 
@@ -92,7 +99,7 @@ public class PatientMenu implements Menu {
      * Wire the choice to the corresponding method
      * @param choice the choice of the patient
      */
-    public void handleChoice(int choice) {  // Cast User to Patient
+    public void handleChoice(int choice) {// Cast User to Patient
         switch (choice) {
             case 1:
                 changePassword();
@@ -126,6 +133,7 @@ public class PatientMenu implements Menu {
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
+                break;
         }
     }
 

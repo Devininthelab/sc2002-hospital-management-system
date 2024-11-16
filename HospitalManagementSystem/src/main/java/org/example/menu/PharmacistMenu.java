@@ -62,8 +62,15 @@ public class PharmacistMenu implements Menu {
         while (choice != 6){
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            handleChoice(choice);
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+                handleChoice(choice);
+                System.out.println("Press Enter to continue...");
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Consume the invalid input
+            }
         }  // Exit when logout is chosen
     }
 
@@ -76,14 +83,13 @@ public class PharmacistMenu implements Menu {
         while (true) {
             System.out.print("Please enter your user id: ");
             String id = scanner.nextLine();
-            System.out.print("Please enter your password: ");
-            String password = scanner.nextLine();
-
             pharmacist = staffRepository.getPharmacistById(id);
             if (pharmacist == null) {
                 System.out.println("Pharmacist not found. Try again");
                 continue;
             }
+            System.out.print("Please enter your password: ");
+            String password = scanner.nextLine();
 
             if (pharmacist.getPassword().equals(password)) {
                 System.out.println("You are logged in.");
@@ -115,7 +121,6 @@ public class PharmacistMenu implements Menu {
      * @param choice
      */
     public void handleChoice(int choice) {
-        scanner.nextLine();
         switch (choice) {
             case 1:
                 viewAppointmentOutcomeRecord();
