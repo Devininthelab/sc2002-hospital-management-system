@@ -2,6 +2,7 @@ package org.example.menu;
 
 import org.example.entity.*;
 import org.example.repository.*;
+import org.example.utils.TimeslotToInt;
 
 import java.time.LocalDate;
 import java.time.format.*;
@@ -56,8 +57,6 @@ public class DoctorMenu implements Menu {
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
             handleChoice(choice);
-            System.out.println("Press Enter to continue...");
-            scanner.nextLine(); // Consume newline
         } while (choice != 9);  // Exit when logout is chosen
     }
 
@@ -235,6 +234,7 @@ public class DoctorMenu implements Menu {
         System.out.println("Choose a date and timeslot:");
         System.out.print("Date (Monday to Saturday): ");
         String date = scanner.nextLine();
+        // TODO: print list of available timeslots and their corresponding numbers
         System.out.print("Timeslot (1/9am to 8/4pm): ");
         int timeslot = scanner.nextInt();
         scanner.nextLine(); // Consume newline
@@ -277,7 +277,7 @@ public class DoctorMenu implements Menu {
             System.out.println("Appointment ID: " + appointment.getId());
             System.out.println(" - Patient ID: " + appointment.getPatientId());
             System.out.println(" - Date: " + appointment.getDate());
-            System.out.println(" - Timeslot: " + appointment.getTimeslot());
+            System.out.println(" - Timeslot: " + TimeslotToInt.timeslotToString(appointment.getTimeslot()));
             System.out.println(" - Status: " + appointment.getStatus());
 
             System.out.print("Accept this appointment? (y/n/empty to ignore): ");
@@ -290,6 +290,8 @@ public class DoctorMenu implements Menu {
                 System.out.println("Appointment accepted.");
             } else {
                 appointment.setStatus("REJECTED");
+                // Free the doctor's schedule
+                doctorRepository.freeDoctorSchedule(doctor.getId(), appointment.getDate(), appointment.getTimeslot());
                 System.out.println("Appointment rejected.");
             }
 
@@ -329,8 +331,24 @@ public class DoctorMenu implements Menu {
         int appointmentId = scanner.nextInt();
         scanner.nextLine(); // Consume newline
 
+        // Check if the appointment exists
+        Appointment appointment = appointmentRepository.getAppointmentById(appointmentId);
+        if (appointment == null) {
+            System.out.println("Appointment not found.");
+            return;
+        }
+
+        if (!appointment.getDoctorId().equals(doctor.getId())) {
+            System.out.println("You don't have permission to complete this appointment.");
+            return;
+        }
+
         // Mark the appointment as complete
         appointmentRepository.markAsCompleted(appointmentId);
+        // Free the doctor's schedule, no need to decrement timeslot
+        doctorRepository.freeDoctorSchedule(doctor.getId(),
+                appointmentRepository.getAppointmentById(appointmentId).getDate(),
+                appointmentRepository.getAppointmentById(appointmentId).getTimeslot());
 
         // Prompt for date
         System.out.print("Enter date (dd/MM/yyyy): ");
