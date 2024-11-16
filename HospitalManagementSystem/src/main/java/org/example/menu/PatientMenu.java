@@ -149,19 +149,19 @@ public class PatientMenu implements Menu {
      * Call the patientRepository to update the password
      */
     private void changePassword() {
-        System.out.println("Password changed successfully.");
-        while (true) {
+        String newPassword = "";
+        while (newPassword.length() < 6 || newPassword.equals(patient.getPassword())) {
             System.out.print("Enter new password: ");
-            String newPassword = scanner.nextLine();
+            newPassword = scanner.nextLine();
             if (newPassword.length() < 6) {
-                System.out.println("Password must be at least 6 characters long.");
-                continue;
+                System.out.println("Password must be at least 6 characters.");
             }
-            patient.setPassword(newPassword);
-            patientRepository.updatePatientField(patient.getId(), "password", newPassword);
-            System.out.println("Password updated successfully.");
+            if (newPassword.equals(patient.getPassword())) {
+                System.out.println("Same password. Please change to the new password.");
+            }
         }
-
+        patientRepository.updatePatientField(patient.getId(),"password",patient.getPassword());
+        System.out.println("Password changed successfully.");
     }
 
     /**
