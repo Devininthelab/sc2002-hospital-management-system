@@ -49,14 +49,20 @@ public class DoctorMenu implements Menu {
     public void start() {
 
         login();
-        int choice;
+        int choice = 0;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = Integer.valueOf(scanner.nextLine());
-            handleChoice(choice);
-            System.out.println("Press Enter to continue...");
-            scanner.nextLine(); // Consume newline
+            String input = scanner.nextLine();
+
+            if (input.matches("[1-9]")) {  // Check if input is a single digit between 1 and 9
+                choice = Integer.valueOf(input);
+                handleChoice(choice);
+                System.out.println("Press Enter to continue...");
+                scanner.nextLine();  // Wait for Enter key
+            } else {
+                System.out.println("Invalid input. Please enter a number between 1 and 9.");
+            }
         } while (choice != 9);  // Exit when logout is chosen
     }
 
@@ -64,14 +70,13 @@ public class DoctorMenu implements Menu {
         while (true) {
             System.out.print("Please enter your user id: ");
             String id = scanner.nextLine();
-            System.out.print("Please enter your password: ");
-            String password = scanner.nextLine();
-
             doctor = doctorRepository.getDoctorById(id);
             if (doctor == null) {
                 System.out.println("Doctor not found. Try again");
                 continue;
             }
+            System.out.print("Please enter your password: ");
+            String password = scanner.nextLine();
 
             if (doctor.getPassword().equals(password)) {
                 System.out.println("You are logged in.");

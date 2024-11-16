@@ -56,16 +56,32 @@ public class PharmacistMenu implements Menu {
      * Pharmacist login
      * Display choice for user to choose and redirect to respective handler function
      */
-    public void start() {
+      public void start() {
         int choice = 0;
         login();
-        while (choice != 6){
+        while (choice != 6) {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = Integer.valueOf(scanner.nextLine());
-            handleChoice(choice);
-        }  // Exit when logout is chosen
-    }
+
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+
+                if (choice >= 1 && choice <= 6) {
+                    handleChoice(choice);
+                    if (choice != 6) {
+                        System.out.println("Press Enter to continue...");
+                        scanner.nextLine();  // Wait for Enter key
+                    }
+                } else {
+                    System.out.println("Invalid input. Please enter a number between 1 and 6.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine(); // Consume the invalid input
+            }
+        }  // Exit when choice is 6 (logout)
+     }
 
     /**
      * Prompt pharmacist for id and password
@@ -76,14 +92,13 @@ public class PharmacistMenu implements Menu {
         while (true) {
             System.out.print("Please enter your user id: ");
             String id = scanner.nextLine();
-            System.out.print("Please enter your password: ");
-            String password = scanner.nextLine();
-
             pharmacist = staffRepository.getPharmacistById(id);
             if (pharmacist == null) {
                 System.out.println("Pharmacist not found. Try again");
                 continue;
             }
+            System.out.print("Please enter your password: ");
+            String password = scanner.nextLine();
 
             if (pharmacist.getPassword().equals(password)) {
                 System.out.println("You are logged in.");
@@ -115,7 +130,6 @@ public class PharmacistMenu implements Menu {
      * @param choice
      */
     public void handleChoice(int choice) {
-        scanner.nextLine();
         switch (choice) {
             case 1:
                 viewAppointmentOutcomeRecord();

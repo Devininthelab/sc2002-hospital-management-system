@@ -34,14 +34,20 @@ public class AdministratorMenu implements Menu {
      */
     public void start() {
         login();
-        int choice;
+        int choice = 0;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = Integer.valueOf(scanner.nextLine());
-            handleChoice(choice);
-            System.out.println("Press Enter to continue...");
-            scanner.nextLine();
+            String input = scanner.nextLine();
+
+            if (input.matches("-?\\d+")) {  // Check if input is a valid integer (including negative numbers)
+                choice = Integer.valueOf(input);
+                handleChoice(choice);
+                System.out.println("Press Enter to continue...");
+                scanner.nextLine();  // Wait for Enter key
+            } else {
+                System.out.println("Invalid input. Please enter a valid number.");
+            }
         } while (choice != 16);  // Exit when logout is chosen
     }
 
@@ -145,6 +151,7 @@ public class AdministratorMenu implements Menu {
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
+                break;
         }
     }
     // update appointment status is redundant (6)

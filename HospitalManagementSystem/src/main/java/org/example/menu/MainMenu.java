@@ -29,7 +29,9 @@ public class MainMenu {
                     "\n1. Log in" +
                     "\n2. Quit");
             System.out.print("Enter your choice: ");
-            int choice = Integer.valueOf(scanner.nextLine());
+
+            int choice = getValidatedInt();
+
             if (choice == 2) {
                 break;
             }
@@ -53,7 +55,9 @@ public class MainMenu {
                 "2. Doctor\n" +
                 "3. Pharmacist\n" +
                 "4. Administrator");
-        int role = Integer.valueOf(scanner.nextLine());
+
+        int role = getValidatedInt();
+
         String[] roles = {"PATIENT", "DOCTOR", "PHARMACIST", "ADMINISTRATOR"};
         if (role < 1 || role > 4) {
             System.out.println("Invalid choice. Please try again.");
@@ -61,5 +65,14 @@ public class MainMenu {
         }
         Menu menu = menuFactory.createMenu(roles[role - 1]); // Redirect to the corresponding menu
         menu.start();
+    }
+    private int getValidatedInt() {
+        while (!scanner.hasNextInt()) {
+            System.out.println("Warning: Invalid input. Please enter a number.");
+            scanner.nextLine(); // Consume the invalid input
+        }
+        int number = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+        return number;
     }
 }
