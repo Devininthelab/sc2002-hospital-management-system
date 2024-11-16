@@ -2,6 +2,8 @@ package org.example.menu;
 
 import org.example.entity.*;
 import org.example.repository.*;
+import org.example.utils.ChangePage;
+import org.example.utils.ColorText;
 
 import java.util.List;
 import java.util.Scanner;
@@ -65,6 +67,8 @@ public class AdministratorMenu implements Menu {
                 System.out.println("Incorrect id or password. Please try again.");
                 continue;
             }
+            ChangePage.changePage();
+            System.out.println("==========================================");
             System.out.println("Welcome, " + administrator.getName() + "!");
             break;
         }
@@ -74,23 +78,24 @@ public class AdministratorMenu implements Menu {
      * Display the Administrator menu, showing the available options
      */
     public void displayMenu() {
-        System.out.println("=====Administrator MENU=====");
-        System.out.println("1. Add Staff Member\n" +
-                "2. Update Staff Information\n" +
-                "3. Remove Staff Member\n" +
-                "4. View Staff List\n" +
-                "5. View Scheduled Appointments\n" +
-                "6. Update Appointment Status\n" +
-                "7. View Medicine Inventory Stock Levels\n" +
-                "8. View Appointment Outcome Record\n" +
-                "9. Add Medication to Inventory\n" +
-                "10. Update Inventory Stock Levels\n" +
-                "11. Remove Medication from Inventory\n" +
-                "12. Set Low Stock Alert Level\n" +
-                "13. View Low Stock Inventory Items\n" +
-                "14. Show all Replenishment Requests\n" +
-                "15. Approve Replenishment Request\n" +
-                "16. Logout");
+        System.out.println("=========== Administrator MENU ===========");
+        System.out.println("\t\t1.  Add Staff Member");
+        System.out.println("\t\t2.  Update Staff Information");
+        System.out.println("\t\t3.  Remove Staff Member");
+        System.out.println("\t\t4.  View Staff List");
+        System.out.println("\t\t5.  View Scheduled Appointments");
+        System.out.println("\t\t6.  Update Appointment Status");
+        System.out.println("\t\t7.  View Medicine Inventory Stock Levels");
+        System.out.println("\t\t8.  View Appointment Outcome Record");
+        System.out.println("\t\t9.  Add Medication to Inventory");
+        System.out.println("\t\t10. Update Inventory Stock Levels");
+        System.out.println("\t\t11. Remove Medication from Inventory");
+        System.out.println("\t\t12. Set Low Stock Alert Level");
+        System.out.println("\t\t13. View Low Stock Inventory Items");
+        System.out.println("\t\t14. Show All Replenishment Requests");
+        System.out.println("\t\t15. Approve Replenishment Request");
+        System.out.println("\t\t16. Logout");
+        System.out.println("==========================================");
     }
 
 
@@ -218,10 +223,21 @@ public class AdministratorMenu implements Menu {
         if (staffList == null || staffList.isEmpty()) {
             System.out.println("No staff members.");
         } else {
-            System.out.println("Staff Members:");
+            System.out.println("+------------+----------------------+-----------------+------------+-----+");
+            System.out.printf("| %-10s | %-20s | %-15s | %-10s | %-3s |\n",
+                    "ID", "Name", "Role", "Gender", "Age");
+            System.out.println("+------------+----------------------+-----------------+------------+-----+");
+
             for (Staff staff : staffList) {
-                System.out.println(staff.toString());
+                System.out.printf("| %-10s | %-20s | %-15s | %-10s | %-3d |\n",
+                        staff.getId(),
+                        staff.getName(),
+                        staff.getRole(),
+                        staff.getGender(),
+                        staff.getAge());
             }
+
+            System.out.println("+------------+----------------------+-----------------+------------+-----+");
         }
     }
 
@@ -235,10 +251,25 @@ public class AdministratorMenu implements Menu {
         if (appointments == null || appointments.isEmpty()) {
             System.out.println("No scheduled appointments.");
         } else {
-            System.out.println("Scheduled Appointments:");
-            for(Appointment appointment : appointments) {
-                System.out.println(appointment.toString());
+            System.out.println("+----+------------+------------+------------+----------+-------------+");
+            System.out.printf("| %-2s | %-10s | %-10s | %-10s | %-8s | %-11s |\n",
+                    "ID", "Patient ID", "Doctor ID", "Date", "Timeslot", "Status");
+            System.out.println("+----+------------+------------+------------+----------+-------------+");
+
+
+            for (Appointment appointment : appointments) {
+
+                System.out.printf("| %-2d | %-10s | %-10s | %-10s | %-8d | %-11s |\n",
+                        appointment.getId(),
+                        appointment.getPatientId(),
+                        appointment.getDoctorId(),
+                        appointment.getDate(),
+                        appointment.getTimeslot(),
+                        ColorText.getStatusWithColor(appointment.getStatus()));
             }
+
+
+            System.out.println("+----+------------+------------+------------+----------+-------------+");
         }
     }
 
@@ -354,9 +385,21 @@ public class AdministratorMenu implements Menu {
             System.out.println("No medicines in inventory.");
         } else {
             System.out.println("Inventory Stock Levels:");
+            System.out.println("+----------------+------------+------------+------------+");
+            System.out.printf("| %-14s | %-10s | %-10s | %-10s |\n", "Name", "Stock", "Low Thresh", "High Thresh");
+            System.out.println("+----------------+------------+------------+------------+");
+
+
             for (Medicine medicine : medicines) {
-                System.out.println(medicine.toString());
+                System.out.printf("| %-14s | %-10d | %-10d | %-10d |\n",
+                        medicine.getName(),
+                        medicine.getStockLevel(),
+                        medicine.getLowThreshold(),
+                        medicine.getHighThreshold());
             }
+
+
+            System.out.println("+----------------+------------+------------+------------+");
         }
     }
 
