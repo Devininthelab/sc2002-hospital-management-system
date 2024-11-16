@@ -1,6 +1,3 @@
 id,medicines,status
-0,paracetamol;ibuprofen,SUBMITTED
-0,ibuprofen;paracetamol,SUBMITTED
+0,paracetamol;ibuprofen,APPROVED
 1,paracetamol;ibuprofen,SUBMITTED
-1,aspirin;ibuprofen,SUBMITTED
-1,ibuprofen,SUBMITTED

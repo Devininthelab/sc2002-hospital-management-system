@@ -134,10 +134,11 @@ public class StaffRepository {
                         staff.setAge(Integer.parseInt(newValue));
                         break;
                 }
+                System.out.println("Staff member with ID " + staffId + " updated " + field + " value " +  newValue + " successfully.");
                 saveStaffsToCSV();
+                return;
             }
         }
-        System.out.println("Staff member with ID " + staffId + " not found.");
     }
 
     /**
