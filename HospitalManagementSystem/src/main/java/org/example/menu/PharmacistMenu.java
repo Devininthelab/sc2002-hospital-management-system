@@ -107,22 +107,27 @@ public class PharmacistMenu implements Menu {
 
             System.out.println("Wrong password. Try again");
         }
+        System.out.println("==========================================");
+        System.out.printf("Welcome, %s!%n", pharmacist.getName());
     }
 
     /**
      * Display pharmacist menu
      */
     public void displayMenu() {
-        System.out.println("=====PHARMACIST MENU=====");
+        System.out.println("========== PHARMACIST MENU ============");
+
         if (medicineRepository.hasLowStockMedicines()) {
             System.out.println("WARNING: Low stock medicine. Please submit replenishment request.");
         }
-        System.out.println("1. View Appointment Outcome Record\n" +
-                "2. Dispense Prescription\n" +
-                "3. View Medication Inventory\n" +
-                "4. Submit Replenishment Request\n" +
-                "5. Update password\n" +
-                "6. Logout");
+
+        System.out.println("\t1. View Appointment Outcome Record");
+        System.out.println("\t2. Dispense Prescription");
+        System.out.println("\t3. View Medication Inventory");
+        System.out.println("\t4. Submit Replenishment Request");
+        System.out.println("\t5. Update Password");
+        System.out.println("\t6. Logout");
+        System.out.println("==========================================");
     }
 
     /**
@@ -276,11 +281,28 @@ public class PharmacistMenu implements Menu {
         if (choice.equalsIgnoreCase("Y")) {
             System.out.println("Low stock medicine: ");
             List<Medicine> lowStockMedicines = medicineRepository.getLowStockMedicines();
-            lowStockMedicines.forEach(System.out::println);
+            printMedicineTable(lowStockMedicines);
         } else {
             System.out.println("All medicines: ");
             List<Medicine> medicines = medicineRepository.getAllMedicines();
-            medicines.forEach(System.out::println);
+            printMedicineTable(medicines);
+        }
+    }
+
+    private void printMedicineTable(List<Medicine> medicines) {
+        System.out.printf("%-20s %-10s %-15s %-15s%n", "Medicine Name", "Stock", "Low Threshold", "High Threshold");
+        System.out.println("-----------------------------------------------------------------------");
+        for (Medicine medicine : medicines) {
+            String stockColor = medicine.isLowStock() ? "\u001B[31m" : "\u001B[32m"; // Red for low stock, green otherwise
+            String resetColor = "\u001B[0m"; // Reset to default color
+
+            System.out.printf(
+                    "%-20s " + stockColor + "%-10d" + resetColor + " %-15d %-15d%n",
+                    medicine.getName(),
+                    medicine.getStockLevel(),
+                    medicine.getLowThreshold(),
+                    medicine.getHighThreshold()
+            );
         }
     }
 
