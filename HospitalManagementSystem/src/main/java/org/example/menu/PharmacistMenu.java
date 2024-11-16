@@ -1,29 +1,10 @@
 package org.example.menu;
 
 import org.example.entity.*;
-import org.example.entity.Medicine;
-import org.example.entity.Pharmacist;
-import org.example.entity.AppointmentOutcomeRecord;
 import org.example.repository.*;
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.*;
 
-/**
- * Pharmacist menu
- * <p>Pharmacist can view appointment outcome record, update prescription status, view medication inventory, submit replenishment request</p>
- * <p>Show persistence warning when stock level is low</p>
- * <p>Menu keeps a pharmacist session id to keep track of user's state
- * The following dependencies are injected:</p>
- * - StaffRepository - Pharmacist login
- * - Medicine repository - View medication inventory, submit replenishment request
- * - AppointmentOutcomeRecordRepository - View appointment outcome record, update prescription status
- * - MedicineRequestRepository - Submit replenishment request
- * - MedicationRepository - Update prescription status
- */
 public class PharmacistMenu implements Menu {
     private Scanner scanner;
     private StaffRepository staffRepository;
@@ -33,15 +14,6 @@ public class PharmacistMenu implements Menu {
     private PrescriptionRepository prescriptionRepository;
     private Pharmacist pharmacist;
 
-    /**
-     * Constructor to inject dependencies
-     * @param scanner
-     * @param staffRepository
-     * @param medicineRepository
-     * @param appointmentOutcomeRecordRepository
-     * @param medicineRequestRepository
-     * @param prescriptionRepository
-     */
     public PharmacistMenu(Scanner scanner, StaffRepository staffRepository, MedicineRepository medicineRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository, MedicineRequestRepository medicineRequestRepository, PrescriptionRepository prescriptionRepository) {
         this.scanner = scanner;
         this.staffRepository = staffRepository;
@@ -52,11 +24,11 @@ public class PharmacistMenu implements Menu {
     }
 
     /**
-     * Start pharmacist menu
-     * Pharmacist login
-     * Display choice for user to choose and redirect to respective handler function
+     * Start the pharmacist menu.
+     * <p>Pharmacist needs to log in. The menu will then display available options, and the user
+     * will be prompted to choose an action. The menu will continue to run until the pharmacist logs out.</p>
      */
-      public void start() {
+    public void start() {
         int choice = 0;
         login();
         while (choice != 6) {
@@ -80,13 +52,14 @@ public class PharmacistMenu implements Menu {
                 System.out.println("Invalid input. Please enter a valid number.");
                 scanner.nextLine(); // Consume the invalid input
             }
-        }  // Exit when choice is 6 (logout)
-     }
+        }
+    }
 
     /**
-     * Prompt pharmacist for id and password
-     * Call staffRepository to get pharmacist object
-     * If id is not a valid pharmacist id, or password does not match, pharmacist
+     * Log in the pharmacist to the system.
+     * The pharmacist will be prompted to enter their user ID and password. If the credentials are
+     * valid, the pharmacist is logged in, and the menu is displayed. If not, the system prompts the
+     * pharmacist to re-enter the credentials until they are correct.
      */
     public void login() {
         while (true) {
@@ -112,7 +85,11 @@ public class PharmacistMenu implements Menu {
     }
 
     /**
-     * Display pharmacist menu
+     * Display the main menu for the pharmacist.
+     * The menu includes options for viewing appointment outcome records, dispensing
+     * prescriptions, viewing medication inventory, submitting replenishment requests, updating
+     * the password, and logging out.
+     * If there are any medicines with low stock, a warning is displayed at the top of the menu.
      */
     public void displayMenu() {
         System.out.println("========== PHARMACIST MENU ============");
@@ -131,8 +108,11 @@ public class PharmacistMenu implements Menu {
     }
 
     /**
-     * redirect to view functions with corresponding responsibility
-     * @param choice
+     * Handle the pharmacist's menu choice.
+     * Each choice corresponds to a specific action, such as viewing appointment outcome records,
+     * dispensing prescriptions, or updating the password. The method redirects to the appropriate
+     * handler function based on the user's input.
+     * @param choice The selected menu option
      */
     public void handleChoice(int choice) {
         switch (choice) {
@@ -161,7 +141,8 @@ public class PharmacistMenu implements Menu {
     }
 
     /**
-     * Display all appointment outcome record with a pending prescription
+     * Display all appointment outcome records that have pending prescriptions.
+     * This allows the pharmacist to see which appointments require prescription dispensing.
      */
     public void viewAppointmentOutcomeRecord() {
         List<AppointmentOutcomeRecord> records = appointmentOutcomeRecordRepository.getAllPendingRecords();
@@ -174,12 +155,10 @@ public class PharmacistMenu implements Menu {
     }
 
     /**
-     * Dispense prescription status in appointment outcome record
-     * Prompt pharmacist for record id, and print out the detail of that id
-     * Then repeated prompt for prescription to dispense
-     * save through appointment outcome record, until user enter empty line
+     * Dispense pending prescriptions for an appointment.
+     * The pharmacist is prompted to enter an appointment ID, view the pending prescriptions,
+     * and mark them as dispensed. The pharmacist can dispense multiple prescriptions in one session.
      */
-    /**TODO: May print all appointment id existing first, then enter appointment id*/
     public void dispensePrescription() {
         int appointmentId = -1;
 
@@ -204,7 +183,6 @@ public class PharmacistMenu implements Menu {
             System.out.println("No pending prescriptions for this appointment.");
             return;
         }
-
 
         System.out.println("Pending prescriptions for appointment ID " + appointmentId + ":");
         for (Prescription prescription : pendingPrescriptions) {
@@ -262,7 +240,9 @@ public class PharmacistMenu implements Menu {
     }
 
     /**
-     * Display all medicine in inventory
+     * View the inventory of all medicines.
+     * The pharmacist can choose to view only low-stock medicines or all medicines.
+     * The inventory is displayed in a formatted table with medicines that are low on stock highlighted.
      */
     public void viewMedicationInventory() {
         System.out.println("Medicine inventory");
@@ -289,6 +269,10 @@ public class PharmacistMenu implements Menu {
         }
     }
 
+    /**
+     * Print a formatted table of medicines.
+     * @param medicines List of medicines to display
+     */
     private void printMedicineTable(List<Medicine> medicines) {
         // Print the table header with borders
         System.out.println("+----------------------+----------+---------------+---------------+");
@@ -311,8 +295,11 @@ public class PharmacistMenu implements Menu {
         // Print the table footer
         System.out.println("+----------------------+----------+---------------+---------------+");
     }
+
     /**
-     * Prompt pharmacist for list of medicine, submit request to request list for admin to see
+     * Submit a replenishment request for low stock medicines.
+     * The pharmacist can review the low stock medicines and select which ones to request
+     * for replenishment. The request is then submitted to the {@link MedicineRequestRepository}.
      */
     public void submitReplenishmentRequest() {
         System.out.println("Submit replenishment request");
@@ -360,7 +347,7 @@ public class PharmacistMenu implements Menu {
 
             // Add to the request set if valid
             medicines.add(medicineName.toLowerCase());
-            System.out.println("Medicine has been added to the request successfully.");// Normalize to avoid case sensitivity issues
+            System.out.println("Medicine has been added to the request successfully."); // Normalize to avoid case sensitivity issues
         }
 
         // Review and confirm the replenishment request
@@ -390,6 +377,11 @@ public class PharmacistMenu implements Menu {
         System.out.println("Replenishment request submitted.");
     }
 
+    /**
+     * Update the password for the logged-in pharmacist.
+     * The pharmacist is prompted to enter a new password, which is then updated in the
+     * {@link StaffRepository}.
+     */
     public void updatePassword() {
         String newPassword = "";
         while (newPassword.length() < 6 || newPassword.equals(pharmacist.getPassword())) {
