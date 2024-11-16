@@ -125,7 +125,7 @@ public class DoctorMenu implements Menu {
                 System.out.println("Invalid choice. Please try again.");
         }
     }
-
+    
     public void viewPatientMedicalRecords() {
         System.out.print("Enter patient's id: ");
 
