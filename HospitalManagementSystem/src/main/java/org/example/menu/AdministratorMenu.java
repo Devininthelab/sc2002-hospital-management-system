@@ -251,15 +251,14 @@ public class AdministratorMenu implements Menu {
         if (appointments == null || appointments.isEmpty()) {
             System.out.println("No scheduled appointments.");
         } else {
-            System.out.println("+----+------------+------------+------------+----------+-------------+");
-            System.out.printf("| %-2s | %-10s | %-10s | %-10s | %-8s | %-11s |\n",
+            System.out.println("+----+------------+------------+------------+----------+-----------+");
+            System.out.printf("| %-2s | %-10s | %-10s | %-10s | %-8s | %-9s |\n",
                     "ID", "Patient ID", "Doctor ID", "Date", "Timeslot", "Status");
-            System.out.println("+----+------------+------------+------------+----------+-------------+");
+            System.out.println("+----+------------+------------+------------+----------+-----------+");
 
 
             for (Appointment appointment : appointments) {
-
-                System.out.printf("| %-2d | %-10s | %-10s | %-10s | %-8d | %-11s |\n",
+                System.out.printf("| %-2d | %-10s | %-10s | %-10s | %-8d | %-18s |\n",
                         appointment.getId(),
                         appointment.getPatientId(),
                         appointment.getDoctorId(),
@@ -269,7 +268,7 @@ public class AdministratorMenu implements Menu {
             }
 
 
-            System.out.println("+----+------------+------------+------------+----------+-------------+");
+            System.out.println("+----+------------+------------+------------+----------+-----------+");
         }
     }
 
@@ -385,21 +384,28 @@ public class AdministratorMenu implements Menu {
             System.out.println("No medicines in inventory.");
         } else {
             System.out.println("Inventory Stock Levels:");
-            System.out.println("+----------------+------------+------------+------------+");
+            System.out.println("+----------------+------------+------------+-------------+");
             System.out.printf("| %-14s | %-10s | %-10s | %-10s |\n", "Name", "Stock", "Low Thresh", "High Thresh");
-            System.out.println("+----------------+------------+------------+------------+");
-
+            System.out.println("+----------------+------------+------------+-------------+");
 
             for (Medicine medicine : medicines) {
-                System.out.printf("| %-14s | %-10d | %-10d | %-10d |\n",
+                boolean isLowStock = medicine.getStockLevel() < medicine.getLowThreshold();
+
+
+                String rawStockLevel = String.valueOf(medicine.getStockLevel());
+                String stockLevel = isLowStock
+                        ? ColorText.getColoredText(rawStockLevel, ColorText.RED)
+                        : ColorText.getColoredText(rawStockLevel, ColorText.GREEN);
+
+
+                System.out.printf("| %-14s | %-19s | %-10d | %-11d |\n",
                         medicine.getName(),
-                        medicine.getStockLevel(),
+                        stockLevel,
                         medicine.getLowThreshold(),
                         medicine.getHighThreshold());
             }
 
-
-            System.out.println("+----------------+------------+------------+------------+");
+            System.out.println("+----------------+------------+------------+-------------+");
         }
     }
 
@@ -461,9 +467,23 @@ public class AdministratorMenu implements Menu {
             System.out.println("No low stock items.");
         } else {
             System.out.println("Low Stock Inventory Items:");
+            System.out.println("+----------------+------------+------------+-------------+");
+            System.out.printf("| %-14s | %-10s | %-10s | %-10s |\n", "Name", "Stock", "Low Thresh", "High Thresh");
+            System.out.println("+----------------+------------+------------+-------------+");
+
             for (Medicine medicine : lowStockMedicines) {
-                System.out.println(medicine.toString());
+
+                String rawStockLevel = String.valueOf(medicine.getStockLevel());
+                String stockLevel = ColorText.getColoredText(rawStockLevel, ColorText.RED);
+
+                System.out.printf("| %-14s | %-19s | %-10d | %-11d |\n",
+                        medicine.getName(),
+                        stockLevel,
+                        medicine.getLowThreshold(),
+                        medicine.getHighThreshold());
             }
+
+            System.out.println("+----------------+------------+------------+-------------+");
         }
     }
 
