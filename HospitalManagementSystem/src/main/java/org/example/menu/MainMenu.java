@@ -1,6 +1,9 @@
 package org.example.menu;
 
+import org.example.utils.ChangePage;
+
 import java.util.Scanner;
+
 
 public class MainMenu {
     private Scanner scanner = new Scanner(System.in);
@@ -10,25 +13,36 @@ public class MainMenu {
      * Start the user menu, should run first when the program starts
      */
     public void start() {
-        System.out.println("$$\\   $$\\ $$\\      $$\\  $$$$$$\\  \n" +
-                "$$ |  $$ |$$$\\    $$$ |$$  __$$\\ \n" +
-                "$$ |  $$ |$$$$\\  $$$$ |$$ /  \\__|\n" +
-                "$$$$$$$$ |$$\\$$\\$$ $$ |\\$$$$$$\\  \n" +
-                "$$  __$$ |$$ \\$$$  $$ | \\____$$\\ \n" +
-                "$$ |  $$ |$$ |\\$  /$$ |$$\\   $$ |\n" +
-                "$$ |  $$ |$$ | \\_/ $$ |\\$$$$$$  |\n" +
-                "\\__|  \\__|\\__|     \\__| \\______/ \n" +
-                "                                 \n" +
-                "                                 \n" +
-                "                                 ");
-
+        System.out.println("          _____                    _____                    _____          \n" +
+                "         /\\    \\                  /\\    \\                  /\\    \\         \n" +
+                "        /::\\____\\                /::\\____\\                /::\\    \\        \n" +
+                "       /:::/    /               /::::|   |               /::::\\    \\       \n" +
+                "      /:::/    /               /:::::|   |              /::::::\\    \\      \n" +
+                "     /:::/    /               /::::::|   |             /:::/\\:::\\    \\     \n" +
+                "    /:::/____/               /:::/|::|   |            /:::/__\\:::\\    \\    \n" +
+                "   /::::\\    \\              /:::/ |::|   |            \\:::\\   \\:::\\    \\   \n" +
+                "  /::::::\\    \\   _____    /:::/  |::|___|______    ___\\:::\\   \\:::\\    \\  \n" +
+                " /:::/\\:::\\    \\ /\\    \\  /:::/   |::::::::\\    \\  /\\   \\:::\\   \\:::\\    \\ \n" +
+                "/:::/  \\:::\\    /::\\____\\/:::/    |:::::::::\\____\\/::\\   \\:::\\   \\:::\\____\\\n" +
+                "\\::/    \\:::\\  /:::/    /\\::/    / ~~~~~/:::/    /\\:::\\   \\:::\\   \\::/    /\n" +
+                " \\/____/ \\:::\\/:::/    /  \\/____/      /:::/    /  \\:::\\   \\:::\\   \\/____/ \n" +
+                "          \\::::::/    /               /:::/    /    \\:::\\   \\:::\\    \\     \n" +
+                "           \\::::/    /               /:::/    /      \\:::\\   \\:::\\____\\    \n" +
+                "           /:::/    /               /:::/    /        \\:::\\  /:::/    /    \n" +
+                "          /:::/    /               /:::/    /          \\:::\\/:::/    /     \n" +
+                "         /:::/    /               /:::/    /            \\::::::/    /      \n" +
+                "        /:::/    /               /:::/    /              \\::::/    /       \n" +
+                "        \\::/    /                \\::/    /                \\::/    /        \n" +
+                "         \\/____/                  \\/____/                  \\/____/         \n" +
+                "                                                                           ");
 
 
         while (true) {
-            System.out.println("Welcome to the Hospital Management System" +
-                    "\n1. Log in" +
+            System.out.println("Welcome to the Hospital Management System");
+            System.out.println("==========================================");
+            System.out.println("\n1. Log in" +
                     "\n2. Quit");
-            System.out.print("Enter your choice: ");
+            System.out.print("Enter your choice (1-2): ");
 
             int choice = getValidatedInt();
 
@@ -37,6 +51,7 @@ public class MainMenu {
             }
 
             if (choice == 1) {
+                ChangePage.changePage();
                 roleRedirect();
             } else {
                 System.out.println("Invalid choice. Please try again.");
@@ -49,12 +64,14 @@ public class MainMenu {
      * Redirect to the corresponding menu based on the role chosen
      */
     public void roleRedirect() {
-        System.out.println("Log in using your id and password");
-        System.out.println("Enter your role:\n" +
-                "1. Patient\n" +
-                "2. Doctor\n" +
-                "3. Pharmacist\n" +
-                "4. Administrator");
+        System.out.println("===============================================");
+        System.out.println(
+                "\t\t1. Patient\n" +
+                "\t\t2. Doctor\n" +
+                "\t\t3. Pharmacist\n" +
+                "\t\t4. Administrator");
+        System.out.println("===============================================");
+        System.out.print("Please enter your role (1-4): ");
 
         int role = getValidatedInt();
 
