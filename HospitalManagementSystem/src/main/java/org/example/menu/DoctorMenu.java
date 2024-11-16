@@ -50,13 +50,20 @@ public class DoctorMenu implements Menu {
     public void start() {
 
         login();
-        int choice;
+        int choice = 0;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-            handleChoice(choice);
+            String input = scanner.nextLine();
+
+            if (input.matches("[1-9]")) {  // Check if input is a single digit between 1 and 9
+                choice = Integer.valueOf(input);
+                handleChoice(choice);
+                System.out.println("Press Enter to continue...");
+                scanner.nextLine();  // Wait for Enter key
+            } else {
+                System.out.println("Invalid input. Please enter a number between 1 and 9.");
+            }
         } while (choice != 9);  // Exit when logout is chosen
     }
 
@@ -64,14 +71,13 @@ public class DoctorMenu implements Menu {
         while (true) {
             System.out.print("Please enter your user id: ");
             String id = scanner.nextLine();
-            System.out.print("Please enter your password: ");
-            String password = scanner.nextLine();
-
             doctor = doctorRepository.getDoctorById(id);
             if (doctor == null) {
                 System.out.println("Doctor not found. Try again");
                 continue;
             }
+            System.out.print("Please enter your password: ");
+            String password = scanner.nextLine();
 
             if (doctor.getPassword().equals(password)) {
                 System.out.println("You are logged in.");
@@ -165,8 +171,7 @@ public class DoctorMenu implements Menu {
             System.out.println("3. Treatment plans");
             System.out.println("4. Exit");
 
-            choice = sc.nextInt();
-            sc.nextLine(); // Consume the leftover newline character
+            choice = Integer.valueOf(sc.nextLine());
 
             switch (choice) {
                 case 1:
@@ -236,8 +241,7 @@ public class DoctorMenu implements Menu {
         String date = scanner.nextLine();
         // TODO: print list of available timeslots and their corresponding numbers
         System.out.print("Timeslot (1/9am to 8/4pm): ");
-        int timeslot = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int timeslot = Integer.valueOf(scanner.nextLine());
         System.out.print("New availability status (Available, Busy): ");
         String availability = scanner.nextLine();
 
@@ -328,8 +332,7 @@ public class DoctorMenu implements Menu {
     public void completeAppointment() {
         System.out.println("Mark appointment as completed");
         System.out.print("Enter appointment's id: ");
-        int appointmentId = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int appointmentId = Integer.valueOf(scanner.nextLine());
 
         // Check if the appointment exists
         Appointment appointment = appointmentRepository.getAppointmentById(appointmentId);
@@ -377,8 +380,7 @@ public class DoctorMenu implements Menu {
             }
 
             System.out.print("Enter quantity: ");
-            int quantity = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            int quantity = Integer.valueOf(scanner.nextLine());
 
             prescriptionToAdd = new Prescription(appointmentId, prescriptionName, quantity);
             prescribePrescriptions.add(prescriptionToAdd);

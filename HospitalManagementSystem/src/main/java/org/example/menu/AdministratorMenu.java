@@ -34,15 +34,20 @@ public class AdministratorMenu implements Menu {
      */
     public void start() {
         login();
-        int choice;
+        int choice = 0;
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // remove input buffer
-            handleChoice(choice);
-            System.out.println("Press Enter to continue...");
-            scanner.nextLine();
+            String input = scanner.nextLine();
+
+            if (input.matches("-?\\d+")) {  // Check if input is a valid integer (including negative numbers)
+                choice = Integer.valueOf(input);
+                handleChoice(choice);
+                System.out.println("Press Enter to continue...");
+                scanner.nextLine();  // Wait for Enter key
+            } else {
+                System.out.println("Invalid input. Please enter a valid number.");
+            }
         } while (choice != 16);  // Exit when logout is chosen
     }
 
@@ -146,6 +151,7 @@ public class AdministratorMenu implements Menu {
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
+                break;
         }
     }
     // update appointment status is redundant (6)
@@ -171,8 +177,7 @@ public class AdministratorMenu implements Menu {
         System.out.println("Enter the staff member's gender: ");
         String gender = scanner.nextLine();
         System.out.println("Enter the staff member's age: ");
-        int age = scanner.nextInt();
-        scanner.nextLine(); // remove input buffer
+        int age = Integer.valueOf(scanner.nextLine());
 
         Staff staff = new Staff(id, name, role, gender, age, password);
         staffRepository.addStaffRepo(staff);
@@ -243,8 +248,7 @@ public class AdministratorMenu implements Menu {
      */
     public void updateAppointmentStatus() {
         System.out.println("Enter the appointment id: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // remove input buffer
+        int id = Integer.valueOf(scanner.nextLine());
         System.out.println("Enter the new status: ");
         String status = scanner.nextLine();
         Appointment appointment = appointmentRepository.getAppointmentById(id);
@@ -315,8 +319,7 @@ public class AdministratorMenu implements Menu {
      */
     public void viewAppointmentOutcomeRecord() {
         System.out.println("Enter the appointment id: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // remove input buffer
+        int id = Integer.valueOf(scanner.nextLine());
         AppointmentOutcomeRecord record = appointmentOutcomeRepository.getAppointmentOutcomeRecordById(id);
         if (record == null) {
             System.out.println("Appointment outcome record not found.");
@@ -333,14 +336,11 @@ public class AdministratorMenu implements Menu {
         System.out.println("Enter the medication name: ");
         String medicineName = scanner.nextLine();
         System.out.println("Enter current available stock: ");
-        int stockLevel = scanner.nextInt();
-        scanner.nextLine(); // remove input buffer
+        int stockLevel = Integer.valueOf(scanner.nextLine());
         System.out.println("Enter low threshold of the medicine: ");
-        int lowThreshold = scanner.nextInt();
-        scanner.nextLine(); // remove input buffer
+        int lowThreshold = Integer.valueOf(scanner.nextLine());
         System.out.println("Enter high threshold of the medicine: ");
-        int highThreshold = scanner.nextInt();
-        scanner.nextLine(); // remove input buffer
+        int highThreshold = Integer.valueOf(scanner.nextLine());
         Medicine medicine = new Medicine(medicineName, stockLevel, lowThreshold, highThreshold);
         medicineRepository.addMedicine(medicine);
     }
@@ -371,8 +371,7 @@ public class AdministratorMenu implements Menu {
         }
         else {
             System.out.println("Enter new quantity for " +  medicineName + ": ");
-            int quantity = scanner.nextInt();
-            scanner.nextLine(); // remove input buffer
+            int quantity = Integer.valueOf(scanner.nextLine());
             medicineRepository.updateStockLevel(medicineName, quantity);
         }
     }
@@ -404,8 +403,7 @@ public class AdministratorMenu implements Menu {
         }
         else {
             System.out.println("Enter the new low stock alert level: ");
-            int lowThreshold = scanner.nextInt();
-            scanner.nextLine(); // remove input buffer
+            int lowThreshold = Integer.valueOf(scanner.nextLine());
             medicineRepository.updateLowThreshold(medicineName, lowThreshold);
         }
     }
@@ -447,8 +445,7 @@ public class AdministratorMenu implements Menu {
      */
     public void approveReplenishmentRequest() {
         System.out.println("Enter the request id: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // remove input buffer
+        int id = Integer.valueOf(scanner.nextLine());
         MedicineRequest request = medicineRequestRepository.getMedicineRequestById(id);
         if (request == null) {
             System.out.println("Request not found.");

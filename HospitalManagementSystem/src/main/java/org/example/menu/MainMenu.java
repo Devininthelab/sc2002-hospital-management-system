@@ -10,12 +10,28 @@ public class MainMenu {
      * Start the user menu, should run first when the program starts
      */
     public void start() {
+        System.out.println("$$\\   $$\\ $$\\      $$\\  $$$$$$\\  \n" +
+                "$$ |  $$ |$$$\\    $$$ |$$  __$$\\ \n" +
+                "$$ |  $$ |$$$$\\  $$$$ |$$ /  \\__|\n" +
+                "$$$$$$$$ |$$\\$$\\$$ $$ |\\$$$$$$\\  \n" +
+                "$$  __$$ |$$ \\$$$  $$ | \\____$$\\ \n" +
+                "$$ |  $$ |$$ |\\$  /$$ |$$\\   $$ |\n" +
+                "$$ |  $$ |$$ | \\_/ $$ |\\$$$$$$  |\n" +
+                "\\__|  \\__|\\__|     \\__| \\______/ \n" +
+                "                                 \n" +
+                "                                 \n" +
+                "                                 ");
+
+
+
         while (true) {
-            System.out.println("Welcome" +
+            System.out.println("Welcome to the Hospital Management System" +
                     "\n1. Log in" +
                     "\n2. Quit");
             System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
+
+            int choice = getValidatedInt();
+
             if (choice == 2) {
                 break;
             }
@@ -39,7 +55,9 @@ public class MainMenu {
                 "2. Doctor\n" +
                 "3. Pharmacist\n" +
                 "4. Administrator");
-        int role = scanner.nextInt();
+
+        int role = getValidatedInt();
+
         String[] roles = {"PATIENT", "DOCTOR", "PHARMACIST", "ADMINISTRATOR"};
         if (role < 1 || role > 4) {
             System.out.println("Invalid choice. Please try again.");
@@ -47,5 +65,14 @@ public class MainMenu {
         }
         Menu menu = menuFactory.createMenu(roles[role - 1]); // Redirect to the corresponding menu
         menu.start();
+    }
+    private int getValidatedInt() {
+        while (!scanner.hasNextInt()) {
+            System.out.println("Warning: Invalid input. Please enter a number.");
+            scanner.nextLine(); // Consume the invalid input
+        }
+        int number = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+        return number;
     }
 }
