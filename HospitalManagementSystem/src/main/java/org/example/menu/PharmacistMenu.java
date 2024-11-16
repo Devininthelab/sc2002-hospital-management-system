@@ -290,22 +290,27 @@ public class PharmacistMenu implements Menu {
     }
 
     private void printMedicineTable(List<Medicine> medicines) {
-        System.out.printf("%-20s %-10s %-15s %-15s%n", "Medicine Name", "Stock", "Low Threshold", "High Threshold");
-        System.out.println("-----------------------------------------------------------------------");
+        // Print the table header with borders
+        System.out.println("+----------------------+----------+---------------+---------------+");
+        System.out.printf("| %-20s | %-8s | %-13s | %-13s |%n",
+                "Name", "Stock", "Low Thresh", "High Thresh");
+        System.out.println("+----------------------+----------+---------------+---------------+");
+
+        // Print each medicine with dynamic stock color
         for (Medicine medicine : medicines) {
             String stockColor = medicine.isLowStock() ? "\u001B[31m" : "\u001B[32m"; // Red for low stock, green otherwise
             String resetColor = "\u001B[0m"; // Reset to default color
 
-            System.out.printf(
-                    "%-20s " + stockColor + "%-10d" + resetColor + " %-15d %-15d%n",
+            System.out.printf("| %-20s | " + stockColor + "%-8d" + resetColor + " | %-13d | %-13d |%n",
                     medicine.getName(),
                     medicine.getStockLevel(),
                     medicine.getLowThreshold(),
-                    medicine.getHighThreshold()
-            );
+                    medicine.getHighThreshold());
         }
-    }
 
+        // Print the table footer
+        System.out.println("+----------------------+----------+---------------+---------------+");
+    }
     /**
      * Prompt pharmacist for list of medicine, submit request to request list for admin to see
      */
