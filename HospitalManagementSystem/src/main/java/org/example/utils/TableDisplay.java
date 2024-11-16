@@ -6,37 +6,39 @@ import java.util.List;
 
 public class TableDisplay {
     public static void printTimeslotOption() {
-        // Print header for timeslot options
-        System.out.println("\n=====================================");
-        System.out.println("|        Timeslot Options           |");
-        System.out.println("=====================================");
-
         // Print the transposed timeslot table
-        System.out.printf("| %-10s | %-20s |%n", "Timeslot", "Time");
+
         System.out.println("|------------|----------------------|\n");
 
-        System.out.printf("| %-10s | %-20s |%n", 1, "9:00-10:00");
-        System.out.printf("| %-10s | %-20s |%n", 2, "10:00-11:00");
-        System.out.printf("| %-10s | %-20s |%n", 3, "11:00-12:00");
-        System.out.printf("| %-10s | %-20s |%n", 4, "12:00-13:00");
-        System.out.printf("| %-10s | %-20s |%n", 5, "13:00-14:00");
-        System.out.printf("| %-10s | %-20s |%n", 6, "14:00-15:00");
-        System.out.printf("| %-10s | %-20s |%n", 7, "15:00-16:00");
-        System.out.printf("| %-10s | %-20s |%n", 8, "16:00-17:00");
+        // Print header for timeslot options
+        System.out.println("\n+------------+----------------------+\n");
+        System.out.printf("| %-10s | %-20s |%n", "Timeslot", "Time");
+        System.out.println("+------------+----------------------+");
 
-        System.out.println("=====================================");
+        // Print the transposed timeslot table
+        for (int i = 1; i <= 8; i++) {
+            System.out.printf("| %-10d | %-20s |%n", i, TimeslotToInt.timeslotToString(i));
+        }
+
+        System.out.println("+------------+----------------------+");
     }
 
-    public static void printAppointmentTable(List<Appointment> appointments) {
-        // Print header for the appointment table
-        System.out.println("\n================================================================================");
-        System.out.println("|                              Appointment Table                               |");
-        System.out.println("================================================================================");
+    public static void printAppointmentTable(String tableName, List<Appointment> appointments) {
+        int tableWidth = 84; // Width of the table border excluding the + and |
+        int leftPadding = (tableWidth - tableName.length()) / 2;
+        int rightPadding = tableWidth - leftPadding - tableName.length();
+        System.out.println("\n+====================================================================================+");
+        System.out.printf("|%s%s%s|%n", " ".repeat(leftPadding), tableName, " ".repeat(rightPadding));
+        // Print table header
+        System.out.println("+--------+--------------+--------------+--------------+-----------------+------------+");
+        System.out.println("|   ID   | Patient ID   | Doctor ID    | Date         | Timeslot        | Status     |");
+        System.out.println("+--------+--------------+--------------+--------------+-----------------+------------+");
 
-        // Print the column headers
-        System.out.printf("| %-6s | %-12s | %-12s | %-12s | %-15s | %-10s |%n",
-                "ID", "Patient ID", "Doctor ID", "Date", "Timeslot", "Status");
-        System.out.println("|--------|--------------|--------------|--------------|-----------------|------------|");
+        if (appointments.isEmpty()) {
+            System.out.println("|                               No appointments found!                               |");
+            System.out.println("+--------+--------------+--------------+--------------+-----------------+------------+");
+            return;
+        }
 
         // Print each appointment's details
         for (Appointment appointment : appointments) {
@@ -50,14 +52,14 @@ public class TableDisplay {
         }
 
         // Print table footer
-        System.out.println("================================================================================\n");
+        System.out.println("+--------+--------------+--------------+--------------+-----------------+------------+");
     }
 
     public static void printSchedule(String[][] schedule) {
         // Print table header
-        System.out.println("\n=================================================================================================================");
-        System.out.printf("| %-8s | %-11s | %-11s | %-11s | %-11s | %-11s | %-11s |%n", "Timeslot", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY");
-        System.out.println("=================================================================================================================");
+        System.out.println("\n+----------+-------------+-------------+-------------+-------------+-------------+-------------+");
+        System.out.println("| Timeslot |    MONDAY   |   TUESDAY   |  WEDNESDAY  |  THURSDAY   |   FRIDAY    |  SATURDAY   |");
+        System.out.println("+----------+-------------+-------------+-------------+-------------+-------------+-------------+");
 
         // Print each row of the schedule
         for (int i = 0; i < 8; i++) {
@@ -75,6 +77,8 @@ public class TableDisplay {
         }
 
         // Print table footer
-        System.out.println("=================================================================================================================");
+        System.out.println("+----------+-------------+-------------+-------------+-------------+-------------+-------------+");
     }
+
+
 }
