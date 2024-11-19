@@ -5,6 +5,13 @@ import org.example.repository.*;
 
 import java.util.*;
 
+/**
+ * PharmacistMenu is a menu for the pharmacist to interact with the system.
+ * <p>
+ * The menu allows the pharmacist to view appointment outcome records, dispense prescriptions,
+ * view medication inventory, submit replenishment requests, update the password, and log out.
+ * </p>
+ */
 public class PharmacistMenu implements Menu {
     private Scanner scanner;
     private StaffRepository staffRepository;
@@ -383,10 +390,19 @@ public class PharmacistMenu implements Menu {
      * {@link StaffRepository}.
      */
     public void updatePassword() {
-        System.out.print("Enter new password: ");
-        String newPassword = scanner.nextLine();
+        String newPassword = "";
+        while (newPassword.length() < 6 || newPassword.equals(pharmacist.getPassword())) {
+            System.out.print("Enter new password: ");
+            newPassword = scanner.nextLine();
+            if (newPassword.length() < 6) {
+                System.out.println("Password must be at least 6 characters.");
+            }
+            if (newPassword.equals(pharmacist.getPassword())) {
+                System.out.println("Same password. Please change to the new password.");
+            }
+        }
         pharmacist.setPassword(newPassword);
         staffRepository.updatePassword(pharmacist.getId(), newPassword);
-        System.out.println("Password updated.");
+        System.out.println("Password updated successfully.");
     }
 }

@@ -58,6 +58,13 @@ public class MenuFactory {
         }
     }
 
+
+    /**
+     * Creates a menu based on the role of the user
+     *
+     * @param role the role of the user
+     * @return the menu object
+     */
     public Menu createMenu(String role) {
         switch (role) {
             case "PATIENT":

@@ -27,6 +27,11 @@ public class MedicineRequestRepository {
         counter = highestId();
     }
 
+    /**
+     * Get the highest ID among all medicine requests.
+     *
+     * @return int The highest ID found in the medicine requests.
+     */
     public int highestId() {
         int highest = 0;
         for (MedicineRequest medicineRequest : medicineRequests) {
@@ -37,6 +42,11 @@ public class MedicineRequestRepository {
         return highest;
     }
 
+    /**
+     * Load medicine requests from a CSV file.
+     *
+     * Reads the CSV file, parses each line, and creates MedicineRequest objects to store in the repository.
+     */
     public void loadRequestsFromCsv() {
         InputStream inputStream;
         boolean loadedFromResources = false;
@@ -94,6 +104,11 @@ public class MedicineRequestRepository {
         //}
     }
 
+    /**
+     * Save all medicine requests to a CSV file.
+     *
+     * Iterates over the list of medicine requests and writes each to the CSV file.
+     */
     public void saveRequestsToCsv() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {
             bw.write("id,medicines,status");
@@ -109,6 +124,11 @@ public class MedicineRequestRepository {
         }
     }
 
+    /**
+     * Add a new medicine request to the repository.
+     *
+     * @param medicineNames The list of medicine names requested.
+     */
     public void addMedicineRequest(List<String> medicineNames) {
         MedicineRequest medicineRequest = new MedicineRequest(counter++, "SUBMITTED", medicineNames);
         medicineRequests.add(medicineRequest);
@@ -116,18 +136,19 @@ public class MedicineRequestRepository {
     }
 
     /**
-     * Get all medicine requests
-     * @return List of MedicineRequest
+     * Get all medicine requests from the repository.
+     *
+     * @return List<MedicineRequest> A list of all the medicine requests.
      */
     public List<MedicineRequest> getAllMedicineRequests() {
         return medicineRequests;
     }
 
-
     /**
-     * Get medicine request by id
-     * @param id
-     * @return MedicineRequest
+     * Get a medicine request by its unique ID.
+     *
+     * @param id The ID of the medicine request.
+     * @return MedicineRequest The medicine request with the specified ID, or null if not found.
      */
     public MedicineRequest getMedicineRequestById(int id) {
         for (MedicineRequest medicineRequest : medicineRequests) {
@@ -139,14 +160,15 @@ public class MedicineRequestRepository {
     }
 
     /**
-     * Approve a medicine request
-     * @param id
+     * Approve a medicine request by changing its status to "APPROVED".
+     *
+     * @param id The ID of the medicine request to approve.
      */
-     public void approveMedicineRequest(int id) {
-         MedicineRequest medicineRequest = getMedicineRequestById(id);
-         if (medicineRequest != null) {
-             medicineRequest.setStatus("APPROVED");
-             saveRequestsToCsv();
-         }
-     }
+    public void approveMedicineRequest(int id) {
+        MedicineRequest medicineRequest = getMedicineRequestById(id);
+        if (medicineRequest != null) {
+            medicineRequest.setStatus("APPROVED");
+            saveRequestsToCsv();
+        }
+    }
 }

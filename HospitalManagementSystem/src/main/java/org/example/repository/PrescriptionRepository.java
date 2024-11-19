@@ -17,8 +17,9 @@ public class PrescriptionRepository {
     }
 
     /**
-     * Load Prescriptions from CSV file
-     * Parse Prescription data from CSV file and store in Prescriptions list
+     * Load Prescriptions from CSV file.
+     *
+     * Parses prescription data from the CSV file and stores it in the prescriptions list.
      */
     public void loadPrescriptionsFromCSV() {
         InputStream inputStream;
@@ -91,7 +92,9 @@ public class PrescriptionRepository {
     }
 
     /**
-     * Overwrite the CSV file with the most up-to-date list of Prescriptions
+     * Overwrite the CSV file with the most up-to-date list of Prescriptions.
+     *
+     * Saves the current list of prescriptions to the CSV file.
      */
     public void savePrescriptionsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
@@ -107,6 +110,12 @@ public class PrescriptionRepository {
         }
     }
 
+    /**
+     * Get a list of prescriptions by their unique ID.
+     *
+     * @param prescriptionId The unique ID of the prescription.
+     * @return List<Prescription> A list of prescriptions matching the ID.
+     */
     public List<Prescription> getPrescriptionsById(int prescriptionId) {
         List<Prescription> result = new ArrayList<>();
         for (Prescription prescription : prescriptions) {
@@ -117,30 +126,39 @@ public class PrescriptionRepository {
         return result;
     }
 
-    // Additional method to add a new Prescription and save to CSV
+    /**
+     * Add a new prescription to the repository and save to CSV.
+     *
+     * @param prescription The prescription object to be added.
+     */
     public void addPrescription(Prescription prescription) {
         prescriptions.add(prescription);
         savePrescriptionsToCSV(); // Save changes after adding
     }
 
     /**
-     * Add a list of prescriptions to the repository
+     * Add a list of prescriptions to the repository and save to CSV.
+     *
+     * @param prescriptions A list of prescriptions to be added.
      */
     public void addPrescriptions(List<Prescription> prescriptions) {
         this.prescriptions.addAll(prescriptions);
         savePrescriptionsToCSV();
     }
 
-
-
     /**
-     * Read Prescriptions by name and id
-     * @return List of Prescriptions
+     * Retrieve a prescription by its ID and name.
+     *
+     * This method searches for a prescription in the repository based on its unique
+     * ID and name, and returns the matching prescription if found.
+     *
+     * @param prescriptionId The unique ID of the prescription.
+     * @param name The name of the prescription.
+     * @return Prescription The prescription matching the given ID and name, or null if not found.
      */
     public Prescription getPrescriptionsByNameAndId(int prescriptionId, String name) {
         for (Prescription Prescription : prescriptions) {
             if (Prescription.getId() == prescriptionId && Prescription.getName().equalsIgnoreCase(name)) {
-                // TODO: consider not return the object itself, but a copy of it
                 return Prescription;
             }
         }
@@ -148,10 +166,11 @@ public class PrescriptionRepository {
     }
 
     /**
-     * Create operations on Prescription
-     * @param id
-     * @param name
-     * @param quantity
+     * Add a new prescription to the repository by its attributes and save to CSV.
+     *
+     * @param id The unique ID of the prescription.
+     * @param name The name of the prescription.
+     * @param quantity The quantity of the prescription.
      */
     public void addPrescription(int id, String name, int quantity) {
         Prescription prescription = new Prescription(id, name, quantity);
@@ -160,9 +179,11 @@ public class PrescriptionRepository {
     }
 
     /**
-     * Update operations on Prescription status
-     * @param id is the same as appointment id and appointment outcome record id
-     * @param status can be PENDING, DISPENSED
+     * Update the status of an existing prescription.
+     *
+     * @param id The ID of the prescription to update.
+     * @param PrescriptionName The name of the prescription to update.
+     * @param status The new status to set (e.g., PENDING, DISPENSED).
      */
     public void updatePrescriptionStatus(int id, String PrescriptionName, String status) {
         Prescription Prescription = getPrescriptionsByNameAndId(id, PrescriptionName);
@@ -172,12 +193,25 @@ public class PrescriptionRepository {
         savePrescriptionsToCSV();
     }
 
+    /**
+     * Check if a prescription is valid in the repository based on its ID and name.
+     *
+     * @param appointmentId The appointment ID to check.
+     * @param presciptionName The prescription name to check.
+     * @return boolean True if the prescription exists in the repository, otherwise false.
+     */
     public boolean isValidPrescription(int appointmentId, String presciptionName) {
         return prescriptions.stream()
                 .anyMatch(prescription -> prescription.getId() == appointmentId
                         && prescription.getName().equalsIgnoreCase(presciptionName));
     }
 
+    /**
+     * Get a list of pending prescriptions for a specific appointment ID.
+     *
+     * @param id The appointment ID for which pending prescriptions are needed.
+     * @return List<Prescription> A list of prescriptions with a "PENDING" status.
+     */
     public List<Prescription> getPendingPrescriptions(int id) {
         List<Prescription> notDispensed = new ArrayList<>();
         for (Prescription prescription : prescriptions) {
