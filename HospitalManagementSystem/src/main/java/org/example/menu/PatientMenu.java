@@ -16,10 +16,16 @@ import java.util.*;
 import static org.example.utils.TableDisplay.*;
 
 /**
- * PatientMenu is responsible for managing the patient's interaction with the system
- * It allows the patient to view their medical record, update personal information,
- * view available appointment slots, schedule an appointment, reschedule an appointment,
- * cancel an appointment, view scheduled appointments, and view past appointment outcome records
+ * The PatientMenu class manages the interaction between the patient and the system.
+ * <p>
+ * Provides functionalities for:
+ * <ul>
+ *     <li>Viewing and updating medical records.</li>
+ *     <li>Scheduling, rescheduling, and canceling appointments.</li>
+ *     <li>Viewing available appointment slots and past appointment outcome records.</li>
+ *     <li>Updating personal information and changing passwords.</li>
+ * </ul>
+ * </p>
  */
 public class PatientMenu implements Menu {
 
@@ -30,6 +36,15 @@ public class PatientMenu implements Menu {
     private Patient patient;
     private Scanner scanner;
 
+    /**
+     * Constructor for initializing the PatientMenu.
+     *
+     * @param patientRepository                repository for managing patient data
+     * @param doctorRepository                 repository for managing doctor data
+     * @param appointmentRepository            repository for managing appointment data
+     * @param appointmentOutcomeRecordRepository repository for managing appointment outcome records
+     * @param scanner                          Scanner instance for user input
+     */
     public PatientMenu(PatientRepository patientRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository, Scanner scanner) {
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
@@ -39,8 +54,10 @@ public class PatientMenu implements Menu {
     }
 
     /**
-     * Start the user menu, should run first when the program starts
-     * Patient should log in first before accessing the menu
+     * Starts the patient menu.
+     * <p>
+     * Handles the login process and navigates the menu based on user input.
+     * </p>
      */
     public void start() {
         login();
@@ -63,8 +80,10 @@ public class PatientMenu implements Menu {
     }
 
     /**
-     * Log in to the system, a patient should enter their id and password UNTIL they are correct
-     * Patient state is stored in this phase
+     * Handles the login process for the patient.
+     * <p>
+     * Prompts the patient to enter their ID and password repeatedly until valid credentials are provided.
+     * </p>
      */
     public void login() {
         while (true) {
@@ -89,7 +108,7 @@ public class PatientMenu implements Menu {
     }
 
     /**
-     * Display the menu options for the patient
+     * Displays the patient menu options.
      */
     public void displayMenu() {
         System.out.println("==============PATIENT MENU==============");
@@ -106,11 +125,11 @@ public class PatientMenu implements Menu {
     }
 
     /**
-     * Handle the choice of the patient
-     * Wire the choice to the corresponding method
-     * @param choice the choice of the patient
+     * Handles the patient's menu choice and invokes the corresponding functionality.
+     *
+     * @param choice the patient's choice from the menu
      */
-    public void handleChoice(int choice) {// Cast User to Patient
+    public void handleChoice(int choice) {
         switch (choice) {
             case 1:
                 updatePassword();
@@ -149,9 +168,10 @@ public class PatientMenu implements Menu {
     }
 
     /**
-     * Change the password of the patient
-     * Patient should enter the new password
-     * Call the patientRepository to update the password
+     * Allows the patient to change their password.
+     * <p>
+     * The patient must provide a new password that meets the minimum length requirement.
+     * </p>
      */
     private void updatePassword() {
         while (true) {
@@ -165,15 +185,13 @@ public class PatientMenu implements Menu {
             }
             System.out.println("Password must be at least 6 characters long. Please try again.");
         }
-        patientRepository.updatePatientField(patient.getId(),"password",patient.getPassword());
-        System.out.println("Password changed successfully.");
     }
 
     /**
-     * View the medical record of the patient
-     * Call the medicalRecord method in the patient class
-     * Printing format: id, name, date of birth, gender, contact, blood type
-     * Past diagnosis, treatment and prescription
+     * Displays the medical record of the logged-in patient.
+     * <p>
+     * Includes ID, name, date of birth, gender, contact, blood type, diagnoses, treatments, and prescriptions.
+     * </p>
      */
     private void viewMedicalRecord() {
         System.out.println("Patient Medical Record:");
@@ -193,9 +211,10 @@ public class PatientMenu implements Menu {
     }
 
     /**
-     * Update the personal information of the patient
-     * Patient should be able to update their name, date of birth, and contact
-     * Call the patientRepository to update the patient's information
+     * Allows the patient to update their personal information.
+     * <p>
+     * Includes updating name, date of birth, contact, and gender.
+     * </p>
      */
     private void updatePersonalInformation() {
         System.out.println("You can only update: \n" +
@@ -212,7 +231,7 @@ public class PatientMenu implements Menu {
             switch (choice) {
                 case 1:
                     System.out.print("Please enter your name: ");
-                    String name = scanner.nextLine(); // Read full name (including spaces)
+                    String name = scanner.nextLine();
                     patientRepository.updatePatientField(patient.getId(), "name", name);
                     System.out.println("Name updated successfully.");
                     break;
@@ -224,7 +243,7 @@ public class PatientMenu implements Menu {
                     break;
                 case 3:
                     System.out.println("Please enter your contact: ");
-                    String contact = scanner.nextLine(); // Read full contact number (including spaces if needed)
+                    String contact = scanner.nextLine();
                     patientRepository.updatePatientField(patient.getId(), "contact", contact);
                     System.out.println("Contact updated successfully.");
                     break;
@@ -241,13 +260,13 @@ public class PatientMenu implements Menu {
                     System.out.println("Invalid choice. Please try again.");
                     break;
             }
-            // Prompt user for the next action
             if (choice != 5) {
                 System.out.println("Choose information to update: \n1. Name\n2. Date of Birth\n3. Contact\n4. Gender\n5. Finish");
                 choice = Integer.valueOf(scanner.nextLine());
             }
         } while (choice != 5);
     }
+
 
     /**
      * View available appointment slots for a doctor

@@ -28,6 +28,13 @@ public class MenuFactory {
     private final StaffRepository staffRepository = new StaffRepository(staffPath);
     private final DoctorRepository doctorRepository = new DoctorRepository(doctorDir, staffRepository);
 
+
+    /**
+     * Creates a menu based on the role of the user
+     *
+     * @param role the role of the user
+     * @return the menu object
+     */
     public Menu createMenu(String role) {
         switch (role) {
             case "PATIENT":
