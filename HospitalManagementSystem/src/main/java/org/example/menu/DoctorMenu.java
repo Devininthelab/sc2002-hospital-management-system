@@ -14,6 +14,18 @@ import java.util.stream.Collectors;
 
 import static org.example.utils.TableDisplay.*;
 
+/**
+ * The DoctorMenu class provides a menu-driven interface for doctors to manage their tasks.
+ * <p>
+ * Responsibilities include:
+ * <ul>
+ *     <li>Viewing and updating patient medical records.</li>
+ *     <li>Managing personal schedules and appointment requests.</li>
+ *     <li>Completing appointments and handling prescriptions.</li>
+ *     <li>Updating passwords and logging out.</li>
+ * </ul>
+ * </p>
+ */
 public class DoctorMenu implements Menu {
     private Scanner scanner;
     private Doctor doctor;
@@ -24,6 +36,17 @@ public class DoctorMenu implements Menu {
     private PrescriptionRepository prescriptionRepository;
     private AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
 
+    /**
+     * Constructor for initializing the DoctorMenu with required repositories and utilities.
+     *
+     * @param scanner                       the Scanner instance for user input
+     * @param patientRepository             repository for managing patient data
+     * @param staffRepository               repository for managing staff data
+     * @param doctorRepository              repository for managing doctor data
+     * @param appointmentRepository         repository for managing appointment data
+     * @param prescriptionRepository        repository for managing prescription data
+     * @param appointmentOutcomeRecordRepository repository for managing appointment outcome records
+     */
     public DoctorMenu(Scanner scanner, PatientRepository patientRepository,
                       StaffRepository staffRepository, DoctorRepository doctorRepository,
                       AppointmentRepository appointmentRepository, PrescriptionRepository prescriptionRepository,
@@ -37,6 +60,9 @@ public class DoctorMenu implements Menu {
         this.appointmentOutcomeRecordRepository = appointmentOutcomeRecordRepository;
     }
 
+    /**
+     * Displays the main menu options for the doctor.
+     */
     public void displayMenu() {
         System.out.println("=============DOCTOR MENU=============");
         System.out.println("1. View Patient Medical Records\n" +
@@ -50,8 +76,10 @@ public class DoctorMenu implements Menu {
                 "9. Logout");
     }
 
+    /**
+     * Starts the DoctorMenu by prompting the doctor to log in and navigate the menu.
+     */
     public void start() {
-
         login();
         int choice = 0;
         do {
@@ -59,7 +87,7 @@ public class DoctorMenu implements Menu {
             System.out.print("Enter your choice: ");
             String input = scanner.nextLine();
 
-            if (input.matches("[1-9]")) {  // Check if input is a single digit between 1 and 9
+            if (input.matches("[1-9]")) {  // Validate input as a single digit between 1 and 9
                 choice = Integer.valueOf(input);
                 handleChoice(choice);
             } else {
@@ -71,6 +99,12 @@ public class DoctorMenu implements Menu {
         } while (choice != 9);  // Exit when logout is chosen
     }
 
+    /**
+     * Handles the login process for the doctor.
+     * <p>
+     * The doctor is prompted to enter their user ID and password until the credentials are validated.
+     * </p>
+     */
     public void login() {
         while (true) {
             System.out.print("Please enter your user id: ");
@@ -92,6 +126,11 @@ public class DoctorMenu implements Menu {
         }
     }
 
+    /**
+     * Handles the doctor's menu choice and invokes the corresponding functionality.
+     *
+     * @param choice the menu option selected by the doctor
+     */
     public void handleChoice(int choice) {
         switch (choice) {
             case 1:
@@ -125,7 +164,13 @@ public class DoctorMenu implements Menu {
                 System.out.println("Invalid choice. Please try again.");
         }
     }
-    
+
+    /**
+     * Views the medical records of a specific patient.
+     * <p>
+     * The doctor is prompted to enter the patient's ID, and the medical records are displayed if found.
+     * </p>
+     */
     public void viewPatientMedicalRecords() {
         System.out.print("Enter patient's id: ");
 
@@ -157,6 +202,13 @@ public class DoctorMenu implements Menu {
         }
     }
 
+    /**
+     * Updates a patient's medical records.
+     * <p>
+     * The doctor is prompted to update diagnoses, treatment plans, or prescriptions
+     * for the selected patient. The updated data is saved to the repository.
+     * </p>
+     */
     public void updatePatientMedicalRecords() {
         System.out.print("Enter patient's id: ");
         String patientId = scanner.nextLine();
@@ -183,7 +235,6 @@ public class DoctorMenu implements Menu {
             switch (choice) {
                 case 1:
                     // Update Diagnoses
-
                     while (true) {
                         System.out.print("Add diagnosis (leave blank and press Enter to finish): ");
                         String diagnosis = scanner.nextLine();
@@ -193,7 +244,6 @@ public class DoctorMenu implements Menu {
                         patient.addDiagnose(diagnosis);
                         System.out.println("Diagnosis added: " + diagnosis);
                     }
-
                     break;
 
                 case 2:
@@ -208,6 +258,7 @@ public class DoctorMenu implements Menu {
                         }
                     } while (!treatmentPlan.isEmpty());
                     break;
+
                 case 3:
                     // Update Prescriptions
                     String prescription;
@@ -238,11 +289,24 @@ public class DoctorMenu implements Menu {
         System.out.println("Patient medical records updated successfully.");
     }
 
+    /**
+     * Displays the personal schedule of the logged-in doctor.
+     * <p>
+     * The method retrieves the doctor's schedule and displays it in a formatted manner.
+     * </p>
+     */
     public void viewPersonalSchedule() {
         System.out.println("Your personal schedule:");
         printSchedule(doctor.getSchedule());
     }
 
+    /**
+     * Allows the doctor to set their availability for appointments.
+     * <p>
+     * The doctor can specify a date, timeslot, and availability status (e.g., Available, Busy).
+     * If the selected timeslot is already booked, the schedule cannot be updated.
+     * </p>
+     */
     public void setAvailabilityForAppointments() {
         System.out.println("Choose a date and timeslot:");
         System.out.print("Date (Monday to Saturday): ");
@@ -262,8 +326,11 @@ public class DoctorMenu implements Menu {
     }
 
     /**
-     * Manage appointment requests for the doctor
-     * Doctor can accept or reject appointment requests
+     * Manages appointment requests for the doctor.
+     * <p>
+     * The doctor can view appointment requests and choose to accept or reject them.
+     * Accepted appointments are marked accordingly, and rejected appointments free up the doctor's schedule.
+     * </p>
      */
     public void manageAppointmentRequests() {
         System.out.println("===== Manage Appointment Requests =====");
@@ -273,10 +340,6 @@ public class DoctorMenu implements Menu {
         List<Appointment> requestedAppointments = appointmentRepository.getAppointmentsByDoctorId(doctor.getId()).stream()
                 .filter(appointment -> "REQUESTED".equals(appointment.getStatus()))
                 .collect(Collectors.toList());
-
-        //List<Appointment> requestedAppointments = doctor.getAppointments().stream()
-        //        .filter(appointment -> "REQUESTED".equals(appointment.getStatus()))
-        //        .collect(Collectors.toList());
 
         if (requestedAppointments.isEmpty()) {
             System.out.println("No appointment requests to manage.");
@@ -312,6 +375,12 @@ public class DoctorMenu implements Menu {
         System.out.println("Finished managing appointment requests.");
     }
 
+    /**
+     * Views upcoming appointments for the doctor.
+     * <p>
+     * Retrieves all accepted appointments for the doctor and displays them in a formatted table.
+     * </p>
+     */
     public void viewUpcomingAppointments() {
         List<Appointment> upcomingAppointments = appointmentRepository.getAppointmentsByDoctorId(doctor.getId()).stream()
                 .filter(appointment -> "ACCEPTED".equals(appointment.getStatus()))
@@ -320,9 +389,12 @@ public class DoctorMenu implements Menu {
     }
 
     /**
-     * Used to mark an appointment as completed. Doctor must fill out the outcome record
-     * before it can be marked as completed
-     * Input: Appointment id, date of completion, type of service
+     * Marks an appointment as completed and creates an outcome record.
+     * <p>
+     * The doctor is prompted to enter the appointment ID, services provided,
+     * prescriptions issued, and consultation notes. The appointment is then marked
+     * as completed in the system, and an outcome record is created.
+     * </p>
      */
     public void completeAppointment() {
         System.out.println("Mark appointment as completed");
@@ -388,6 +460,13 @@ public class DoctorMenu implements Menu {
         appointmentOutcomeRecordRepository.addAppointmentOutcomeRecord(record);
     }
 
+    /**
+     * Allows the doctor to update their password.
+     * <p>
+     * The doctor is prompted to enter a new password that meets a minimum length requirement.
+     * The password is then updated in the repository.
+     * </p>
+     */
     public void updatePassword() {
         while (true) {
             System.out.print("Enter new password: ");
@@ -400,10 +479,13 @@ public class DoctorMenu implements Menu {
             }
             System.out.println("Password must be at least 6 characters long. Please try again.");
         }
-
     }
 
+    /**
+     * Logs the doctor out of the system.
+     */
     public void logout() {
         System.out.println("Logging out...");
     }
+
 }

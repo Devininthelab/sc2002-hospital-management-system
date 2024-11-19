@@ -41,55 +41,112 @@ public class Appointment {
     }
 
     // Getters and Setters
+    /**
+     * Get the ID of the appointment
+     * @return the ID of the appointment
+     */
     public int getId() {
         return id;
     }
+    /**
+     * Get the ID of the appointment
+     */
     public String getPatientId() {
         return patientId;
     }
 
+    /**
+     * Set the ID of the appointment
+     * @param patientID the ID of the patient
+     */
     public void setPatientId(String patientID) {
         this.patientId = patientID;
     }
 
+    /**
+     * Get the ID of the doctor
+     * @return the ID of the doctor
+     */
     public String getDoctorId() {
         return doctorId;
     }
 
+    /**
+     * Set the ID of the doctor
+     * @param doctorID the ID of the doctor
+     */
     public void setDoctorId(String doctorID) {
         this.doctorId = doctorID;
     }
 
+    /**
+     * Get the date of the appointment
+     * @return the date of the appointment
+     */
     public String getDate() {
         return date;
     }
 
+    /**
+     * Set the date of the appointment
+     * @param date the date of the appointment
+     */
     public void setDate(String date) {
         this.date = date;
     }
 
+    /**
+     * Get the timeslot of the appointment
+     * @return the timeslot of the appointment
+     */
     public int getTimeslot() {
         return timeslot;
     }
 
+    /**
+     * Set the timeslot of the appointment
+     * @param timeslot the timeslot of the appointment
+     */
     public void setTimeslot(int timeslot) {
         this.timeslot = timeslot;
     }
 
+    /**
+     * Get the status of the appointment
+     * @return the status of the appointment
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * Set the status of the appointment
+     * @param status the status of the appointment
+     */
     public void setStatus(String status) {
         this.status = status;
     }
+
+    /**
+     * Get the outcome of the appointment
+     * @return the outcome of the appointment
+     */
     public AppointmentOutcomeRecord getAppointmentOutcomeRecord() {
         return outcome;
     }
+
+    /**
+     * Set the outcome of the appointment
+     * @param outcome the outcome of the appointment
+     */
     public void setAppointmentOutcomeRecord(AppointmentOutcomeRecord outcome) {
         this.outcome = outcome;
     }
 
+    /**
+     * Get the outcome of the appointment
+     * @return the outcome of the appointment
+     */
     @Override
     public String toString() {
         return "ID: " + id +

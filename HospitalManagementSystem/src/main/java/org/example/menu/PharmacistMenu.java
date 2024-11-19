@@ -5,6 +5,13 @@ import org.example.repository.*;
 
 import java.util.*;
 
+/**
+ * PharmacistMenu is a menu for the pharmacist to interact with the system.
+ * <p>
+ * The menu allows the pharmacist to view appointment outcome records, dispense prescriptions,
+ * view medication inventory, submit replenishment requests, update the password, and log out.
+ * </p>
+ */
 public class PharmacistMenu implements Menu {
     private Scanner scanner;
     private StaffRepository staffRepository;

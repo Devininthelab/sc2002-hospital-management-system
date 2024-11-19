@@ -8,6 +8,18 @@ import org.example.utils.ColorText;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The AdministratorMenu class provides the menu-driven interface for an administrator
+ * to manage staff, appointments, and inventory within the system.
+ * <p>
+ * Responsibilities include:
+ * <ul>
+ *     <li>Staff management: adding, updating, removing, and viewing staff members.</li>
+ *     <li>Appointment management: viewing scheduled appointments and outcome records.</li>
+ *     <li>Inventory management: managing medicines, stock levels, and replenishment requests.</li>
+ * </ul>
+ * </p>
+ */
 public class AdministratorMenu implements Menu {
     private StaffRepository staffRepository;
     private AppointmentRepository appointmentRepository;
@@ -18,6 +30,17 @@ public class AdministratorMenu implements Menu {
     private Administrator administrator;
     private Scanner scanner;
 
+    /**
+     * Constructor to initialize the AdministratorMenu with the necessary repositories and scanner.
+     *
+     * @param staffRepository             the repository for managing staff data
+     * @param appointmentRepository       the repository for managing appointment data
+     * @param appointmentOutcomeRepository the repository for managing appointment outcome records
+     * @param prescriptionRepository      the repository for managing prescription data
+     * @param medicineRepository          the repository for managing medicine data
+     * @param medicineRequestRepository   the repository for managing medicine replenishment requests
+     * @param scanner                     the Scanner instance for user input
+     */
     public AdministratorMenu(StaffRepository staffRepository, AppointmentRepository appointmentRepository,
                              AppointmentOutcomeRecordRepository appointmentOutcomeRepository,
                              PrescriptionRepository prescriptionRepository, MedicineRepository medicineRepository,
@@ -163,9 +186,13 @@ public class AdministratorMenu implements Menu {
 
 
     /**
-     * Add a new staff member to the system
+     * Adds a new staff member to the system.
+     * <p>
+     * Prompts the administrator to enter the staff member's details such as ID, name, role,
+     * password, gender, and age, and then adds the staff member to the system repository.
+     * </p>
      */
-    public void addStaff(){
+    public void addStaff() {
         System.out.print("Enter the staff member's id: ");
         String id = scanner.nextLine();
         System.out.print("Enter the staff member's name: ");
@@ -184,7 +211,12 @@ public class AdministratorMenu implements Menu {
     }
 
     /**
-     * Update an existing staff member's information
+     * Updates the information of an existing staff member in the system.
+     * <p>
+     * Prompts the administrator to enter the staff member's ID, the field to update
+     * (e.g., name, role, password, gender, or age), and the new value. The system
+     * repository is then updated with the new information.
+     * </p>
      */
     public void updateStaff() {
         System.out.print("Enter the staff member's id: ");
@@ -196,9 +228,13 @@ public class AdministratorMenu implements Menu {
         staffRepository.updateStaffRepo(id, field, newValue);
     }
 
-
     /**
-     * Remove a staff member from the system
+     * Removes a staff member from the system.
+     * <p>
+     * Prompts the administrator to enter the staff member's ID. If the ID matches
+     * the administrator's own ID, the removal is not allowed. Otherwise, the staff
+     * member is removed from the system repository.
+     * </p>
      */
     public void removeStaff() {
         System.out.print("Enter the staff member's id: ");
@@ -210,6 +246,21 @@ public class AdministratorMenu implements Menu {
         staffRepository.removeStaffRepo(id);
     }
 
+    /**
+     * Sorts a list of staff members based on the specified attribute.
+     * <p>
+     * Attributes for sorting include:
+     * <ul>
+     *     <li>Role</li>
+     *     <li>Gender</li>
+     *     <li>Age</li>
+     * </ul>
+     * </p>
+     *
+     * @param staffList the list of staff members to sort
+     * @param displayBy the attribute to sort by (e.g., Role, Gender, Age)
+     * @return the sorted list of staff members
+     */
     private List<Staff> sortStaffList(List<Staff> staffList, String displayBy) {
         switch (displayBy) {
             case "Role":
@@ -227,9 +278,12 @@ public class AdministratorMenu implements Menu {
         return staffList;
     }
 
-
     /**
-     * View the list of staff members
+     * Displays the list of staff members in the system.
+     * <p>
+     * The administrator is prompted to optionally sort the staff list by Role, Gender,
+     * or Age. The staff members are then displayed in a formatted table.
+     * </p>
      */
     public void viewStaffList() {
         List<Staff> staffList = staffRepository.getAllStaffs();
@@ -259,10 +313,12 @@ public class AdministratorMenu implements Menu {
         }
     }
 
-
     /**
-     * View the list of scheduled appointments of all patients
-     * Display the details and status of each appointment
+     * Displays the list of scheduled appointments for all patients.
+     * <p>
+     * Includes details such as appointment ID, patient ID, doctor ID, date, timeslot,
+     * and status, displayed in a formatted table.
+     * </p>
      */
     public void viewScheduledAppointments() {
         List<Appointment> appointments = appointmentRepository.getAllAppointments();
@@ -275,7 +331,6 @@ public class AdministratorMenu implements Menu {
                     "ID", "Patient ID", "Doctor ID", "Date", "Timeslot", "Status");
             System.out.println("+----+------------+------------+------------+----------+-----------+");
 
-
             for (Appointment appointment : appointments) {
                 System.out.printf("| %-2d | %-10s | %-10s | %-10s | %-8d | %-18s |\n",
                         appointment.getId(),
@@ -286,85 +341,16 @@ public class AdministratorMenu implements Menu {
                         ColorText.getStatusWithColor(appointment.getStatus()));
             }
 
-
             System.out.println("+----+------------+------------+------------+----------+-----------+");
         }
     }
 
-
     /**
-     * Update the status of an appointment
-     */
-//    public void updateAppointmentStatus() {
-//        System.out.print("Enter the appointment id: ");
-//        int id = Integer.valueOf(scanner.nextLine());
-//        System.out.print("Enter the new status: ");
-//        String status = scanner.nextLine();
-//        Appointment appointment = appointmentRepository.getAppointmentById(id);
-//        if (appointment == null) {
-//            System.out.println("Appointment not found.");
-//        }
-//        else {
-//            appointmentRepository.updateAppointmentStatus(id, status);
-//        }
-//    }
-
-//    /**
-//     * Record the outcome of an appointment
-//     * NEED TO CONFIRM THE LOGIC
-//     */
-//    public void recordAppointmentOutcome() {
-//        System.out.println("Enter the appointment id: ");
-//        int id = scanner.nextInt();
-//        scanner.nextLine(); // remove input buffer
-//        Appointment appointment = appointmentRepository.getAppointmentById(id);
-//        // validation check for appointment: If that appointment exists
-//        if (appointment == null) {
-//            System.out.println("Appointment not found.");
-//        }
-//        else {
-//            System.out.println("Enter the date of the appointment outcome(DD-MM-YYYY): ");
-//            String date = scanner.nextLine();
-//            System.out.println("Enter consultation notes: ");
-//            String consultationNotes = scanner.nextLine();
-//
-//            // Input Services used
-//            List<String> typeOfService = new ArrayList<>();
-//            while (true) {
-//                System.out.println("Enter the type of service (Enter -1 to stop): ");
-//                String input = scanner.nextLine();
-//                if (input.equals("-1")) {
-//                    break;
-//                }
-//                typeOfService.add(input);
-//            }
-//
-//            // Input prescriptions
-//            List<Prescription> prescriptions = new ArrayList<>();
-//            while (true) {
-//                System.out.println("Enter the medication name (Enter -1 to stop): ");
-//                String medicationName = scanner.nextLine();
-//                if (medicationName.equals("-1")) {
-//                    break;
-//                }
-//                System.out.println("Enter the dosage: ");
-//                int dosage = scanner.nextInt();
-//                scanner.nextLine(); // remove input buffer
-//                System.out.println("Enter the status: ");
-//                String status = scanner.nextLine();
-//                Prescription prescription = new Prescription(id, medicationName, dosage, status);
-//                prescriptions.add(prescription);
-//            }
-//
-//            AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
-//            appointmentOutcomeRepository.addAppointmentOutcomeRecord(record);
-//            prescriptionRepository.addPrescriptions(prescriptions);
-//        }
-//    }
-
-
-    /**
-     * View the outcome record of an appointment
+     * Displays the outcome record of a specific appointment.
+     * <p>
+     * Prompts the administrator to enter the appointment ID, retrieves the
+     * corresponding outcome record, and displays it if found.
+     * </p>
      */
     public void viewAppointmentOutcomeRecord() {
         System.out.print("Enter the appointment id: ");
@@ -372,11 +358,11 @@ public class AdministratorMenu implements Menu {
         AppointmentOutcomeRecord record = appointmentOutcomeRepository.getAppointmentOutcomeRecordById(id);
         if (record == null) {
             System.out.println("Appointment outcome record not found.");
-        }
-        else {
+        } else {
             System.out.println(record.toString());
         }
     }
+
 
     /**
      * Add a new medicine to the inventory
@@ -395,7 +381,12 @@ public class AdministratorMenu implements Menu {
     }
 
     /**
-     * View All Medicines in Inventory
+     * Displays all medicines currently in the inventory.
+     * <p>
+     * The method retrieves and lists all medicines, including their name, stock level,
+     * low stock threshold, and high stock threshold in a formatted table.
+     * Medicines with stock levels below their low threshold are highlighted.
+     * </p>
      */
     public void viewMedicines() {
         List<Medicine> medicines = medicineRepository.getAllMedicines();
@@ -409,13 +400,10 @@ public class AdministratorMenu implements Menu {
 
             for (Medicine medicine : medicines) {
                 boolean isLowStock = medicine.getStockLevel() < medicine.getLowThreshold();
-
-
                 String rawStockLevel = String.valueOf(medicine.getStockLevel());
                 String stockLevel = isLowStock
                         ? ColorText.getColoredText(rawStockLevel, ColorText.RED)
                         : ColorText.getColoredText(rawStockLevel, ColorText.GREEN);
-
 
                 System.out.printf("| %-14s | %-19s | %-10d | %-11d |\n",
                         medicine.getName(),
@@ -429,56 +417,70 @@ public class AdministratorMenu implements Menu {
     }
 
     /**
-     * Update the stock levels of a medication in the inventory
+     * Updates the stock level of a specific medication in the inventory.
+     * <p>
+     * The administrator is prompted to provide the name of the medication
+     * and its new quantity. If the medication does not exist, an error
+     * message is displayed.
+     * </p>
      */
     public void updateInventoryStockLevels() {
         System.out.print("Enter the medication name: ");
         String medicineName = scanner.nextLine();
-        if(!medicineRepository.medicineExists(medicineName)) {
+        if (!medicineRepository.medicineExists(medicineName)) {
             System.out.println("Medicine not found. Please try again.");
-        }
-        else {
-            System.out.print("Enter new quantity for " +  medicineName + ": ");
+        } else {
+            System.out.print("Enter new quantity for " + medicineName + ": ");
             int quantity = Integer.valueOf(scanner.nextLine());
             medicineRepository.updateStockLevel(medicineName, quantity);
         }
     }
 
     /**
-     * Remove a medication from the inventory
+     * Removes a medication from the inventory.
+     * <p>
+     * The administrator is prompted to provide the name of the medication.
+     * If the medication exists, it is removed from the inventory. Otherwise,
+     * an error message is displayed.
+     * </p>
      */
     public void removeMedicationFromInventory() {
         System.out.print("Enter the medication name: ");
         String medicineName = scanner.nextLine();
-        if(!medicineRepository.medicineExists(medicineName)) {
+        if (!medicineRepository.medicineExists(medicineName)) {
             System.out.println("Medicine not found. Please try again.");
-        }
-        else {
+        } else {
             medicineRepository.removeMedicine(medicineName);
             System.out.println("Medicine " + medicineName + " removed from inventory.");
         }
     }
 
-
     /**
-     * Set the low stock alert level for a medication
+     * Sets a low stock alert level for a specific medication.
+     * <p>
+     * The administrator is prompted to provide the name of the medication
+     * and a new low stock threshold. If the medication does not exist, an
+     * error message is displayed.
+     * </p>
      */
     public void setLowStockAlertLevel() {
         System.out.print("Enter the medication name: ");
         String medicineName = scanner.nextLine();
-        if(!medicineRepository.medicineExists(medicineName)) {
+        if (!medicineRepository.medicineExists(medicineName)) {
             System.out.println("Medicine not found. Please try again.");
-        }
-        else {
+        } else {
             System.out.println("Enter the new low stock alert level: ");
             int lowThreshold = Integer.valueOf(scanner.nextLine());
             medicineRepository.updateLowThreshold(medicineName, lowThreshold);
         }
     }
 
-
     /**
-     * View the list of medications with low stock
+     * Displays a list of medications with stock levels below their low threshold.
+     * <p>
+     * The method retrieves and lists all low stock medications, including their name,
+     * stock level, low stock threshold, and high stock threshold in a formatted table.
+     * </p>
      */
     public void viewLowStockInventoryItems() {
         List<Medicine> lowStockMedicines = medicineRepository.getLowStockMedicines();
@@ -491,7 +493,6 @@ public class AdministratorMenu implements Menu {
             System.out.println("+----------------+------------+------------+-------------+");
 
             for (Medicine medicine : lowStockMedicines) {
-
                 String rawStockLevel = String.valueOf(medicine.getStockLevel());
                 String stockLevel = ColorText.getColoredText(rawStockLevel, ColorText.RED);
 
@@ -507,7 +508,11 @@ public class AdministratorMenu implements Menu {
     }
 
     /**
-     * Show all replenishment requests for medications
+     * Displays all replenishment requests for medications.
+     * <p>
+     * The method retrieves and lists all replenishment requests, including their ID,
+     * the medicines requested, and their status in a formatted table.
+     * </p>
      */
     public void showAllReplenishmentRequests() {
         List<MedicineRequest> requests = medicineRequestRepository.getAllMedicineRequests();
@@ -515,11 +520,9 @@ public class AdministratorMenu implements Menu {
             System.out.println("No replenishment requests.");
         } else {
             System.out.println("Replenishment Requests:");
-            System.out.println("Replenishment Requests:");
             System.out.println("+----+--------------------------+------------+");
             System.out.printf("| %-2s | %-24s | %-10s |\n", "ID", "Medicines", "Status");
             System.out.println("+----+--------------------------+------------+");
-
 
             for (MedicineRequest request : requests) {
                 String medicines = String.join(", ", request.getMedicines());
@@ -538,9 +541,14 @@ public class AdministratorMenu implements Menu {
         }
     }
 
-
     /**
-     * Approve a replenishment request for a medication
+     * Approves a replenishment request for a specific medication.
+     * <p>
+     * The administrator is prompted to provide the request ID. If the request exists,
+     * it is approved, and the inventory stock levels for the requested medicines are
+     * updated to their high threshold. If the request does not exist, an error message
+     * is displayed.
+     * </p>
      */
     public void approveReplenishmentRequest() {
         System.out.print("Enter the request id: ");
@@ -548,11 +556,10 @@ public class AdministratorMenu implements Menu {
         MedicineRequest request = medicineRequestRepository.getMedicineRequestById(id);
         if (request == null) {
             System.out.println("Request not found.");
-        }
-        else {
+        } else {
             List<String> medicineNames = request.getMedicines();
             medicineRequestRepository.approveMedicineRequest(id);
-            // update in Medicine List
+            // Update in Medicine List
             for (String medicineName : medicineNames) {
                 Medicine medicine = medicineRepository.getMedicine(medicineName);
                 if (medicine != null) {
@@ -562,5 +569,6 @@ public class AdministratorMenu implements Menu {
             System.out.println("Request approved.");
         }
     }
+
 
 }
