@@ -1,3 +1,16 @@
+# Set up instructions
+This project is developed in Java 21 and is built using Maven
+
+To generate the JAR executable in IntelliJ
+- Go to Project Structure > Project Settings > Artifacts
+- Add an artifact, choosing Main as the main class and resources as the folder to store the MANIFEST
+- Go to Build > Build Artifacts > Build/Rebuild
+
+The JAR will appear usually in some folder named out, using the terminal, navigate to that directory then run the command
+```
+java -jar HospitalManagementSystem.jar
+```
+
 # If it's your first time to download this project:
 
 (Ensure you have git installed on your machine with SSH setup), or you can clone by HTTPS
