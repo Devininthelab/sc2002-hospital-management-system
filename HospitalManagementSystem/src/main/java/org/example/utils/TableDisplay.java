@@ -4,7 +4,13 @@ import org.example.entity.Appointment;
 
 import java.util.List;
 
+/**
+ * Utility class to display tables
+ */
 public class TableDisplay {
+    /**
+     * Print the timeslot options
+     */
     public static void printTimeslotOption() {
         // Print header for timeslot options
         System.out.println("+------------+----------------------+");
@@ -19,6 +25,11 @@ public class TableDisplay {
         System.out.println("+------------+----------------------+");
     }
 
+    /**
+     * Print the appointment table
+     * @param tableName the name of the table
+     * @param appointments the list of appointments
+     */
     public static void printAppointmentTable(String tableName, List<Appointment> appointments) {
         int tableWidth = 84; // Width of the table border excluding the + and |
         int leftPadding = (tableWidth - tableName.length()) / 2;
@@ -51,6 +62,10 @@ public class TableDisplay {
         System.out.println("+--------+--------------+--------------+--------------+-----------------+------------+");
     }
 
+    /**
+     * Print the schedule table
+     * @param schedule the schedule to print
+     */
     public static void printSchedule(String[][] schedule) {
         // Print table header
         System.out.println("\n+----------+-------------+-------------+-------------+-------------+-------------+-------------+");

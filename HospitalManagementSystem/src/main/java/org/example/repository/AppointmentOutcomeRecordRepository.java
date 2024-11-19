@@ -7,11 +7,21 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>Repository class for AppointmentOutcomeRecord objects</p>
+ * <p>This class is responsible for loading and saving records to a CSV file and providing methods to query the records</p>
+ * <p>Record also contains a list of prescriptions, which uses the PrescriptionRepository</p>
+ */
 public class AppointmentOutcomeRecordRepository {
     private List<AppointmentOutcomeRecord> records;
     private PrescriptionRepository prescriptionRepository;
     private String filePath;
 
+    /**
+     * Constructor
+     * @param filePath WRITABLE Path to the CSV file
+     * @param prescriptionRepository PrescriptionRepository object
+     */
     public AppointmentOutcomeRecordRepository(String filePath, PrescriptionRepository prescriptionRepository) {
         // Load prescriptions and records from their respective CSV files
         records = new ArrayList<>();
@@ -21,7 +31,11 @@ public class AppointmentOutcomeRecordRepository {
     }
 
     /**
-     * Load records from CSV file
+     * <p>Load records from CSV file</p>
+     * <p>This method is called by the constructor</p>
+     * <p>Before reading the files line by line, it first checks if the file exists in the writable directory</p>
+     * <p>If not, it loads the file from the resources directory and saves it to the writable directory</p>
+     * <p>Exceptions are caught and printed to the console</p>
      */
     private void loadRecordsFromCSV() {
         InputStream inputStream;
@@ -105,7 +119,12 @@ public class AppointmentOutcomeRecordRepository {
         //}
     }
 
-        // Method to save a record to CSV
+    /**
+     * Save records to CSV file
+     * This method is called whenever a record is added or updated
+     * It writes all records to the file, overwriting the previous content
+     * Exceptions are caught and printed to the console
+     */
     public void saveRecordsToCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write header
@@ -122,14 +141,17 @@ public class AppointmentOutcomeRecordRepository {
         }
     }
 
-
+    /**
+     * Get all records
+     * @return List of AppointmentOutcomeRecord objects
+     */
     public List<AppointmentOutcomeRecord> getAllPendingRecords() {
         return records;
     }
 
     /**
      * Query the records for matching id
-     * @param id
+     * @param id Appointment ID
      * @return AppointmentOutcomeRecord object, or null if
      */
     public AppointmentOutcomeRecord getRecordById(int id) {
@@ -141,13 +163,19 @@ public class AppointmentOutcomeRecordRepository {
         return null; // If not found
     }
 
+    /**
+     * Add a new record to the repository
+     * @param record AppointmentOutcomeRecord object
+     */
     public void addAppointmentOutcomeRecord(AppointmentOutcomeRecord record) {
         records.add(record);
         saveRecordsToCSV();
     }
 
     /**
-     * Get appointment outcome record by appointment ID
+     * Read record by appointment ID
+     * @param appointmentId Appointment ID
+     * @return AppointmentOutcomeRecord object, or null if not found
      */
     public AppointmentOutcomeRecord getAppointmentOutcomeRecordById(int appointmentId) {
         for (AppointmentOutcomeRecord record : records) {

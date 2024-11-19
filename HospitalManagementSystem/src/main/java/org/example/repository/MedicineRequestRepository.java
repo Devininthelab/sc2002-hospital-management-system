@@ -9,17 +9,20 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Medicine Request Repository
- * <p>Handles the CRUD operations of Medicine Requests</p>
+ * MedicineRequestRepository is responsible for managing the requests for medicines.
+ * It reads from the medicine_request database and updates the status of medicine requests.
+ * It also provides methods to add a new medicine request, get all medicine requests, get a medicine request by ID,
+ * and approve a medicine request.
  */
 public class MedicineRequestRepository {
-    /**
-     * counter pointing to the highest current id
-     */
     private static int counter;
     private List<MedicineRequest> medicineRequests;
     private String csvPath;
 
+    /**
+     * Constructor to create a MedicineRequestRepository.
+     * @param filePath The writable path to the medicine request database.
+     */
     public MedicineRequestRepository(String filePath) {
         this.csvPath = filePath;
         medicineRequests = new ArrayList<>();
@@ -29,7 +32,7 @@ public class MedicineRequestRepository {
 
     /**
      * Get the highest ID among all medicine requests.
-     *
+     * Used to generate a new unique ID for a new medicine request.
      * @return int The highest ID found in the medicine requests.
      */
     public int highestId() {
@@ -44,7 +47,8 @@ public class MedicineRequestRepository {
 
     /**
      * Load medicine requests from a CSV file.
-     *
+     * If the file exists in the writable path, it will load from the file.
+     * If the file does not exist, it will load from the resources folder.
      * Reads the CSV file, parses each line, and creates MedicineRequest objects to store in the repository.
      */
     public void loadRequestsFromCsv() {
@@ -106,7 +110,7 @@ public class MedicineRequestRepository {
 
     /**
      * Save all medicine requests to a CSV file.
-     *
+     * Writes the medicine requests to the writable path.
      * Iterates over the list of medicine requests and writes each to the CSV file.
      */
     public void saveRequestsToCsv() {
@@ -126,7 +130,7 @@ public class MedicineRequestRepository {
 
     /**
      * Add a new medicine request to the repository.
-     *
+     * With auto-generated ID and status "SUBMITTED".
      * @param medicineNames The list of medicine names requested.
      */
     public void addMedicineRequest(List<String> medicineNames) {
@@ -137,7 +141,7 @@ public class MedicineRequestRepository {
 
     /**
      * Get all medicine requests from the repository.
-     *
+     * Used to display all medicine requests to the admin.
      * @return List<MedicineRequest> A list of all the medicine requests.
      */
     public List<MedicineRequest> getAllMedicineRequests() {
@@ -146,7 +150,7 @@ public class MedicineRequestRepository {
 
     /**
      * Get a medicine request by its unique ID.
-     *
+     * Used to retrieve a specific medicine request for viewing or approval.
      * @param id The ID of the medicine request.
      * @return MedicineRequest The medicine request with the specified ID, or null if not found.
      */
@@ -161,7 +165,7 @@ public class MedicineRequestRepository {
 
     /**
      * Approve a medicine request by changing its status to "APPROVED".
-     *
+     * Saves the updated status to the CSV file.
      * @param id The ID of the medicine request to approve.
      */
     public void approveMedicineRequest(int id) {

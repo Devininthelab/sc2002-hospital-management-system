@@ -5,12 +5,10 @@ import org.example.utils.TimeslotToInt;
 import java.time.LocalDate;
 
 /**
- * Appointment
- * Depend on
- * - AppointmentOutcomeRecord
+ * <p>Entity class for Appointment objects</p>
+ * <p>Appointments are created by patients and can be accepted or rejected by doctors</p>
+ * <p>Appointments can be rescheduled by patients</p>
  */
-
-/**4 STATUS: ACCEPTED, REQUESTED, REJECTED, COMPLETED*/
 public class Appointment {
     private int id;
     private String doctorId;
@@ -22,12 +20,12 @@ public class Appointment {
 
     /**
      * Constructor for creating an appointment
-     * @param id
-     * @param patientId
-     * @param doctorId
-     * @param date
-     * @param timeslot
-     * @param status
+     * @param id the ID of the appointment
+     * @param patientId the ID of the patient
+     * @param doctorId the ID of the doctor
+     * @param date the date of the appointment
+     * @param timeslot the timeslot of the appointment
+     * @param status the status of the appointment
      */
 
     public Appointment(int id, String patientId, String doctorId, String date, int timeslot, String status) {
@@ -50,6 +48,7 @@ public class Appointment {
     }
     /**
      * Get the ID of the appointment
+     * @return the ID of the appointment
      */
     public String getPatientId() {
         return patientId;
@@ -159,9 +158,9 @@ public class Appointment {
 
     /**
      * Reschedule an appointment
-     * @param doctorId
-     * @param date
-     * @param timeslot
+     * @param doctorId the ID of the doctor
+     * @param date the date of the appointment
+     * @param timeslot the timeslot of the appointment
      */
     public void reschedule(String doctorId, String date, int timeslot) {
         this.doctorId = doctorId;

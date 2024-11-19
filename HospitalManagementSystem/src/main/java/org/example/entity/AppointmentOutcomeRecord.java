@@ -42,8 +42,7 @@ public class AppointmentOutcomeRecord {
 
 
     /**
-     * Get the prescription of the appointment outcome record
-     * @return the prescription of the appointment outcome record
+     * Set the prescription of the appointment outcome record
      */
     public void setPrescriptions(List<Prescription> prescriptions) {
         this.prescriptions = prescriptions;
