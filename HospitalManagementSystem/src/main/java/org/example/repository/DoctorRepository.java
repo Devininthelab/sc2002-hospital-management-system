@@ -6,6 +6,7 @@ import org.example.utils.DateToNumber;
 import org.example.utils.TimeslotToInt;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -31,20 +32,61 @@ public class DoctorRepository {
      * @return a 2D array of the doctor's schedule
      */
     public String[][] loadDoctorSchedule(String doctorId) {
+        InputStream inputStream;
+        boolean loadedFromResources = false;
         String[][] schedule = new String[8][6];
-        try (BufferedReader br = new BufferedReader(new FileReader(fileDir + doctorId + "_availability.csv"))) {
-            String line;
-            int i = 0;
-            String header = br.readLine(); // Skip the header
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                schedule[i] = new String[data.length - 1];
-                System.arraycopy(data, 1, schedule[i], 0, data.length - 1); // Skip the first entry in each row
-                i++;
+        String filePath = fileDir + doctorId + "_availability.csv";
+
+        try {
+            File writableFile = new File(filePath);
+            if (writableFile.exists()) {
+                inputStream = new FileInputStream(filePath);
+            } else {
+                inputStream = getClass().getClassLoader().getResourceAsStream(Paths.get(fileDir).getFileName().toString() + "/" + new File(filePath).getName());
+                if (inputStream == null) {
+                    System.err.println("File not found: " + filePath);
+                    return schedule;
+                }
+                loadedFromResources = true;
             }
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                int i = 0;
+                String header = br.readLine(); // Skip the header
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+                    schedule[i] = new String[data.length - 1];
+                    System.arraycopy(data, 1, schedule[i], 0, data.length - 1); // Skip the first entry in each row
+                    i++;
+                }
+            }
+
+            if (loadedFromResources) {
+                saveDoctorSchedule(doctorId, schedule);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return schedule;
         } catch (IOException e) {
             e.printStackTrace();
+            return schedule;
         }
+
+        //String[][] schedule = new String[8][6];
+        //try (BufferedReader br = new BufferedReader(new FileReader(fileDir + doctorId + "_availability.csv"))) {
+        //    String line;
+        //    int i = 0;
+        //    String header = br.readLine(); // Skip the header
+        //    while ((line = br.readLine()) != null) {
+        //        String[] data = line.split(",");
+        //        schedule[i] = new String[data.length - 1];
+        //        System.arraycopy(data, 1, schedule[i], 0, data.length - 1); // Skip the first entry in each row
+        //        i++;
+        //    }
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //}
 
         return schedule;
     }
@@ -107,8 +149,22 @@ public class DoctorRepository {
 
     public void saveDoctorSchedule(String doctorId) {
         Doctor doctor = getDoctorById(doctorId);
-        String[][] schedule = doctor.getSchedule();
+        saveDoctorSchedule(doctorId, doctor.getSchedule());
 
+        //try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileDir + doctorId + "_availability.csv"))) {
+        //    // Write header row
+        //    bw.write("TimeSlot,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday\n");
+        //
+        //    // Write each time slot with day-wise availability
+        //    for (int i = 0; i < 8; i++) {
+        //        bw.write(TimeslotToInt.timeslotToString(i) + "," + String.join(",", schedule[i]) + "\n");
+        //    }
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //}
+    }
+
+    public void saveDoctorSchedule(String doctorId, String[][] schedule) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileDir + doctorId + "_availability.csv"))) {
             // Write header row
             bw.write("TimeSlot,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday\n");

@@ -2,11 +2,7 @@ package org.example.repository;
 
 import org.example.entity.Prescription;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,27 +22,73 @@ public class PrescriptionRepository {
      * Parses prescription data from the CSV file and stores it in the prescriptions list.
      */
     public void loadPrescriptionsFromCSV() {
-        String line;
-        prescriptions.clear(); // Clear list before loading to avoid duplicates
+        InputStream inputStream;
+        boolean loadedFromResources = false;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String header = br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length >= 4) {
-                    int medId = Integer.parseInt(values[0].trim());
-                    String name = values[1].trim();
-                    int quantity = Integer.parseInt(values[2].trim());
-                    String status = values[3].trim().toUpperCase();
-                    Prescription prescription = new Prescription(medId, name, quantity, status);
-                    prescriptions.add(prescription);
+        try {
+            File writableFile = new File(filePath);
+            if (writableFile.exists()) {
+                inputStream = new FileInputStream(filePath);
+            } else {
+                inputStream = getClass().getClassLoader().getResourceAsStream(new File(filePath).getName());
+                if (inputStream == null) {
+                    System.err.println("File not found: " + filePath);
+                    return;
+                }
+                loadedFromResources = true;
+            }
+
+            String line;
+            prescriptions.clear(); // Clear list before loading to avoid duplicates
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                String header = br.readLine(); // Skip header
+                while ((line = br.readLine()) != null) {
+                    String[] values = line.split(",");
+                    if (values.length >= 4) {
+                        int medId = Integer.parseInt(values[0].trim());
+                        String name = values[1].trim();
+                        int quantity = Integer.parseInt(values[2].trim());
+                        String status = values[3].trim().toUpperCase();
+                        Prescription prescription = new Prescription(medId, name, quantity, status);
+                        prescriptions.add(prescription);
+                    }
                 }
             }
+
+            if (loadedFromResources) {
+                savePrescriptionsToCSV();
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + filePath);
         } catch (IOException e) {
             System.out.println("Error reading CSV file: " + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
             System.out.println("Error parsing Prescription data: " + e.getMessage());
         }
+
+        //String line;
+        //prescriptions.clear(); // Clear list before loading to avoid duplicates
+        //
+        //try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        //    String header = br.readLine(); // Skip header
+        //    while ((line = br.readLine()) != null) {
+        //        String[] values = line.split(",");
+        //        if (values.length >= 4) {
+        //            int medId = Integer.parseInt(values[0].trim());
+        //            String name = values[1].trim();
+        //            int quantity = Integer.parseInt(values[2].trim());
+        //            String status = values[3].trim().toUpperCase();
+        //            Prescription prescription = new Prescription(medId, name, quantity, status);
+        //            prescriptions.add(prescription);
+        //        }
+        //    }
+        //} catch (IOException e) {
+        //    System.out.println("Error reading CSV file: " + e.getMessage());
+        //} catch (Exception e) {
+        //    System.out.println("Error parsing Prescription data: " + e.getMessage());
+        //}
     }
 
     /**

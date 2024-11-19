@@ -30,23 +30,64 @@ public class MedicineRepository {
      * @param filePath
      */
     public void loadMedicinesFromCSV(String filePath) {
-        String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String header = br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length >= 3) {
-                    String name = values[0].trim();
-                    int stockLevel = Integer.parseInt(values[1].trim());
-                    int lowThreshold = Integer.parseInt(values[2].trim());
-                    int highThreshold = Integer.parseInt(values[3].trim());
-                    Medicine medicine = new Medicine(name, stockLevel, lowThreshold, highThreshold);
-                    medicines.add(medicine);
+        InputStream inputStream;
+        boolean loadedFromResources = false;
+        try {
+            File writableFile = new File(filePath);
+            if (writableFile.exists()) {
+                inputStream = new FileInputStream(filePath);
+            } else {
+                inputStream = getClass().getClassLoader().getResourceAsStream(new File(filePath).getName());
+                if (inputStream == null) {
+                    System.err.println("File not found: " + filePath);
+                    return;
+                }
+                loadedFromResources = true;
+            }
+
+            String line;
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                String header = br.readLine(); // Skip header
+                while ((line = br.readLine()) != null) {
+                    String[] values = line.split(",");
+                    if (values.length >= 3) {
+                        String name = values[0].trim();
+                        int stockLevel = Integer.parseInt(values[1].trim());
+                        int lowThreshold = Integer.parseInt(values[2].trim());
+                        int highThreshold = Integer.parseInt(values[3].trim());
+                        Medicine medicine = new Medicine(name, stockLevel, lowThreshold, highThreshold);
+                        medicines.add(medicine);
+                    }
                 }
             }
+
+            if (loadedFromResources) {
+                saveMedicinesToCSV();
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + filePath);
         } catch (IOException e) {
-            System.out.println("Error reading CSV file: " + e.getMessage());
+            System.err.println("Error reading CSV file: " + e.getMessage());
+            e.printStackTrace();
         }
+
+        //String line;
+        //try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        //    String header = br.readLine(); // Skip header
+        //    while ((line = br.readLine()) != null) {
+        //        String[] values = line.split(",");
+        //        if (values.length >= 3) {
+        //            String name = values[0].trim();
+        //            int stockLevel = Integer.parseInt(values[1].trim());
+        //            int lowThreshold = Integer.parseInt(values[2].trim());
+        //            int highThreshold = Integer.parseInt(values[3].trim());
+        //            Medicine medicine = new Medicine(name, stockLevel, lowThreshold, highThreshold);
+        //            medicines.add(medicine);
+        //        }
+        //    }
+        //} catch (IOException e) {
+        //    System.out.println("Error reading CSV file: " + e.getMessage());
+        //}
     }
 
     /**

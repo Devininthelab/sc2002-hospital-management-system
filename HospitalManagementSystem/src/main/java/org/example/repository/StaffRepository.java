@@ -16,7 +16,8 @@ public class StaffRepository {
 
     public StaffRepository(String staffPath) {
         this.csvPath = staffPath;
-        staffList = loadStaffsFromCSV();
+        staffList = new ArrayList<>();
+        loadStaffsFromCSV();
     }
 
     /**
@@ -24,38 +25,90 @@ public class StaffRepository {
      *
      * @return List of staff members
      */
-    private List<Staff> loadStaffsFromCSV() {
-        List<Staff> staffList = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
-            String line;
-            String header = br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                String id = values[0].trim();
-                String name = values[1].trim();
-                String role = values[2].trim();
-                String gender = values[3].trim();
-                int age = Integer.parseInt(values[4].trim());
-                String password = values[5].trim();
-                switch (role) {
-                    case "Doctor":
-                        staffList.add(new Doctor(id, name, role, gender, age, password));
-                        break;
-                    case "Pharmacist":
-                        staffList.add(new Pharmacist(id, name, role, gender, age, password));
-                        break;
-                    case "Administrator":
-                        staffList.add(new Administrator(id, name, role, gender, age, password));
-                        break;
+    private void loadStaffsFromCSV() {
+        InputStream inputStream;
+        boolean loadedFromResources = false;
+        try {
+            File writableFile = new File(csvPath);
+            if (writableFile.exists()) {
+                inputStream = new FileInputStream(csvPath);
+            } else {
+                inputStream = getClass().getClassLoader().getResourceAsStream(new File(csvPath).getName());
+                if (inputStream == null) {
+                    System.err.println("File not found: " + csvPath);
+                    return;
                 }
-
+                loadedFromResources = true;
             }
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                String header = br.readLine(); // Skip header
+                while ((line = br.readLine()) != null) {
+                    String[] values = line.split(",");
+                    String id = values[0].trim();
+                    String name = values[1].trim();
+                    String role = values[2].trim();
+                    String gender = values[3].trim();
+                    int age = Integer.parseInt(values[4].trim());
+                    String password = values[5].trim();
+                    switch (role) {
+                        case "Doctor":
+                            staffList.add(new Doctor(id, name, role, gender, age, password));
+                            break;
+                        case "Pharmacist":
+                            staffList.add(new Pharmacist(id, name, role, gender, age, password));
+                            break;
+                        case "Administrator":
+                            staffList.add(new Administrator(id, name, role, gender, age, password));
+                            break;
+                    }
+
+                }
+            }
+
+            if (loadedFromResources) {
+                saveStaffsToCSV();
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + csvPath);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NumberFormatException e) {
             System.err.println("Error parsing number");
         }
-        return staffList;
+
+        //List<Staff> staffList = new ArrayList<>();
+        //try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
+        //    String line;
+        //    String header = br.readLine(); // Skip header
+        //    while ((line = br.readLine()) != null) {
+        //        String[] values = line.split(",");
+        //        String id = values[0].trim();
+        //        String name = values[1].trim();
+        //        String role = values[2].trim();
+        //        String gender = values[3].trim();
+        //        int age = Integer.parseInt(values[4].trim());
+        //        String password = values[5].trim();
+        //        switch (role) {
+        //            case "Doctor":
+        //                staffList.add(new Doctor(id, name, role, gender, age, password));
+        //                break;
+        //            case "Pharmacist":
+        //                staffList.add(new Pharmacist(id, name, role, gender, age, password));
+        //                break;
+        //            case "Administrator":
+        //                staffList.add(new Administrator(id, name, role, gender, age, password));
+        //                break;
+        //        }
+        //
+        //    }
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //} catch (NumberFormatException e) {
+        //    System.err.println("Error parsing number");
+        //}
+        //return staffList;
     }
 
 
