@@ -5,7 +5,6 @@ import java.util.List;
 
 /**
  * Represents a doctor who is a type of staff member.
- * <p>
  * A doctor has a weekly schedule with 8 rows (hours per day)
  * and 6 columns (days of the week). Each time slot in the
  * schedule can have one of three statuses:
@@ -14,7 +13,6 @@ import java.util.List;
  *     <li>BUSY</li>
  *     <li>BOOKED</li>
  * </ul>
- * </p>
  */
 public class Doctor extends Staff {
     private String[][] schedule;

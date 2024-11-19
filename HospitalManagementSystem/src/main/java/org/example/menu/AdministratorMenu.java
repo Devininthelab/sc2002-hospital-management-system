@@ -11,14 +11,12 @@ import java.util.Scanner;
 /**
  * The AdministratorMenu class provides the menu-driven interface for an administrator
  * to manage staff, appointments, and inventory within the system.
- * <p>
  * Responsibilities include:
  * <ul>
  *     <li>Staff management: adding, updating, removing, and viewing staff members.</li>
  *     <li>Appointment management: viewing scheduled appointments and outcome records.</li>
  *     <li>Inventory management: managing medicines, stock levels, and replenishment requests.</li>
  * </ul>
- * </p>
  */
 public class AdministratorMenu implements Menu {
     private StaffRepository staffRepository;

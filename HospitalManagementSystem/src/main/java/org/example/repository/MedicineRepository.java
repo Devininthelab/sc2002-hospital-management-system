@@ -9,6 +9,8 @@ import java.util.List;
 /**
  * This can also can be interpreted conceptually as the Medicine Inventory.
  * This class is responsible for managing the stock of medicines in the clinic.
+ * It reads from the medicine database and updates the stock level of medicines.
+ * It also provides methods to check the stock level of medicines and update the threshold.
  */
 public class MedicineRepository {
     private List<Medicine> medicines;
@@ -16,7 +18,7 @@ public class MedicineRepository {
 
     /**
      * Constructor to inject dependencies
-     * @param filePath
+     * @param filePath - the writable path to the medicine database
      */
     public MedicineRepository(String filePath) {
         this.filePath = filePath;
@@ -26,8 +28,10 @@ public class MedicineRepository {
 
     /**
      * Load medicines from CSV file
+     * If the file exists in the writable path, it will load from the file
+     * If the file does not exist, it will load from the resources folder
      * Parse medicine data from CSV file and store in medicines list
-     * @param filePath
+     * @param filePath - the path to the CSV file
      */
     public void loadMedicinesFromCSV(String filePath) {
         InputStream inputStream;
@@ -92,6 +96,7 @@ public class MedicineRepository {
 
     /**
      * Overwrite the CSV file with the most up-to-date list of medicines
+     * This method is called whenever a change is made to the list of medicines
      */
     private void saveMedicinesToCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
@@ -110,7 +115,7 @@ public class MedicineRepository {
 
     /**
      * Used by admin to add new medicine
-     * @param medicine
+     * @param medicine - the medicine to be added
      */
     public void addMedicine(Medicine medicine) {
         medicines.add(medicine);
@@ -127,8 +132,8 @@ public class MedicineRepository {
 
     /**
      * Get medicine by name
-     * @param name
-     * @return
+     * @param name - the name of the medicine
+     * @return Medicine object with the specified name
      */
     public Medicine getMedicine(String name) {
         for (Medicine medicine : medicines) {
@@ -141,7 +146,7 @@ public class MedicineRepository {
 
     /**
      * Remove medicine from inventory
-     * @param medicineName
+     * @param medicineName - the name of the medicine to be removed
      */
     public void removeMedicine(String medicineName) {
         medicines.remove(getMedicine(medicineName));
@@ -152,7 +157,7 @@ public class MedicineRepository {
 
     /**
      * Check if the medicine exists in the inventory
-     * @param medicineName
+     * @param medicineName - the name of the medicine
      * @return true if the medicine exists, false otherwise
      */
     public boolean medicineExists(String medicineName) {
@@ -161,8 +166,8 @@ public class MedicineRepository {
 
     /**
      * Decrease the stock level of a medicine
-     * @param presciptionName
-     * @param quantity
+     * @param presciptionName - the name of the medicine
+     * @param quantity - the quantity to be decreased
      */
     public void decreaseStockLevel(String presciptionName, int quantity) {
         Medicine medicine = getMedicine(presciptionName);
@@ -182,13 +187,18 @@ public class MedicineRepository {
                 .toList();
     }
 
+    /**
+     * Check if there are any low stock medicines
+     * @return true if there are low stock medicines, false otherwise
+     */
     public boolean hasLowStockMedicines() {
         return medicines.stream().anyMatch(Medicine::isLowStock);
     }
 
     /**
-     * Update stock level of medicine
-     * @param medicineName, quantity
+     * Update the stock level of a medicine
+     * @param medicineName - the name of the medicine
+     * @param quantity - the new stock level
      */
     public void updateStockLevel(String medicineName, int quantity) {
         Medicine medicine = getMedicine(medicineName);
@@ -201,8 +211,8 @@ public class MedicineRepository {
 
     /**
      * Update the low threshold of a medicine
-     * @param medicineName
-     * @param lowThreshold
+     * @param medicineName - the name of the medicine
+     * @param lowThreshold - the new low threshold
      */
     public void updateLowThreshold(String medicineName, int lowThreshold) {
         Medicine medicine = getMedicine(medicineName);

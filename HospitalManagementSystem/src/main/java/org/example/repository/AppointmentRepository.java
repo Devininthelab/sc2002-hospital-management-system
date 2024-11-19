@@ -9,15 +9,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * AppointmentRepository
- * Depend on
- * - DoctorRepo to update their availability
+ * Repository class for managing appointments
+ * It manages the loading and saving of appointments to a CSV file
+ * It also provides methods for adding, updating, deleting, and retrieving appointments
+ * It also manages the auto-increment of appointment IDs
  */
 public class AppointmentRepository {
     private List<Appointment> appointments;
     private static int counter = 0;
     private final String filePath;
 
+    /**
+     * Constructor to create an AppointmentRepository
+     * @param filePath - the WRITABLE path to the CSV file
+     */
     public AppointmentRepository(String filePath) {
         this.filePath = filePath;
         appointments = new ArrayList<>();
@@ -41,6 +46,10 @@ public class AppointmentRepository {
 
     /**
      * Load appointments from CSV file
+     * If the file exists in the writable path, it will load from the file
+     * If the file does not exist, it will load from the resources folder
+     * If loaded from resources, it will save the appointments to a writable file
+     * If the file does not exist in resources, it will print an error message
      */
     public void loadAppointmentsFromCSV() {
         InputStream inputStream;
@@ -120,6 +129,9 @@ public class AppointmentRepository {
 
     /**
      * Save appointments to CSV file
+     * It will write the appointments to the writable path
+     * Overwriting the existing file
+     * It's called whenever changes are made to the appointments list
      */
     public void saveAppointmentsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
@@ -149,12 +161,11 @@ public class AppointmentRepository {
 
     /**
      * Add an appointment to the Appointment List
-     * @param patientId
-     * @param doctorId
-     * @param date
+     * @param patientId - the ID of the patient
+     * @param doctorId - the ID of the doctor
+     * @param date - from Monday to Saturday
      * @param timeslot - from 0 to 7
-     * @param status
-     * @return
+     * @param status - the status of the appointment
      */
     public void addAppointment(String patientId, String doctorId, String date, int timeslot, String status) {
         // Use counter to assign a unique ID
@@ -164,6 +175,11 @@ public class AppointmentRepository {
         System.out.println("Appointment added: " + appointment);
     }
 
+    /**
+     * Get an appointment by ID
+     * @param id - the ID of the appointment
+     * @return the appointment with the specified ID
+     */
     public Appointment getAppointmentById(int id) {
         for (Appointment appointment : appointments) {
             if (appointment.getId() == id) {
@@ -174,8 +190,10 @@ public class AppointmentRepository {
     }
 
     /**
+     * Reschedule an appointment, uniquely identifiable by ID
+     * to a new date and timeslot and potentially a new doctor
      * Once accepted, an appointment cannot be rescheduled
-     * @param id
+     * @param id - the ID of the appointment
      * @param date - from Monday to Saturday
      * @param timeslot - from 0 to 7
      */
@@ -187,7 +205,7 @@ public class AppointmentRepository {
 
     /**
      * Delete appointment from Appointment List
-     * @param id
+     * @param id - the ID of the appointment
      */
     public void deleteAppointmentById(int id) {
         Appointment appointment = getAppointmentById(id);
@@ -197,8 +215,8 @@ public class AppointmentRepository {
 
     /**
      * Get all appointments for a specific patient
-     * @param patientId
-     * @return
+     * @param patientId - the ID of the patient
+     * @return a list of all appointments for the patient
      */
     public List<Appointment> getAppointmentsByPatientId(String patientId) {
         return appointments.stream()
@@ -208,8 +226,8 @@ public class AppointmentRepository {
 
     /**
      * Get all appointments for a specific doctor
-     * @param doctorId
-     * @return
+     * @param doctorId - the ID of the doctor
+     * @return a list of all appointments for the doctor
      */
     public List<Appointment> getAppointmentsByDoctorId(String doctorId) {
         return appointments.stream()
@@ -219,7 +237,7 @@ public class AppointmentRepository {
 
     /**
      * Mark an appointment as completed
-     * @param id
+     * @param id - the ID of the appointment
      */
     public void markAsCompleted(int id) {
         Appointment appointment = getAppointmentById(id);
@@ -228,7 +246,8 @@ public class AppointmentRepository {
     }
 
     /**
-     * Update the status of an appointment, after udate new status, save to CSV
+     * Update the status of an appointment
+     * @param id - the ID of the appointment
      */
     public void updateAppointmentStatus(int id, String status){
         Appointment appointment = getAppointmentById(id);

@@ -12,7 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Repository class for managing patients.
+ * PatientRepository is responsible for managing the list of patients.
+ * It reads from the patient database and updates the patient's information.
+ * It also provides methods to get a patient by ID, update a patient's field, and save the patients back to the database.
  */
 public class PatientRepository {
     private List<Patient> patients;
@@ -23,7 +25,9 @@ public class PatientRepository {
 
     /**
      * Constructor that initializes the list of patients by loading data from a CSV file.
-     * TODO: Implement depedency injection for every dependencies
+     * @param csvPath The writable path to the patient database.
+     * @param appointmentRepository The AppointmentRepository object.
+     * @param appointmentOutcomeRecordRepository The AppointmentOutcomeRecordRepository object.
      */
     public PatientRepository(String csvPath, AppointmentRepository appointmentRepository, AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository) {
         this.csvPath = csvPath;
@@ -37,6 +41,8 @@ public class PatientRepository {
      * Load patients from a CSV file.
      * The List of patients will be stored in the patients field.
      * Diagnosis, treatment and prescription is parsed using ; as delimiter.
+     * If the file exists in the writable path, it will load from the file.
+     * If the file does not exist, it will load from the resources folder.
      * @param csvPath the path to the CSV file
      */
     private void loadPatientsFromCSV(String csvPath) {
@@ -123,7 +129,7 @@ public class PatientRepository {
 
     /**
      * Get a list of all patients.
-     * TODO: Consider encapsulating the list of patients by returning a deep copy of the list.
+     * @param id the ID of the patient
      * @return the list of patients
      */
     public Patient getPatientById(String id) {
@@ -139,6 +145,9 @@ public class PatientRepository {
      * Update a patient's field with a new value.
      * The field is specified as a string, and the new value is also a string.
      * Some component needs to convert different types of values to string before calling this method.
+     * @param id the ID of the patient
+     * @param field the field to update
+     * @param newValue the new value to set
      */
     public void updatePatientField(String id, String field, String newValue) {
         Patient patient = getPatientById(id);
@@ -175,6 +184,7 @@ public class PatientRepository {
 
     /**
      * Save the list of patients back to the CSV file.
+     * This method is called whenever a change is made to the list of patients.
      */
     public void savePatientsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {

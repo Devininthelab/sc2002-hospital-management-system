@@ -16,7 +16,12 @@ import java.util.List;
 public class DoctorRepository {
     private List<Doctor> doctors;
     private String fileDir;
-    
+
+    /**
+     * Constructor to create a DoctorRepository
+     * @param fileDir - the writable path to the directory containing the doctor availability files
+     * @param staffRepository - the StaffRepository containing the list of doctors
+     */
     public DoctorRepository(String fileDir, StaffRepository staffRepository) {
         this.fileDir = fileDir;
         doctors = staffRepository.getAllDoctors();
@@ -27,7 +32,9 @@ public class DoctorRepository {
 
     /**
      * Load the doctor's schedule from the database
-     * Each doctor has a separate file named {doctorId}_availability.csv
+     * Each doctor has a separated file named {doctorId}_availability.csv
+     * If the file exists in the writable path, it will load from the file
+     * If the file does not exist, it will load from the resources folder
      * @param doctorId the doctor's ID
      * @return a 2D array of the doctor's schedule
      */
@@ -91,6 +98,11 @@ public class DoctorRepository {
         return schedule;
     }
 
+    /**
+     * Get the doctor by ID
+     * @param id the doctor's ID
+     * @return the doctor with the specified ID
+     */
     public Doctor getDoctorById(String id) {
         return doctors.stream()
                 .filter(doc -> doc.getId().equals(id))
@@ -98,6 +110,10 @@ public class DoctorRepository {
                 .orElse(null);
     }
 
+    /**
+     * Get all doctors
+     * @return a list of all doctors
+     */
     public List<Doctor> getAllDoctors() {
         return doctors;
     }
@@ -116,6 +132,14 @@ public class DoctorRepository {
         return "AVAILABLE".equalsIgnoreCase(doctor.getSchedule()[time][dayIndex]);
     }
 
+    /**
+     * Check if the doctor is booked at the specified date and time
+     * Use function dateToNumber to convert date to number (read the function's documentation)
+     * @param doctorId the doctor's ID
+     * @param date the date of the appointment
+     * @param time the time slot of the appointment
+     * @return true if the doctor is booked, false otherwise
+     */
     public boolean doctorBooked(String doctorId, String date, int time) {
         Doctor doctor = getDoctorById(doctorId);
         int dayIndex = DateToNumber.dateToNumber(date);
@@ -147,6 +171,12 @@ public class DoctorRepository {
         updateDoctorSchedule(doctorId, date, time, "AVAILABLE");
     }
 
+    /**
+     * Save a doctor's schedule to the database
+     * Only the doctor's id is required
+     * Uses the overloaded method to save the schedule, for better consistency
+     * @param doctorId the doctor's ID
+     */
     public void saveDoctorSchedule(String doctorId) {
         Doctor doctor = getDoctorById(doctorId);
         saveDoctorSchedule(doctorId, doctor.getSchedule());
@@ -164,6 +194,12 @@ public class DoctorRepository {
         //}
     }
 
+    /**
+     * Save a doctor's schedule to the database
+     * Provide the doctor's ID and the schedule to save
+     * @param doctorId the doctor's ID
+     * @param schedule the doctor's schedule
+     */
     public void saveDoctorSchedule(String doctorId, String[][] schedule) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileDir + doctorId + "_availability.csv"))) {
             // Write header row

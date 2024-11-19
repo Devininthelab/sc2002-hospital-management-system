@@ -16,7 +16,6 @@ import static org.example.utils.TableDisplay.*;
 
 /**
  * The DoctorMenu class provides a menu-driven interface for doctors to manage their tasks.
- * <p>
  * Responsibilities include:
  * <ul>
  *     <li>Viewing and updating patient medical records.</li>
@@ -24,7 +23,6 @@ import static org.example.utils.TableDisplay.*;
  *     <li>Completing appointments and handling prescriptions.</li>
  *     <li>Updating passwords and logging out.</li>
  * </ul>
- * </p>
  */
 public class DoctorMenu implements Menu {
     private Scanner scanner;

@@ -9,7 +9,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * StaffRepository is responsible for managing the list of staff members.
+ * It reads from the staff database and updates the staff's information.
+ * It also provides methods to get a staff by ID, update a staff's field, and save the staff back to the database.
+ */
 public class StaffRepository {
     private List<Staff> staffList;
     private String csvPath;
@@ -131,7 +135,6 @@ public class StaffRepository {
 
     /**
      * Check if whether the staff has existed in the staff list
-     *
      * @param id The staff id
      * @return true if the staff id exists, false otherwise
      */
@@ -147,7 +150,6 @@ public class StaffRepository {
 
     /**
      * Add a staff into the CSV file
-     *
      * @param staff The staff to be added
      */
     public void addStaffRepo(Staff staff) {
@@ -162,7 +164,6 @@ public class StaffRepository {
 
     /**
      * Update the staff details in the CSV file
-     *
      * @param staffId  The staff id to be updated
      * @param field    Fileld to be updated
      * @param newValue The new value to be updated
@@ -196,7 +197,6 @@ public class StaffRepository {
 
     /**
      * Remove a staff from the CSV file
-     *
      * @param staffId The staff id to be removed
      */
     public void removeStaffRepo(String staffId) {
@@ -222,7 +222,6 @@ public class StaffRepository {
 
     /**
      * Get Doctor by credentials
-     *
      * @return a specific doctor if credentials are correct, null otherwise
      */
     public Doctor getDoctorByCredentials(String id, String password) {
@@ -236,7 +235,6 @@ public class StaffRepository {
 
     /**
      * Get Pharmacist by credentials
-     *
      * @return a specific pharmacist if credentials are correct, null otherwise
      */
     public Pharmacist getPharmacistByCredentials(String id, String password) {
@@ -249,18 +247,17 @@ public class StaffRepository {
     }
 
     /**
-     * View the list of staff members
-     * Current format is like this:
-     * List of staff members:
-     * ID: 1,   Name: John Doe,     Role: Doctor, ...
-     * ....
-     * TODO: Remove because repo doesn't handle UI
+     * Get all staff members
+     * @return List of staff members
      */
     public List<Staff> getAllStaffs() {
         return staffList;
     }
 
-
+    /**
+     * Get pharmacist by ID
+     * @param id The pharmacist's id
+     */
     public Pharmacist getPharmacistById(String id) {
         for (Staff staff : staffList) {
             if (staff.getId().equals(id) && staff.getRole().equals("Pharmacist")) {
@@ -272,7 +269,7 @@ public class StaffRepository {
 
     /**
      * Update the password of a staff member
-     *
+     * Provided the staff id and the new password
      * @param id         The staff id
      * @param newPassword The new password
      */

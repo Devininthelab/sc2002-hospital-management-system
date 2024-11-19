@@ -7,6 +7,10 @@ import org.example.repository.StaffRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents an administrator who is a type of staff member.
+ * An administrator has access to the staff repository, medicine repository, and appointment repository.
+ */
 public class Administrator extends Staff {
 
     /**

@@ -1,6 +1,14 @@
 package org.example.utils;
 
+/**
+ * Utility class to convert timeslot integer to string representation
+ */
 public class TimeslotToInt {
+    /**
+     * Convert a timeslot integer to a string representation
+     * @param timeslot the timeslot integer
+     * @return the string representation of the timeslot
+     */
     public static String timeslotToString(int timeslot) {
         switch (timeslot) {
             case 0:

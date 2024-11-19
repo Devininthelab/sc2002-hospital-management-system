@@ -21,8 +21,6 @@ public interface Menu {
 
     /**
      * Gets an integer input from the user.
-     *
-     * @return the integer input
      */
     void login();
 

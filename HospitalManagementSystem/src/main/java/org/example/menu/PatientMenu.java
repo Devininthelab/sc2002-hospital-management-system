@@ -17,7 +17,6 @@ import static org.example.utils.TableDisplay.*;
 
 /**
  * The PatientMenu class manages the interaction between the patient and the system.
- * <p>
  * Provides functionalities for:
  * <ul>
  *     <li>Viewing and updating medical records.</li>
@@ -25,7 +24,6 @@ import static org.example.utils.TableDisplay.*;
  *     <li>Viewing available appointment slots and past appointment outcome records.</li>
  *     <li>Updating personal information and changing passwords.</li>
  * </ul>
- * </p>
  */
 public class PatientMenu implements Menu {
 

@@ -2,7 +2,6 @@ package org.example.entity;
 
 /**
  * Medication is the prescription requested in the AppointmentOutcomeRecord.
- * <p>
  * It contains:
  * <ul>
  *     <li>An ID pointing to the respective outcome record ID.</li>
@@ -10,7 +9,6 @@ package org.example.entity;
  *     <li>A quantity requested.</li>
  *     <li>A status for the request, such as PENDING, APPROVED, or REJECTED.</li>
  * </ul>
- * </p>
  */
 public class Prescription {
 
