@@ -43,30 +43,79 @@ public class AppointmentRepository {
      * Load appointments from CSV file
      */
     public void loadAppointmentsFromCSV() {
-        String line;
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        //TEMPORARILY, TYPE OF DATE IS STRING, SO DON'T NEED FORMATTER HERE
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String header = br.readLine(); // Skip the header
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length >= 6) {
-                    int id = Integer.parseInt(values[0]);
-                    String doctorId = values[1].trim();
-                    String patientId = values[2].trim();
-                    String date = values[3].trim();
-                    int timeslot = Integer.parseInt(values[4].trim());
-                    String status = values[5].trim().toUpperCase();
+        InputStream inputStream;
+        boolean loadedFromResources = false;
+        try {
+            File writableFile = new File(filePath);
+            if (writableFile.exists()) {
+                inputStream = new FileInputStream(filePath);
+            } else {
+                inputStream = getClass().getClassLoader().getResourceAsStream(new File(filePath).getName());
+                if (inputStream == null) {
+                    System.err.println("File not found: " + filePath);
+                    return;
+                }
+                loadedFromResources = true;
+            }
 
-                    Appointment appointment = new Appointment(id, patientId, doctorId, date, timeslot, status);
-                    appointments.add(appointment);
+            String line;
+            //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            //TEMPORARILY, TYPE OF DATE IS STRING, SO DON'T NEED FORMATTER HERE
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                String header = br.readLine(); // Skip the header
+                while ((line = br.readLine()) != null) {
+                    String[] values = line.split(",");
+                    if (values.length >= 6) {
+                        int id = Integer.parseInt(values[0]);
+                        String doctorId = values[1].trim();
+                        String patientId = values[2].trim();
+                        String date = values[3].trim();
+                        int timeslot = Integer.parseInt(values[4].trim());
+                        String status = values[5].trim().toUpperCase();
+
+                        Appointment appointment = new Appointment(id, patientId, doctorId, date, timeslot, status);
+                        appointments.add(appointment);
+                    }
                 }
             }
+
+            if (loadedFromResources) {
+                saveAppointmentsToCSV();
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + filePath);
+            return;
         } catch (IOException e) {
             System.out.println("Error reading CSV file: " + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
             System.out.println("Error parsing appointment data: " + e.getMessage());
         }
+
+        //String line;
+        ////DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        ////TEMPORARILY, TYPE OF DATE IS STRING, SO DON'T NEED FORMATTER HERE
+        //try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        //    String header = br.readLine(); // Skip the header
+        //    while ((line = br.readLine()) != null) {
+        //        String[] values = line.split(",");
+        //        if (values.length >= 6) {
+        //            int id = Integer.parseInt(values[0]);
+        //            String doctorId = values[1].trim();
+        //            String patientId = values[2].trim();
+        //            String date = values[3].trim();
+        //            int timeslot = Integer.parseInt(values[4].trim());
+        //            String status = values[5].trim().toUpperCase();
+        //
+        //            Appointment appointment = new Appointment(id, patientId, doctorId, date, timeslot, status);
+        //            appointments.add(appointment);
+        //        }
+        //    }
+        //} catch (IOException e) {
+        //    System.out.println("Error reading CSV file: " + e.getMessage());
+        //} catch (Exception e) {
+        //    System.out.println("Error parsing appointment data: " + e.getMessage());
+        //}
     }
 
     /**

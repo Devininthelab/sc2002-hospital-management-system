@@ -38,19 +38,57 @@ public class MedicineRequestRepository {
     }
 
     public void loadRequestsFromCsv() {
-        try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
-            String line;
-            String header = br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                int id = Integer.parseInt(data[0].trim());
-                String[] medicineNames = data[1].trim().split(";");
-                String status = data[2].trim().toUpperCase();
-                medicineRequests.add(new MedicineRequest(id, status, Arrays.asList(medicineNames)));
+        InputStream inputStream;
+        boolean loadedFromResources = false;
+        try {
+            File writableFile = new File(csvPath);
+            if (writableFile.exists()) {
+                inputStream = new FileInputStream(csvPath);
+            } else {
+                inputStream = getClass().getClassLoader().getResourceAsStream(new File(csvPath).getName());
+                if (inputStream == null) {
+                    System.err.println("File not found: " + csvPath);
+                    return;
+                }
+                loadedFromResources = true;
             }
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                String header = br.readLine(); // Skip header
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+                    int id = Integer.parseInt(data[0].trim());
+                    String[] medicineNames = data[1].trim().split(";");
+                    String status = data[2].trim().toUpperCase();
+                    medicineRequests.add(new MedicineRequest(id, status, Arrays.asList(medicineNames)));
+                }
+            }
+
+            if (loadedFromResources) {
+                saveRequestsToCsv();
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + csvPath);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing number");
         }
+
+        //try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
+        //    String line;
+        //    String header = br.readLine(); // Skip header
+        //    while ((line = br.readLine()) != null) {
+        //        String[] data = line.split(",");
+        //        int id = Integer.parseInt(data[0].trim());
+        //        String[] medicineNames = data[1].trim().split(";");
+        //        String status = data[2].trim().toUpperCase();
+        //        medicineRequests.add(new MedicineRequest(id, status, Arrays.asList(medicineNames)));
+        //    }
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //}
         //} catch (Exception e) {
         //    System.out.println("Error parsing medicine request: " + e.getMessage());
         //}

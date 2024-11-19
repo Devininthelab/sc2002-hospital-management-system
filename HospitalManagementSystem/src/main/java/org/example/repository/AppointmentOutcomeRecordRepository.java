@@ -10,11 +10,12 @@ import java.util.List;
 public class AppointmentOutcomeRecordRepository {
     private List<AppointmentOutcomeRecord> records;
     private PrescriptionRepository prescriptionRepository;
-    private String filePath = "src/main/resources/AppointmentOutcomeRecord.csv";
+    private String filePath;
 
     public AppointmentOutcomeRecordRepository(String filePath, PrescriptionRepository prescriptionRepository) {
         // Load prescriptions and records from their respective CSV files
         records = new ArrayList<>();
+        this.filePath = filePath;
         this.prescriptionRepository = prescriptionRepository;
         loadRecordsFromCSV();
     }
@@ -23,39 +24,89 @@ public class AppointmentOutcomeRecordRepository {
      * Load records from CSV file
      */
     private void loadRecordsFromCSV() {
-        String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String header = br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-
-                int id = Integer.parseInt(values[0].trim());
-                String date = values[1].trim();
-                String typeOfServiceStr = values[2].trim();
-                String consultationNotes = values[3].trim();
-
-                // Deserialize typeOfService string
-                String[] types = typeOfServiceStr.split(";");
-                ArrayList<String> typeOfService = new ArrayList<>();
-                for (String type : types) {
-                    typeOfService.add(type.trim());
+        InputStream inputStream;
+        boolean loadedFromResources = false;
+        try {
+            File writableFile = new File(filePath);
+            if (writableFile.exists()) {
+                inputStream = new FileInputStream(filePath);
+            } else {
+                inputStream = getClass().getClassLoader().getResourceAsStream(new File(filePath).getName());
+                if (inputStream == null) {
+                    System.err.println("File not found: " + filePath);
+                    return;
                 }
+                loadedFromResources = true;
+            }
 
-                // Retrieve prescriptions for this record and assign them
-                List<Prescription> prescriptions = prescriptionRepository.getPrescriptionsById(id);  // Updated method name
-                // Create the AppointmentOutcomeRecord
-                AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                String header = br.readLine(); // Skip header
+                while ((line = br.readLine()) != null) {
+                    String[] values = line.split(",");
 
-                records.add(record); // Add to records list
+                    int id = Integer.parseInt(values[0].trim());
+                    String date = values[1].trim();
+                    String typeOfServiceStr = values[2].trim();
+                    String consultationNotes = values[3].trim();
 
+                    // Deserialize typeOfService string
+                    String[] types = typeOfServiceStr.split(";");
+                    ArrayList<String> typeOfService = new ArrayList<>();
+                    for (String type : types) {
+                        typeOfService.add(type.trim());
+                    }
+
+                    // Retrieve prescriptions for this record and assign them
+                    List<Prescription> prescriptions = prescriptionRepository.getPrescriptionsById(id);  // Updated method name
+                    // Create the AppointmentOutcomeRecord
+                    AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
+
+                    records.add(record); // Add to records list
+
+                }
+            }
+
+            if (loadedFromResources) {
+                saveRecordsToCSV();
             }
         } catch (IOException e) {
             System.out.println("Error reading CSV file: " + e.getMessage());
         }
+
+        //String line;
+        //try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        //    String header = br.readLine(); // Skip header
+        //    while ((line = br.readLine()) != null) {
+        //        String[] values = line.split(",");
+        //
+        //        int id = Integer.parseInt(values[0].trim());
+        //        String date = values[1].trim();
+        //        String typeOfServiceStr = values[2].trim();
+        //        String consultationNotes = values[3].trim();
+        //
+        //        // Deserialize typeOfService string
+        //        String[] types = typeOfServiceStr.split(";");
+        //        ArrayList<String> typeOfService = new ArrayList<>();
+        //        for (String type : types) {
+        //            typeOfService.add(type.trim());
+        //        }
+        //
+        //        // Retrieve prescriptions for this record and assign them
+        //        List<Prescription> prescriptions = prescriptionRepository.getPrescriptionsById(id);  // Updated method name
+        //        // Create the AppointmentOutcomeRecord
+        //        AppointmentOutcomeRecord record = new AppointmentOutcomeRecord(id, date, consultationNotes, typeOfService, prescriptions);
+        //
+        //        records.add(record); // Add to records list
+        //
+        //    }
+        //} catch (IOException e) {
+        //    System.out.println("Error reading CSV file: " + e.getMessage());
+        //}
     }
 
-    // Method to save a record to CSV
-    public void saveRecordsToCSV(AppointmentOutcomeRecord record) {
+        // Method to save a record to CSV
+    public void saveRecordsToCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write header
             writer.write("appointmentId,date,typeOfService,consultationNotes");
@@ -92,7 +143,7 @@ public class AppointmentOutcomeRecordRepository {
 
     public void addAppointmentOutcomeRecord(AppointmentOutcomeRecord record) {
         records.add(record);
-        saveRecordsToCSV(record);
+        saveRecordsToCSV();
     }
 
     /**

@@ -2,6 +2,7 @@ package org.example.menu;
 
 import org.example.repository.*;
 
+import java.io.File;
 import java.util.Scanner;
 
 /**
@@ -10,23 +11,52 @@ import java.util.Scanner;
  */
 public class MenuFactory {
     private final Scanner scanner = new Scanner(System.in);
-    private final String appointmentOutcomeRecordPath = "src/main/resources/AppointmentOutcomeRecord.csv";
-    private final String appointmentPath = "src/main/resources/Appointment_List.csv";
-    private final String doctorDir = "src/main/resources/doctor_availability/";
-    private final String medicinePath = "src/main/resources/Medicine_List.csv";
-    private final String medicineRequestPath = "src/main/resources/Medicine_Requests.csv";
-    private final String patientPath = "src/main/resources/Patient_List.csv";
-    private final String prescriptionPath = "src/main/resources/Prescription.csv";
-    private final String staffPath = "src/main/resources/Staff_List.csv";
+    private final String writableBasePath = System.getProperty("user.dir") + "/data";
 
-    private final AppointmentRepository appointmentRepository = new AppointmentRepository(appointmentPath);
-    private final MedicineRepository medicineRepository = new MedicineRepository(medicinePath);
-    private final MedicineRequestRepository medicineRequestRepository = new MedicineRequestRepository(medicineRequestPath);
-    private final PrescriptionRepository prescriptionRepository = new PrescriptionRepository(prescriptionPath);
-    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository(appointmentOutcomeRecordPath, prescriptionRepository);
-    private final PatientRepository patientRepository = new PatientRepository(patientPath, appointmentRepository, appointmentOutcomeRecordRepository);
-    private final StaffRepository staffRepository = new StaffRepository(staffPath);
-    private final DoctorRepository doctorRepository = new DoctorRepository(doctorDir, staffRepository);
+    private final String appointmentOutcomeRecordPath = "AppointmentOutcomeRecord.csv";
+    private final String appointmentPath = "Appointment_List.csv";
+    private final String doctorDir = "doctor_availability/";
+    private final String medicinePath = "Medicine_List.csv";
+    private final String medicineRequestPath = "Medicine_Requests.csv";
+    private final String patientPath = "Patient_List.csv";
+    private final String prescriptionPath = "Prescription.csv";
+    private final String staffPath = "Staff_List.csv";
+
+    private final AppointmentRepository appointmentRepository;
+    private final MedicineRepository medicineRepository;
+    private final MedicineRequestRepository medicineRequestRepository;
+    private final PrescriptionRepository prescriptionRepository;
+    private final AppointmentOutcomeRecordRepository appointmentOutcomeRecordRepository;
+    private final PatientRepository patientRepository;
+    private final StaffRepository staffRepository;
+    private final DoctorRepository doctorRepository;
+
+    public MenuFactory() {
+        checkWritableBasePathExists();
+        appointmentRepository = new AppointmentRepository(getWritableBasePath(appointmentPath));
+        medicineRepository = new MedicineRepository(getWritableBasePath(medicinePath));
+        medicineRequestRepository = new MedicineRequestRepository(getWritableBasePath(medicineRequestPath));
+        prescriptionRepository = new PrescriptionRepository(getWritableBasePath(prescriptionPath));
+        appointmentOutcomeRecordRepository = new AppointmentOutcomeRecordRepository(getWritableBasePath(appointmentOutcomeRecordPath), prescriptionRepository);
+        patientRepository = new PatientRepository(getWritableBasePath(patientPath), appointmentRepository, appointmentOutcomeRecordRepository);
+        staffRepository = new StaffRepository(getWritableBasePath(staffPath));
+        doctorRepository = new DoctorRepository(getWritableBasePath(doctorDir), staffRepository);
+    }
+
+    private String getWritableBasePath(String fileName) {
+        return writableBasePath + "/" + fileName;
+    }
+
+    public void checkWritableBasePathExists() {
+        File dir = new File(writableBasePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        dir = new File(writableBasePath + "/" + doctorDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+    }
 
     public Menu createMenu(String role) {
         switch (role) {
